@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getUser } from '@/lib/dal'
+import { LogoutButton } from '@/components/auth/logout-button'
 
 /**
  * Admin layout -- wraps all admin pages.
@@ -7,6 +8,7 @@ import { getUser } from '@/lib/dal'
  * If not authenticated or not admin, redirects to /login.
  *
  * Renders admin shell with sidebar navigation and main content area.
+ * Includes LogoutButton in both the sidebar footer and the top header.
  */
 export default async function AdminLayout({
   children,
@@ -52,15 +54,19 @@ export default async function AdminLayout({
         </nav>
         <div className="border-t border-gray-700 px-6 py-4">
           <p className="truncate text-sm text-gray-400">{user.email}</p>
+          <div className="mt-2">
+            <LogoutButton />
+          </div>
         </div>
       </aside>
 
       {/* Main content */}
       <div className="flex flex-1 flex-col">
-        <header className="flex h-14 items-center border-b bg-background px-6">
+        <header className="flex h-14 items-center justify-between border-b bg-background px-6">
           <span className="text-sm text-muted-foreground">
             Signed in as {user.email}
           </span>
+          <LogoutButton />
         </header>
         <main className="flex-1 p-6">{children}</main>
       </div>

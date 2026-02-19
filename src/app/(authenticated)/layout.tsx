@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation'
 import { getUser } from '@/lib/dal'
+import { LogoutButton } from '@/components/auth/logout-button'
 
 /**
  * Authenticated layout -- wraps all authenticated pages (candidate, employer).
  * Calls the DAL to verify session. If no valid user, redirects to /login.
  *
  * Renders a basic app shell with header and content area.
- * The header shows the app name and user email.
+ * The header shows the app name, user email, and logout button.
  */
 export default async function AuthenticatedLayout({
   children,
@@ -26,7 +27,7 @@ export default async function AuthenticatedLayout({
           <span className="text-lg font-semibold">IP Lawyer Recruiting</span>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{user.email}</span>
-            {/* Logout button placeholder -- implemented in Plan 05 */}
+            <LogoutButton />
           </div>
         </div>
       </header>

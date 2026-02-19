@@ -1,35 +1,27 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { MagicLinkVerify } from '@/components/auth/magic-link-verify'
 
 export const metadata: Metadata = {
   title: 'Verify Login',
 }
 
 /**
- * Verify page -- placeholder for the token confirmation UI.
- * The actual verify logic will be implemented in Plan 05.
+ * Verify page -- renders the two-step token confirmation UI.
+ * Wrapped in Suspense because MagicLinkVerify uses useSearchParams,
+ * which requires a Suspense boundary in Next.js.
  * Renders within the centered public layout.
  */
 export default function VerifyPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Verify Your Login</CardTitle>
-        <CardDescription>
-          Confirming your magic link token
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground">
-          Token verification will be implemented here.
-        </p>
-      </CardContent>
-    </Card>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center">
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
+      }
+    >
+      <MagicLinkVerify />
+    </Suspense>
   )
 }
