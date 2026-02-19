@@ -10,23 +10,23 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Phase: 1 of 8 (Foundation and Auth)
-Plan: 1 of 5 (Phase 1)
+Plan: 2 of 5 (Phase 1)
 Status: In progress
-Last activity: 2026-02-19 -- Completed 01-01-PLAN.md (scaffold + schema)
+Last activity: 2026-02-19 -- Completed 01-02-PLAN.md (auth infrastructure layer)
 
-Progress: ██░░░░░░░░ ~5% (1 plan of ~20 estimated total)
+Progress: ████░░░░░░ ~10% (2 plans of ~20 estimated total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: ~11 min
+- Total plans completed: 2
+- Average duration: ~7 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 - Foundation and Auth | 1/5 | ~11 min | ~11 min |
+| 1 - Foundation and Auth | 2/5 | ~14 min | ~7 min |
 
 ## Accumulated Context
 
@@ -40,10 +40,12 @@ Progress: ██░░░░░░░░ ~5% (1 plan of ~20 estimated total)
 - [01-01-D1] Scaffold fallback: used temp directory approach since project root was non-empty
 - [01-01-D2] Added .env.example exception to .gitignore (.env* pattern would exclude it)
 - [01-01-D3] text() for IP address columns instead of inet() to avoid driver compatibility issues
+- [01-02-D1] Used Next.js 16 proxy.ts (not middleware.ts) -- confirmed via source code that middleware.ts is deprecated in 16.1.6
+- [01-02-D2] Role-mismatched proxy redirects go to user's dashboard (not /login) for better UX
 
 ### Pending Todos
 
-- User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-02
+- User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-03
 - User must run `npx drizzle-kit push` to apply schema to database
 - User must generate SESSION_SECRET (`openssl rand -base64 32`)
 - User must configure Resend API key and email address
@@ -57,5 +59,5 @@ Progress: ██░░░░░░░░ ~5% (1 plan of ~20 estimated total)
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-01-PLAN.md
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
