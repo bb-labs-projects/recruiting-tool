@@ -42,6 +42,8 @@ Progress: ██████░░░░ ~20% (4 plans of ~20 estimated total)
 - [01-01-D3] text() for IP address columns instead of inet() to avoid driver compatibility issues
 - [01-02-D1] Used Next.js 16 proxy.ts (not middleware.ts) -- confirmed via source code that middleware.ts is deprecated in 16.1.6
 - [01-02-D2] Role-mismatched proxy redirects go to user's dashboard (not /login) for better UX
+- [01-03-D1] Inline HTML for email template instead of React email components (simpler, better email client compatibility)
+- [01-03-D2] Server action uses 'server-action' as IP/userAgent placeholder (Next.js server actions lack request header access)
 
 ### Pending Todos
 
