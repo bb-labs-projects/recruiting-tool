@@ -25,9 +25,16 @@ This roadmap follows the critical path to revenue identified in research: authen
 4. Session persists across browser tabs and page refreshes via HTTP-only cookie; user can log out from any page
 5. Rate limiting prevents more than 5 magic link requests per email per hour, and expired/reused tokens show clear error messages
 
-**Notes:** Implements the full magic link specification from `01-magic-link-auth.md`. Includes project scaffolding (Next.js 15, Drizzle ORM, Neon PostgreSQL, Tailwind, shadcn/ui), database schema with all normalized tables, and the complete route group structure (`(public)`, `admin/`, `employer/`, `candidate/`).
+**Notes:** Implements the full magic link specification from `01-magic-link-auth.md`. Includes project scaffolding (Next.js 16, Drizzle ORM, Neon PostgreSQL, Tailwind v4, shadcn/ui), database schema with all normalized tables, and the complete route group structure (`(public)`, `admin/`, `employer/`, `candidate/`).
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md -- Project scaffolding, dependencies, database schema
+- [ ] 01-02-PLAN.md -- Auth libraries (session, tokens, rate limit) + DAL + proxy
+- [ ] 01-03-PLAN.md -- Auth API routes, server action, email template
+- [ ] 01-04-PLAN.md -- Route group structure, layouts, role-based placeholder pages
+- [ ] 01-05-PLAN.md -- Auth UI components, wiring, end-to-end verification
 
 ---
 
@@ -182,7 +189,7 @@ This roadmap follows the critical path to revenue identified in research: authen
 
 | Phase | Status | Completed |
 |-------|--------|-----------|
-| 1 - Foundation and Auth | Not started | -- |
+| 1 - Foundation and Auth | Planned | -- |
 | 2 - CV Parsing Pipeline | Not started | -- |
 | 3 - Admin Review and Profiles | Not started | -- |
 | 4 - Employer Onboarding and Browse | Not started | -- |
