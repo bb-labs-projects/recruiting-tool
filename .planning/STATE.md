@@ -10,41 +10,46 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Phase: 1 of 8 (Foundation and Auth)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-02-19 -- Project roadmap created
+Plan: 1 of 5 (Phase 1)
+Status: In progress
+Last activity: 2026-02-19 -- Completed 01-01-PLAN.md (scaffold + schema)
 
-Progress: ░░░░░░░░░░ 0%
+Progress: ██░░░░░░░░ ~5% (1 plan of ~20 estimated total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: --
+- Total plans completed: 1
+- Average duration: ~11 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| -- | -- | -- | -- |
+| 1 - Foundation and Auth | 1/5 | ~11 min | ~11 min |
 
 ## Accumulated Context
 
 ### Decisions
 
 - Magic link auth follows spec in `01-magic-link-auth.md` (no passwords, HTTP-only cookies, rate limiting, 10-min token expiry)
-- Stack: Next.js 15 + Drizzle ORM + Neon PostgreSQL + Stripe + Resend + Vercel Blob + shadcn/ui
+- Stack: Next.js 16.1.6 + Drizzle ORM 0.45.1 + Neon PostgreSQL + Stripe + Resend + Vercel Blob + shadcn/ui
 - Server-side anonymization enforced at data access layer (never send PII to unapproved/unpaid employers)
 - Two-stage AI matching: SQL pre-filter then Claude API scoring on shortlist only
 - Webhook-first payment pattern: profile unlocks only on Stripe webhook confirmation
+- [01-01-D1] Scaffold fallback: used temp directory approach since project root was non-empty
+- [01-01-D2] Added .env.example exception to .gitignore (.env* pattern would exclude it)
+- [01-01-D3] text() for IP address columns instead of inet() to avoid driver compatibility issues
 
 ### Pending Todos
 
-(None yet)
+- User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-02
+- User must run `npx drizzle-kit push` to apply schema to database
+- User must generate SESSION_SECRET (`openssl rand -base64 32`)
+- User must configure Resend API key and email address
 
 ### Blockers/Concerns
 
-- Package versions from research are based on May 2025 training data -- verify with `npm view` before installing
 - IP law taxonomy (specializations, technical domains) should be validated with the agency client
 - GDPR legal basis needs legal counsel review
 - Claude API pricing for PDF processing should be verified against current Anthropic pricing
@@ -52,5 +57,5 @@ Progress: ░░░░░░░░░░ 0%
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Roadmap creation
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None
