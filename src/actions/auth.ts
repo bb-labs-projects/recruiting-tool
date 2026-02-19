@@ -1,0 +1,62 @@
+'use server'
+
+import { z } from 'zod'
+import { handleMagicLinkRequest } from '@/lib/auth/request-magic-link'
+
+export type MagicLinkState =
+  | {
+      success?: boolean
+      error?: string
+    }
+  | undefined
+
+const RequestMagicLinkSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+})
+
+/**
+ * Server action for the magic link login form.
+ *
+ * Compatible with React useActionState:
+ *   const [state, action, pending] = useActionState(requestMagicLink, undefined)
+ *
+ * Delegates to handleMagicLinkRequest for the actual logic, sharing
+ * implementation with the API route (no business logic duplication).
+ */
+export async function requestMagicLink(
+  prevState: MagicLinkState,
+  formData: FormData
+): Promise<MagicLinkState> {
+  try {
+    const rawEmail = formData.get('email')
+
+    const parsed = RequestMagicLinkSchema.safeParse({ email: rawEmail })
+
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors
+      return { error: fieldErrors.email?.[0] ?? 'Invalid email address' }
+    }
+
+    // Server actions don't have easy access to request headers.
+    // Use 'server-action' as placeholder -- the security log still
+    // records the event, just without client IP.
+    const result = await handleMagicLinkRequest({
+      email: parsed.data.email,
+      ip: 'server-action',
+      userAgent: 'server-action',
+    })
+
+    if (!result.success && result.rateLimited) {
+      return { error: 'Too many login attempts. Please try again later.' }
+    }
+
+    if (!result.success) {
+      return { error: result.error }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('requestMagicLink server action error:', error)
+    return { error: 'Something went wrong. Please try again.' }
+  }
+}
