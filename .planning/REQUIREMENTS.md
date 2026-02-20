@@ -20,7 +20,7 @@
 
 - [x] **MARK-01**: Employers can browse anonymized candidate profiles (no name/contact details) -- enforced server-side
 - [x] **MARK-02**: Employers can search and filter candidates by IP specialization, experience, location, tech background, patent bar status
-- [ ] **MARK-03**: Employers can pay per-profile via Stripe to unlock a candidate's full contact details and name
+- [x] **MARK-03**: Employers can pay per-profile via Stripe to unlock a candidate's full contact details and name
 - [x] **MARK-04**: Employers can save/favorite profiles for later viewing
 
 ### Job Matching
@@ -33,7 +33,7 @@
 
 - [x] **ADMN-01**: Admin can view, edit, and manage all candidate profiles and parsed data
 - [x] **ADMN-02**: Admin can approve, manage, and view activity of employer accounts
-- [ ] **ADMN-03**: Admin can view analytics: profile views, unlock conversions, popular searches, revenue
+- [x] **ADMN-03**: Admin can view analytics: profile views, unlock conversions, popular searches, revenue
 - [x] **ADMN-04**: Admin can batch-upload multiple CVs at once (initial 95 + ongoing)
 
 ## v2 Requirements (Deferred)
@@ -66,15 +66,15 @@
 | PROF-04 | Phase 7 | -- | Pending |
 | MARK-01 | Phase 4 | 04-01, 04-04 | Complete |
 | MARK-02 | Phase 5 | 05-01, 05-02 | Complete |
-| MARK-03 | Phase 6 | -- | Pending |
+| MARK-03 | Phase 6 | 06-01, 06-02 | Complete |
 | MARK-04 | Phase 5 | 05-01, 05-02, 05-03 | Complete |
 | JOBS-01 | Phase 8 | -- | Pending |
 | JOBS-02 | Phase 8 | -- | Pending |
 | JOBS-03 | Phase 8 | -- | Pending |
 | ADMN-01 | Phase 3 | 03-02, 03-04 | Complete |
 | ADMN-02 | Phase 4 | 04-03 | Complete |
-| ADMN-03 | Phase 6 | -- | Pending |
+| ADMN-03 | Phase 6 | 06-03 | Complete |
 | ADMN-04 | Phase 2 | 02-03, 02-04 | Complete |
 
 ---
-*Last updated: 2026-02-20 after Phase 5 completion*
+*Last updated: 2026-02-20 after Phase 6 completion*
