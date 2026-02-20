@@ -58,10 +58,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- Database schema extension and package installation
-- [ ] 02-02-PLAN.md -- CV parser core (Claude API + Zod schemas)
-- [ ] 02-03-PLAN.md -- Upload handler and API routes
-- [ ] 02-04-PLAN.md -- Admin CV upload UI with batch processing
+- [x] 02-01-PLAN.md -- Database schema extension and package installation
+- [x] 02-02-PLAN.md -- CV parser core (Claude API + Zod schemas)
+- [x] 02-03-PLAN.md -- Upload handler and API routes
+- [x] 02-04-PLAN.md -- Admin CV upload UI with batch processing
 
 ---
 
@@ -85,11 +85,11 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 03-01-PLAN.md -- Schema extension, Drizzle relations, packages, badge components
-- [ ] 03-02-PLAN.md -- Server actions for profile CRUD (approve, reject, edit)
-- [ ] 03-03-PLAN.md -- Candidate list page with TanStack Table
-- [ ] 03-04-PLAN.md -- Profile detail page with inline editing and PDF side-by-side view
-- [ ] 03-05-PLAN.md -- End-to-end verification checkpoint
+- [x] 03-01-PLAN.md -- Schema extension, Drizzle relations, packages, badge components
+- [x] 03-02-PLAN.md -- Server actions for profile CRUD (approve, reject, edit)
+- [x] 03-03-PLAN.md -- Candidate list page with TanStack Table
+- [x] 03-04-PLAN.md -- Profile detail page with inline editing and PDF side-by-side view
+- [x] 03-05-PLAN.md -- End-to-end verification checkpoint
 
 ---
 
@@ -203,8 +203,8 @@ Plans:
 | Phase | Status | Completed |
 |-------|--------|-----------|
 | 1 - Foundation and Auth | Complete | 2026-02-20 |
-| 2 - CV Parsing Pipeline | Planned | -- |
-| 3 - Admin Review and Profiles | Planned | -- |
+| 2 - CV Parsing Pipeline | Complete | 2026-02-20 |
+| 3 - Admin Review and Profiles | Complete | 2026-02-20 |
 | 4 - Employer Onboarding and Browse | Not started | -- |
 | 5 - Search and Discovery | Not started | -- |
 | 6 - Monetization | Not started | -- |
