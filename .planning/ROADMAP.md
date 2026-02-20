@@ -55,7 +55,13 @@ Plans:
 
 **Notes:** This is the make-or-break technical phase. CV parsing accuracy determines the quality of everything downstream. Uses Claude API with structured output validated by Zod schemas. PDFs stored in Vercel Blob. Async processing with status polling on the frontend.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md -- Database schema extension and package installation
+- [ ] 02-02-PLAN.md -- CV parser core (Claude API + Zod schemas)
+- [ ] 02-03-PLAN.md -- Upload handler and API routes
+- [ ] 02-04-PLAN.md -- Admin CV upload UI with batch processing
 
 ---
 
@@ -190,7 +196,7 @@ Plans:
 | Phase | Status | Completed |
 |-------|--------|-----------|
 | 1 - Foundation and Auth | Complete | 2026-02-20 |
-| 2 - CV Parsing Pipeline | Not started | -- |
+| 2 - CV Parsing Pipeline | Planned | -- |
 | 3 - Admin Review and Profiles | Not started | -- |
 | 4 - Employer Onboarding and Browse | Not started | -- |
 | 5 - Search and Discovery | Not started | -- |
