@@ -70,6 +70,11 @@ export const confidenceEnum = pgEnum('confidence_level', [
   'high', 'medium', 'low',
 ])
 
+// Profile status enum
+export const profileStatusEnum = pgEnum('profile_status', [
+  'pending_review', 'active', 'rejected',
+])
+
 // Profiles table
 export const profiles = pgTable('profiles', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -79,9 +84,15 @@ export const profiles = pgTable('profiles', {
   emailConfidence: confidenceEnum('email_confidence').notNull(),
   phone: varchar('phone', { length: 50 }),
   phoneConfidence: confidenceEnum('phone_confidence').notNull(),
+  status: profileStatusEnum('status').notNull().default('pending_review'),
+  rejectionNotes: text('rejection_notes'),
+  reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+  reviewedBy: uuid('reviewed_by').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('profiles_status_idx').on(table.status),
+])
 
 // CV uploads table
 export const cvUploads = pgTable('cv_uploads', {
