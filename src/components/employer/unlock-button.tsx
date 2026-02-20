@@ -1,16 +1,56 @@
+'use client'
+
+import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
-import { Lock } from 'lucide-react'
+import { Lock, Unlock, Loader2 } from 'lucide-react'
+import { createCheckoutSession } from '@/actions/checkout'
 
 /**
  * Unlock Profile CTA button.
- * Currently a non-functional placeholder -- Phase 6 will wire this
- * to Stripe Checkout for profile unlock payments.
+ * Wired to Stripe Checkout -- calls createCheckoutSession server action on click.
+ * Shows loading state during redirect and prevents double-clicks via useTransition.
+ * When already unlocked, shows a disabled "Profile Unlocked" badge state.
  */
-export function UnlockButton({ profileId }: { profileId: string }) {
+export function UnlockButton({
+  profileId,
+  isUnlocked,
+}: {
+  profileId: string
+  isUnlocked?: boolean
+}) {
+  const [isPending, startTransition] = useTransition()
+
+  if (isUnlocked) {
+    return (
+      <Button variant="outline" size="lg" disabled>
+        <Unlock className="size-4" />
+        Profile Unlocked
+      </Button>
+    )
+  }
+
   return (
-    <Button variant="default" size="lg" disabled>
-      <Lock className="size-4" />
-      Unlock Full Profile
+    <Button
+      variant="default"
+      size="lg"
+      disabled={isPending}
+      onClick={() => {
+        startTransition(async () => {
+          await createCheckoutSession(profileId)
+        })
+      }}
+    >
+      {isPending ? (
+        <>
+          <Loader2 className="size-4 animate-spin" />
+          Processing...
+        </>
+      ) : (
+        <>
+          <Lock className="size-4" />
+          Unlock Full Profile
+        </>
+      )}
     </Button>
   )
 }
