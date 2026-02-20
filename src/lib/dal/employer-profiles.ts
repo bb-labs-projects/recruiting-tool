@@ -2,8 +2,16 @@ import 'server-only'
 
 import { cache } from 'react'
 import { db } from '@/lib/db'
-import { profiles } from '@/lib/db/schema'
-import { eq, sql, count } from 'drizzle-orm'
+import {
+  profiles,
+  profileSpecializations,
+  specializations,
+  profileTechnicalDomains,
+  technicalDomains,
+  barAdmissions,
+  education,
+} from '@/lib/db/schema'
+import { eq, and, exists, ilike, inArray, sql, type SQL } from 'drizzle-orm'
 import { bucketExperienceYears, anonymizeWorkHistory } from '@/lib/anonymize'
 
 // Source: https://nextjs.org/docs/app/guides/data-security (DTO pattern)
@@ -29,24 +37,223 @@ export type AnonymizedProfileDTO = {
 }
 
 /**
- * Get anonymized profiles for employer browsing.
- * Uses Drizzle column inclusion mode to whitelist ONLY safe fields.
- * PII (name, email, phone, employer names) is never selected.
+ * Multi-dimensional search filters for employer browse.
+ */
+export type SearchFilters = {
+  search?: string
+  specializations?: string[]
+  technicalDomains?: string[]
+  patentBar?: boolean
+  experienceRange?: string
+  location?: string
+  page?: number
+  pageSize?: number
+}
+
+/**
+ * Escape ILIKE wildcard characters in user input.
+ * Prevents %, _, and \ from being interpreted as wildcards.
+ */
+function escapeIlike(input: string): string {
+  return input.replace(/[%_\\]/g, '\\$&')
+}
+
+/**
+ * Build dynamic SQL filter conditions from SearchFilters.
+ * Uses EXISTS subqueries for junction table filtering.
+ * NEVER references PII columns (name, email, phone, employer).
+ */
+function buildFilterConditions(filters: SearchFilters): SQL[] {
+  const conditions: SQL[] = [eq(profiles.status, 'active')]
+
+  // Specialization filter: EXISTS subquery on junction table
+  if (filters.specializations?.length) {
+    conditions.push(
+      exists(
+        db
+          .select({ id: sql`1` })
+          .from(profileSpecializations)
+          .innerJoin(
+            specializations,
+            eq(profileSpecializations.specializationId, specializations.id)
+          )
+          .where(
+            and(
+              eq(profileSpecializations.profileId, profiles.id),
+              inArray(specializations.name, filters.specializations)
+            )
+          )
+      )
+    )
+  }
+
+  // Technical domain filter: EXISTS subquery on junction table
+  if (filters.technicalDomains?.length) {
+    conditions.push(
+      exists(
+        db
+          .select({ id: sql`1` })
+          .from(profileTechnicalDomains)
+          .innerJoin(
+            technicalDomains,
+            eq(
+              profileTechnicalDomains.technicalDomainId,
+              technicalDomains.id
+            )
+          )
+          .where(
+            and(
+              eq(profileTechnicalDomains.profileId, profiles.id),
+              inArray(technicalDomains.name, filters.technicalDomains)
+            )
+          )
+      )
+    )
+  }
+
+  // Patent bar filter: EXISTS on bar_admissions with USPTO jurisdiction
+  if (filters.patentBar) {
+    conditions.push(
+      exists(
+        db
+          .select({ id: sql`1` })
+          .from(barAdmissions)
+          .where(
+            and(
+              eq(barAdmissions.profileId, profiles.id),
+              ilike(barAdmissions.jurisdiction, '%USPTO%')
+            )
+          )
+      )
+    )
+  }
+
+  // Location filter: EXISTS on bar_admissions jurisdiction via ILIKE
+  if (filters.location) {
+    conditions.push(
+      exists(
+        db
+          .select({ id: sql`1` })
+          .from(barAdmissions)
+          .where(
+            and(
+              eq(barAdmissions.profileId, profiles.id),
+              ilike(
+                barAdmissions.jurisdiction,
+                `%${escapeIlike(filters.location)}%`
+              )
+            )
+          )
+      )
+    )
+  }
+
+  // Free-text search across non-PII fields only
+  // NEVER searches against profiles.name, profiles.email, profiles.phone, or workHistory.employer
+  if (filters.search) {
+    const term = `%${escapeIlike(filters.search)}%`
+    conditions.push(sql`(
+      EXISTS (
+        SELECT 1 FROM profile_specializations ps
+        JOIN specializations s ON ps.specialization_id = s.id
+        WHERE ps.profile_id = ${profiles.id}
+        AND s.name ILIKE ${term}
+      )
+      OR EXISTS (
+        SELECT 1 FROM profile_technical_domains ptd
+        JOIN technical_domains td ON ptd.technical_domain_id = td.id
+        WHERE ptd.profile_id = ${profiles.id}
+        AND td.name ILIKE ${term}
+      )
+      OR EXISTS (
+        SELECT 1 FROM bar_admissions ba
+        WHERE ba.profile_id = ${profiles.id}
+        AND ba.jurisdiction ILIKE ${term}
+      )
+      OR EXISTS (
+        SELECT 1 FROM education e
+        WHERE e.profile_id = ${profiles.id}
+        AND (e.institution ILIKE ${term} OR e.degree ILIKE ${term} OR e.field ILIKE ${term})
+      )
+    )`)
+  }
+
+  return conditions
+}
+
+/**
+ * Get anonymized profiles for employer browsing with multi-dimensional filtering.
+ * Uses two-query strategy:
+ *   1. Filter query (select builder with EXISTS subqueries) to get matching IDs
+ *   2. Data loading query (relational API with column inclusion mode) for anonymized data
+ *
+ * Experience range filtering is applied post-query since experience is computed
+ * from work_history dates, not stored as a column.
  */
 export const getAnonymizedProfiles = cache(
-  async (filters?: {
-    specialization?: string
-    experienceRange?: string
-    search?: string
-    page?: number
-    pageSize?: number
-  }): Promise<{ profiles: AnonymizedProfileDTO[]; total: number }> => {
+  async (
+    filters?: SearchFilters
+  ): Promise<{ profiles: AnonymizedProfileDTO[]; total: number }> => {
     const page = filters?.page ?? 1
     const pageSize = filters?.pageSize ?? 12
+    const conditions = buildFilterConditions(filters ?? {})
+    const whereConditions = and(...conditions)
 
-    // Query ONLY non-PII fields using Drizzle column inclusion mode
+    // Step 1: Filter query -- get all matching profile IDs (no pagination yet)
+    const matchedRows = await db
+      .select({ id: profiles.id })
+      .from(profiles)
+      .where(whereConditions)
+      .orderBy(sql`${profiles.createdAt} DESC`)
+
+    let matchedIds = matchedRows.map((r) => r.id)
+
+    // Step 1b: Experience range post-filter (if set)
+    // Experience is computed from work_history dates, not stored as a column.
+    // For <1000 profiles this is fast enough without a materialized column.
+    if (filters?.experienceRange && matchedIds.length > 0) {
+      const workHistoryRows = await db.query.workHistory.findMany({
+        where: (wh, { inArray: inArr }) => inArr(wh.profileId, matchedIds),
+        columns: {
+          profileId: true,
+          startDate: true,
+          endDate: true,
+        },
+      })
+
+      // Group work history by profile
+      const whByProfile = new Map<
+        string,
+        { startDate: string | null; endDate: string | null }[]
+      >()
+      for (const wh of workHistoryRows) {
+        const existing = whByProfile.get(wh.profileId) ?? []
+        existing.push({ startDate: wh.startDate, endDate: wh.endDate })
+        whByProfile.set(wh.profileId, existing)
+      }
+
+      // Filter profiles whose computed experience range matches
+      matchedIds = matchedIds.filter((id) => {
+        const wh = whByProfile.get(id) ?? []
+        return bucketExperienceYears(wh) === filters.experienceRange
+      })
+    }
+
+    // Step 1c: Pagination on the filtered ID list
+    const total = matchedIds.length
+    const paginatedIds = matchedIds.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    )
+
+    if (paginatedIds.length === 0) {
+      return { profiles: [], total }
+    }
+
+    // Step 2: Data loading -- relational query with column inclusion mode (anonymization)
     const results = await db.query.profiles.findMany({
-      where: (profiles, { eq }) => eq(profiles.status, 'active'),
+      where: (profiles, { inArray: inArr }) =>
+        inArr(profiles.id, paginatedIds),
       columns: {
         id: true,
         createdAt: true,
@@ -94,18 +301,13 @@ export const getAnonymizedProfiles = cache(
           },
         },
       },
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-      orderBy: (profiles, { desc }) => [desc(profiles.createdAt)],
     })
 
-    // Separate count query for total
-    const [{ value: total }] = await db
-      .select({ value: count() })
-      .from(profiles)
-      .where(eq(profiles.status, 'active'))
+    // Preserve the order from the filter query (orderBy createdAt DESC)
+    const orderMap = new Map(paginatedIds.map((id, i) => [id, i]))
+    results.sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0))
 
-    // Transform results into anonymized DTOs
+    // Step 3: Transform results into anonymized DTOs
     const anonymizedProfiles: AnonymizedProfileDTO[] = results.map(
       (profile) => ({
         id: profile.id,

@@ -53,8 +53,8 @@ export function FilterBar() {
   return (
     <div className="flex gap-3">
       <Select
-        defaultValue={searchParams.get('specialization') ?? 'all'}
-        onValueChange={(value) => updateFilter('specialization', value)}
+        defaultValue={searchParams.get('spec') ?? 'all'}
+        onValueChange={(value) => updateFilter('spec', value)}
       >
         <SelectTrigger className="w-[200px]">
           <SelectValue placeholder="All Specializations" />

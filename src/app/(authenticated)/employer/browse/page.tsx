@@ -24,7 +24,7 @@ export default async function BrowsePage({
 }: {
   searchParams: Promise<{
     q?: string
-    specialization?: string
+    spec?: string | string[]
     experience?: string
     page?: string
   }>
@@ -43,10 +43,18 @@ export default async function BrowsePage({
   const page = Math.max(1, parseInt(params.page ?? '1', 10) || 1)
   const pageSize = 12
 
+  // Normalize multi-value params to arrays
+  const specParam = params.spec
+  const specializations = specParam
+    ? Array.isArray(specParam)
+      ? specParam
+      : [specParam]
+    : undefined
+
   // Fetch anonymized profiles with filters
   const { profiles, total } = await getAnonymizedProfiles({
     search: params.q,
-    specialization: params.specialization,
+    specializations,
     experienceRange: params.experience,
     page,
     pageSize,
@@ -58,8 +66,11 @@ export default async function BrowsePage({
   function buildPageUrl(targetPage: number) {
     const urlParams = new URLSearchParams()
     if (params.q) urlParams.set('q', params.q)
-    if (params.specialization)
-      urlParams.set('specialization', params.specialization)
+    if (specializations) {
+      for (const spec of specializations) {
+        urlParams.append('spec', spec)
+      }
+    }
     if (params.experience) urlParams.set('experience', params.experience)
     urlParams.set('page', String(targetPage))
     return `/employer/browse?${urlParams.toString()}`
