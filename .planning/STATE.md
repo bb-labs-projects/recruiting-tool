@@ -12,14 +12,14 @@ See: .planning/PROJECT.md
 Phase: 4 of 8 (Employer Onboarding and Browse)
 Plan: 3 of ? (Phase 4)
 Status: In progress
-Last activity: 2026-02-20 -- Completed 04-03-PLAN.md (admin employer management UI)
+Last activity: 2026-02-20 -- Completed 04-02-PLAN.md (employer registration flow and approval gating)
 
-Progress: ████████████████████████████░░ ~40% (16 of ~40 plans)
+Progress: ████████████████████████████░░░ ~42% (17 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: ~4 min
 
 **By Phase:**
@@ -29,7 +29,7 @@ Progress: ███████████████████████�
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
 | 2 - CV Parsing Pipeline | 4/4 | ~11 min | ~3 min |
 | 3 - Admin Review and Profiles | 5/5 | ~15 min | ~3 min |
-| 4 - Employer Onboarding/Browse | 2/? | ~6 min | ~3 min |
+| 4 - Employer Onboarding/Browse | 3/? | ~11 min | ~4 min |
 
 ## Accumulated Context
 
@@ -53,6 +53,8 @@ Progress: ███████████████████████�
 - [04-01-D2] Two separate DAL modules for employer vs admin data paths (never conditional field return in a single function)
 - [04-03-D1] Inline employer status badge rather than reusing candidate StatusBadge (different status values: pending/approved/rejected vs pending_review/active/rejected)
 - [04-03-D2] Direct DB query in employer detail page by profile id (existing DAL getEmployerProfile uses userId, not profile id needed for admin nav)
+- [04-02-D1] Page-level approval gating over layout gating (Next.js layouts don't re-render on client navigation, can't read pathname reliably)
+- [04-02-D2] Updated registerEmployer signature to (prevState, formData) for useActionState compatibility
 
 ### Pending Todos
 
@@ -72,5 +74,5 @@ Progress: ███████████████████████�
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 04-03-PLAN.md (admin employer management UI)
+Stopped at: Completed 04-02-PLAN.md (employer registration flow and approval gating)
 Resume file: None
