@@ -11,6 +11,7 @@ import {
   specializations,
   technicalDomains,
   employerProfiles,
+  savedProfiles,
 } from './schema'
 
 export const profilesRelations = relations(profiles, ({ many }) => ({
@@ -20,6 +21,7 @@ export const profilesRelations = relations(profiles, ({ many }) => ({
   profileSpecializations: many(profileSpecializations),
   profileTechnicalDomains: many(profileTechnicalDomains),
   cvUploads: many(cvUploads),
+  savedProfiles: many(savedProfiles),
 }))
 
 export const educationRelations = relations(education, ({ one }) => ({
@@ -78,11 +80,12 @@ export const cvUploadsRelations = relations(cvUploads, ({ one }) => ({
   }),
 }))
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   employerProfile: one(employerProfiles, {
     fields: [users.id],
     references: [employerProfiles.userId],
   }),
+  savedProfiles: many(savedProfiles),
 }))
 
 export const employerProfilesRelations = relations(
@@ -100,3 +103,14 @@ export const employerProfilesRelations = relations(
     }),
   })
 )
+
+export const savedProfilesRelations = relations(savedProfiles, ({ one }) => ({
+  user: one(users, {
+    fields: [savedProfiles.employerUserId],
+    references: [users.id],
+  }),
+  profile: one(profiles, {
+    fields: [savedProfiles.profileId],
+    references: [profiles.id],
+  }),
+}))

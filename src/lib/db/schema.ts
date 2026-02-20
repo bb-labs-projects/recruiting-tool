@@ -208,3 +208,18 @@ export const employerProfiles = pgTable('employer_profiles', {
   index('employer_profiles_user_idx').on(table.userId),
   index('employer_profiles_status_idx').on(table.status),
 ])
+
+// Saved profiles junction table (employer bookmarks)
+export const savedProfiles = pgTable('saved_profiles', {
+  employerUserId: uuid('employer_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
+  savedAt: timestamp('saved_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.employerUserId, table.profileId] }),
+  index('saved_profiles_employer_idx').on(table.employerUserId),
+  index('saved_profiles_profile_idx').on(table.profileId),
+])
