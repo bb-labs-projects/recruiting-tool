@@ -10,16 +10,16 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Phase: 4 of 8 (Employer Onboarding and Browse)
-Plan: 1 of ? (Phase 4)
+Plan: 3 of ? (Phase 4)
 Status: In progress
-Last activity: 2026-02-20 -- Completed 04-01-PLAN.md (schema, anonymization, DAL, server actions)
+Last activity: 2026-02-20 -- Completed 04-03-PLAN.md (admin employer management UI)
 
-Progress: ██████████████████████████░░ ~37% (15 of ~40 plans)
+Progress: ████████████████████████████░░ ~40% (16 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: ~4 min
 
 **By Phase:**
@@ -29,7 +29,7 @@ Progress: ███████████████████████�
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
 | 2 - CV Parsing Pipeline | 4/4 | ~11 min | ~3 min |
 | 3 - Admin Review and Profiles | 5/5 | ~15 min | ~3 min |
-| 4 - Employer Onboarding/Browse | 1/? | ~3 min | ~3 min |
+| 4 - Employer Onboarding/Browse | 2/? | ~6 min | ~3 min |
 
 ## Accumulated Context
 
@@ -51,6 +51,8 @@ Progress: ███████████████████████�
 - [03-04-D2] Used orientation prop instead of direction for ResizablePanelGroup (react-resizable-panels v3 API)
 - [04-01-D1] Column inclusion mode (whitelist) for anonymized queries rather than exclusion mode, to prevent PII leakage if new columns added
 - [04-01-D2] Two separate DAL modules for employer vs admin data paths (never conditional field return in a single function)
+- [04-03-D1] Inline employer status badge rather than reusing candidate StatusBadge (different status values: pending/approved/rejected vs pending_review/active/rejected)
+- [04-03-D2] Direct DB query in employer detail page by profile id (existing DAL getEmployerProfile uses userId, not profile id needed for admin nav)
 
 ### Pending Todos
 
@@ -70,5 +72,5 @@ Progress: ███████████████████████�
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 04-01-PLAN.md (schema, anonymization, DAL, server actions)
+Stopped at: Completed 04-03-PLAN.md (admin employer management UI)
 Resume file: None
