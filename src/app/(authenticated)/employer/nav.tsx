@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Search, Heart } from 'lucide-react'
+import { LayoutDashboard, Search, Heart, Receipt } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
   { href: '/employer', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/employer/browse', label: 'Browse', icon: Search, exact: false },
   { href: '/employer/saved', label: 'Saved', icon: Heart, exact: true },
+  { href: '/employer/purchases', label: 'Purchases', icon: Receipt, exact: true },
 ] as const
 
 /**
