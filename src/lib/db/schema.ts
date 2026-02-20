@@ -183,3 +183,28 @@ export const workHistory = pgTable('work_history', {
 }, (table) => [
   index('work_history_profile_idx').on(table.profileId),
 ])
+
+// Employer status enum
+export const employerStatusEnum = pgEnum('employer_status', [
+  'pending', 'approved', 'rejected',
+])
+
+// Employer profiles table
+export const employerProfiles = pgTable('employer_profiles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  companyName: varchar('company_name', { length: 255 }).notNull(),
+  companyWebsite: varchar('company_website', { length: 500 }),
+  contactName: varchar('contact_name', { length: 255 }).notNull(),
+  contactTitle: varchar('contact_title', { length: 255 }),
+  phone: varchar('phone', { length: 50 }),
+  status: employerStatusEnum('status').notNull().default('pending'),
+  rejectionReason: text('rejection_reason'),
+  reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+  reviewedBy: uuid('reviewed_by').references(() => users.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index('employer_profiles_user_idx').on(table.userId),
+  index('employer_profiles_status_idx').on(table.status),
+])

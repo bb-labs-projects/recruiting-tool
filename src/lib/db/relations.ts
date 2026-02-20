@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm'
 import {
+  users,
   profiles,
   cvUploads,
   education,
@@ -9,6 +10,7 @@ import {
   profileTechnicalDomains,
   specializations,
   technicalDomains,
+  employerProfiles,
 } from './schema'
 
 export const profilesRelations = relations(profiles, ({ many }) => ({
@@ -75,3 +77,26 @@ export const cvUploadsRelations = relations(cvUploads, ({ one }) => ({
     references: [profiles.id],
   }),
 }))
+
+export const usersRelations = relations(users, ({ one }) => ({
+  employerProfile: one(employerProfiles, {
+    fields: [users.id],
+    references: [employerProfiles.userId],
+  }),
+}))
+
+export const employerProfilesRelations = relations(
+  employerProfiles,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [employerProfiles.userId],
+      references: [users.id],
+      relationName: 'employerUser',
+    }),
+    reviewer: one(users, {
+      fields: [employerProfiles.reviewedBy],
+      references: [users.id],
+      relationName: 'employerReviewer',
+    }),
+  })
+)
