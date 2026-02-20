@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md
 
 **Core value:** Automated CV parsing and intelligent job matching for IP lawyers -- turning unstructured PDF CVs into structured candidate profiles and using AI to match candidates against job requirements.
-**Current focus:** Phase 5 in progress -- Search and Discovery
+**Current focus:** Phase 5 complete -- ready for Phase 6 (Monetization)
 
 ## Current Position
 
 Phase: 5 of 8 (Search and Discovery)
-Plan: 3 of 5 (Phase 5)
-Status: In progress
-Last activity: 2026-02-20 -- Completed 05-03-PLAN.md (saved profiles page and e2e verification)
+Plan: 3 of 3 (Phase 5)
+Status: Phase complete (verified 4/5, gap auto-fixed)
+Last activity: 2026-02-20 -- Completed Phase 5 (all 3 plans executed, verification passed after auto-fix)
 
-Progress: ██████████████████████████████████░ ~55% (22 of ~40 plans)
+Progress: ████████████████████████████████████░ ~55% (22 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
+- Total plans completed: 22
 - Average duration: ~4 min
 
 **By Phase:**
@@ -30,7 +30,7 @@ Progress: ███████████████████████�
 | 2 - CV Parsing Pipeline | 4/4 | ~11 min | ~3 min |
 | 3 - Admin Review and Profiles | 5/5 | ~15 min | ~3 min |
 | 4 - Employer Onboarding/Browse | 5/5 | ~15 min | ~3 min |
-| 5 - Search and Discovery | 3/5 | ~13 min | ~4 min |
+| 5 - Search and Discovery | 3/3 | ~16 min | ~5 min |
 
 ## Accumulated Context
 
@@ -59,6 +59,7 @@ Progress: ███████████████████████�
 - [05-01-D1] Two-query strategy for filtered browse: select builder with EXISTS subqueries for filtering, then relational API with column inclusion for anonymized data loading
 - [05-01-D2] Post-query experience range filtering in JS (experience computed from work_history dates, not stored as column; fast enough at <1000 profiles)
 - [05-01-D3] URL param renamed from 'specialization' to 'spec' (shorter, supports multi-value via repeated params)
+- [05-03-D1] Extracted EmployerNav to shared component for Dashboard/Browse/Saved navigation with active state highlighting
 
 ### Pending Todos
 
@@ -79,5 +80,5 @@ Progress: ███████████████████████�
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 05-03-PLAN.md (saved profiles page and e2e verification)
+Stopped at: Phase 5 complete -- all plans executed, verification passed after auto-fix
 Resume file: None

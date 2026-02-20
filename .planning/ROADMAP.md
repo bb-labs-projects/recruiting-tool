@@ -141,9 +141,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Schema extension (savedProfiles), pg_trgm migration, DAL rewrite with dynamic filtering
-- [ ] 05-02-PLAN.md -- Enhanced filter UI, save/unsave functionality, browse page wiring
-- [ ] 05-03-PLAN.md -- Saved profiles page, navigation, and end-to-end verification
+- [x] 05-01-PLAN.md -- Schema extension (savedProfiles), pg_trgm migration, DAL rewrite with dynamic filtering
+- [x] 05-02-PLAN.md -- Enhanced filter UI, save/unsave functionality, browse page wiring
+- [x] 05-03-PLAN.md -- Saved profiles page, navigation, and end-to-end verification
 
 ---
 
@@ -218,7 +218,7 @@ Plans:
 | 2 - CV Parsing Pipeline | Complete | 2026-02-20 |
 | 3 - Admin Review and Profiles | Complete | 2026-02-20 |
 | 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
-| 5 - Search and Discovery | Planning complete | -- |
+| 5 - Search and Discovery | Complete | 2026-02-20 |
 | 6 - Monetization | Not started | -- |
 | 7 - Candidate Self-Service | Not started | -- |
 | 8 - Job Posting and AI Matching | Not started | -- |

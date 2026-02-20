@@ -19,9 +19,9 @@
 ### Marketplace
 
 - [x] **MARK-01**: Employers can browse anonymized candidate profiles (no name/contact details) -- enforced server-side
-- [ ] **MARK-02**: Employers can search and filter candidates by IP specialization, experience, location, tech background, patent bar status
+- [x] **MARK-02**: Employers can search and filter candidates by IP specialization, experience, location, tech background, patent bar status
 - [ ] **MARK-03**: Employers can pay per-profile via Stripe to unlock a candidate's full contact details and name
-- [ ] **MARK-04**: Employers can save/favorite profiles for later viewing
+- [x] **MARK-04**: Employers can save/favorite profiles for later viewing
 
 ### Job Matching
 
@@ -65,9 +65,9 @@
 | PROF-03 | Phase 3 | 03-03, 03-04 | Complete |
 | PROF-04 | Phase 7 | -- | Pending |
 | MARK-01 | Phase 4 | 04-01, 04-04 | Complete |
-| MARK-02 | Phase 5 | -- | Pending |
+| MARK-02 | Phase 5 | 05-01, 05-02 | Complete |
 | MARK-03 | Phase 6 | -- | Pending |
-| MARK-04 | Phase 5 | -- | Pending |
+| MARK-04 | Phase 5 | 05-01, 05-02, 05-03 | Complete |
 | JOBS-01 | Phase 8 | -- | Pending |
 | JOBS-02 | Phase 8 | -- | Pending |
 | JOBS-03 | Phase 8 | -- | Pending |
@@ -77,4 +77,4 @@
 | ADMN-04 | Phase 2 | 02-03, 02-04 | Complete |
 
 ---
-*Last updated: 2026-02-20 after Phase 4 completion*
+*Last updated: 2026-02-20 after Phase 5 completion*
