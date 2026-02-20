@@ -1,17 +1,17 @@
 import { getUser } from '@/lib/dal'
 import { getEmployerProfile } from '@/lib/dal/admin-employers'
 import { getAnonymizedProfileById } from '@/lib/dal/employer-profiles'
+import { isProfileSaved } from '@/lib/dal/employer-saved'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { UnlockButton } from '@/components/employer/unlock-button'
+import { SaveButton } from '../saved-button'
 import {
   ArrowLeft,
   Briefcase,
@@ -49,6 +49,9 @@ export default async function ProfileDetailPage({
   const profile = await getAnonymizedProfileById(id)
   if (!profile) notFound()
 
+  // Check if profile is saved by this employer
+  const saved = await isProfileSaved(user.id, id)
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       {/* Back Link */}
@@ -64,6 +67,7 @@ export default async function ProfileDetailPage({
       <div className="flex items-center gap-3">
         <h1 className="text-3xl font-bold tracking-tight">IP Professional</h1>
         <Badge variant="secondary">{profile.experienceRange} experience</Badge>
+        <SaveButton profileId={profile.id} initialSaved={saved} />
       </div>
 
       {/* Main Content Card */}

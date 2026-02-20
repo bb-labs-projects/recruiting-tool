@@ -10,6 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Lock, Briefcase, GraduationCap, Scale } from 'lucide-react'
+import { SaveButton } from '@/app/(authenticated)/employer/browse/saved-button'
 import type { AnonymizedProfileDTO } from '@/lib/dal/employer-profiles'
 
 /**
@@ -17,13 +18,23 @@ import type { AnonymizedProfileDTO } from '@/lib/dal/employer-profiles'
  * Displays ONLY non-PII data: specializations, experience range,
  * bar admissions, education summary, and anonymized work history.
  * NEVER shows name, email, phone, or employer names.
+ * Includes save/unsave heart button with optimistic UI.
  */
-export function ProfileCard({ profile }: { profile: AnonymizedProfileDTO }) {
+export function ProfileCard({
+  profile,
+  isSaved,
+}: {
+  profile: AnonymizedProfileDTO
+  isSaved: boolean
+}) {
   return (
     <Card className="flex h-full flex-col">
-      <CardHeader>
-        <CardTitle>IP Professional</CardTitle>
-        <CardDescription>{profile.experienceRange} experience</CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div>
+          <CardTitle>IP Professional</CardTitle>
+          <CardDescription>{profile.experienceRange} experience</CardDescription>
+        </div>
+        <SaveButton profileId={profile.id} initialSaved={isSaved} size="sm" />
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col gap-4">
