@@ -190,7 +190,13 @@ Plans:
 
 **Notes:** Reuses the parsing pipeline from Phase 2 and the profile display patterns from Phase 4. The key addition is the candidate-facing registration flow and profile editing UI. Duplicate detection (email matching, name+firm matching) should flag potential overlaps between agency-uploaded and self-registered profiles.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 4 plans
+
+Plans:
+- [ ] 07-01-PLAN.md -- Schema change (userId on profiles), relations, SQL migration, candidate DAL
+- [ ] 07-02-PLAN.md -- Candidate CV upload/parse/status API routes and profile server actions
+- [ ] 07-03-PLAN.md -- Candidate navigation, layout, and profile-aware dashboard
+- [ ] 07-04-PLAN.md -- Candidate CV upload page and profile view/edit page
 
 ---
 
@@ -225,7 +231,7 @@ Plans:
 | 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
 | 5 - Search and Discovery | Complete | 2026-02-20 |
 | 6 - Monetization | Complete | 2026-02-20 |
-| 7 - Candidate Self-Service | Not started | -- |
+| 7 - Candidate Self-Service | Planning complete | -- |
 | 8 - Job Posting and AI Matching | Not started | -- |
 
 ---
