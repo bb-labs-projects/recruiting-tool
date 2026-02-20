@@ -217,7 +217,13 @@ Plans:
 
 **Notes:** AI matching is the headline differentiator. Uses decomposed scoring rubric (specialization match, experience fit, technical background, location, bar admissions sub-scores). Match scores cached in `job_matches` table to avoid redundant API calls. Notifications via Resend email.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 4 plans
+
+Plans:
+- [ ] 08-01-PLAN.md -- Schema (jobs, jobMatches tables), enums, relations, DAL modules
+- [ ] 08-02-PLAN.md -- AI matching pipeline (pre-filter, scoring, caching, orchestrator)
+- [ ] 08-03-PLAN.md -- Job CRUD server actions, employer job UI (list, create, detail with matches)
+- [ ] 08-04-PLAN.md -- Admin job management, match notifications, and end-to-end verification
 
 ---
 
@@ -232,7 +238,7 @@ Plans:
 | 5 - Search and Discovery | Complete | 2026-02-20 |
 | 6 - Monetization | Complete | 2026-02-20 |
 | 7 - Candidate Self-Service | Planning complete | -- |
-| 8 - Job Posting and AI Matching | Not started | -- |
+| 8 - Job Posting and AI Matching | Planning complete | -- |
 
 ---
 
