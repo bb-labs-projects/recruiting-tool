@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md
 
 **Core value:** Automated CV parsing and intelligent job matching for IP lawyers -- turning unstructured PDF CVs into structured candidate profiles and using AI to match candidates against job requirements.
-**Current focus:** Phase 5 complete -- ready for Phase 6 (Monetization)
+**Current focus:** Phase 6 in progress -- Monetization (1 of 3 plans complete)
 
 ## Current Position
 
-Phase: 5 of 8 (Search and Discovery)
-Plan: 3 of 3 (Phase 5)
-Status: Phase complete (verified 4/5, gap auto-fixed)
-Last activity: 2026-02-20 -- Completed Phase 5 (all 3 plans executed, verification passed after auto-fix)
+Phase: 6 of 8 (Monetization)
+Plan: 1 of 3 (Phase 6)
+Status: In progress
+Last activity: 2026-02-20 -- Completed 06-01-PLAN.md (Stripe infrastructure and profile unlock backend)
 
-Progress: ████████████████████████████████████░ ~55% (22 of ~40 plans)
+Progress: █████████████████████████████████████████░ ~59% (23 of ~39 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
+- Total plans completed: 23
 - Average duration: ~4 min
 
 **By Phase:**
@@ -31,6 +31,7 @@ Progress: ███████████████████████�
 | 3 - Admin Review and Profiles | 5/5 | ~15 min | ~3 min |
 | 4 - Employer Onboarding/Browse | 5/5 | ~15 min | ~3 min |
 | 5 - Search and Discovery | 3/3 | ~16 min | ~5 min |
+| 6 - Monetization | 1/3 | ~5 min | ~5 min |
 
 ## Accumulated Context
 
@@ -60,16 +61,19 @@ Progress: ███████████████████████�
 - [05-01-D2] Post-query experience range filtering in JS (experience computed from work_history dates, not stored as column; fast enough at <1000 profiles)
 - [05-01-D3] URL param renamed from 'specialization' to 'spec' (shorter, supports multi-value via repeated params)
 - [05-03-D1] Extracted EmployerNav to shared component for Dashboard/Browse/Saved navigation with active state highlighting
+- [06-01-D1] Reused existing APP_URL env var for Stripe success/cancel URLs instead of adding NEXT_PUBLIC_URL
 
 ### Pending Todos
 
 - User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-03
-- User must run `npx drizzle-kit push` to apply schema to database (now includes CV parsing tables + profile status enum + review columns + employerProfiles table + employer_status enum + savedProfiles table)
+- User must run `npx drizzle-kit push` to apply schema to database (now includes CV parsing tables + profile status enum + review columns + employerProfiles table + employer_status enum + savedProfiles table + stripeEvents + profileUnlocks + profileViews)
 - User must run `drizzle/0001_enable_pg_trgm.sql` against the database to enable pg_trgm extension and GIN indexes for search
 - User must generate SESSION_SECRET (`openssl rand -base64 32`)
 - User must configure Resend API key and email address
 - User must set ANTHROPIC_API_KEY for Claude API CV parsing
 - User must set BLOB_READ_WRITE_TOKEN for Vercel Blob PDF storage
+- User must set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, and STRIPE_PRICE_AMOUNT for payment processing
+- User must configure Stripe webhook endpoint (CLI: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`)
 
 ### Blockers/Concerns
 
@@ -80,5 +84,5 @@ Progress: ███████████████████████�
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Phase 5 complete -- all plans executed, verification passed after auto-fix
+Stopped at: Completed 06-01-PLAN.md (Stripe infrastructure and profile unlock backend)
 Resume file: None
