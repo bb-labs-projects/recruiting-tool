@@ -138,7 +138,12 @@ Plans:
 
 **Notes:** Uses PostgreSQL full-text search with pg_trgm for text matching, plus structured filters on junction tables (specializations, bar admissions, technical domains). Sufficient for <1000 candidates -- no Elasticsearch needed.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md -- Schema extension (savedProfiles), pg_trgm migration, DAL rewrite with dynamic filtering
+- [ ] 05-02-PLAN.md -- Enhanced filter UI, save/unsave functionality, browse page wiring
+- [ ] 05-03-PLAN.md -- Saved profiles page, navigation, and end-to-end verification
 
 ---
 
@@ -213,7 +218,7 @@ Plans:
 | 2 - CV Parsing Pipeline | Complete | 2026-02-20 |
 | 3 - Admin Review and Profiles | Complete | 2026-02-20 |
 | 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
-| 5 - Search and Discovery | Not started | -- |
+| 5 - Search and Discovery | Planning complete | -- |
 | 6 - Monetization | Not started | -- |
 | 7 - Candidate Self-Service | Not started | -- |
 | 8 - Job Posting and AI Matching | Not started | -- |
