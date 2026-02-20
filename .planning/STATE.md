@@ -10,24 +10,24 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Phase: 2 of 8 (CV Parsing Pipeline)
-Plan: 1 of 4 (Phase 2)
+Plan: 2 of 4 (Phase 2)
 Status: In progress
-Last activity: 2026-02-20 -- Completed 02-01-PLAN.md (schema + packages)
+Last activity: 2026-02-20 -- Completed 02-02-PLAN.md (CV parser core)
 
-Progress: ████████████░░░░░░░░ ~15% (6 of ~40 plans)
+Progress: █████████████░░░░░░░ ~18% (7 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: ~5.5 min
+- Total plans completed: 7
+- Average duration: ~5 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
-| 2 - CV Parsing Pipeline | 1/4 | ~3 min | ~3 min |
+| 2 - CV Parsing Pipeline | 2/4 | ~6 min | ~3 min |
 
 ## Accumulated Context
 
@@ -64,5 +64,5 @@ Progress: ████████████░░░░░░░░ ~15% (6 o
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 02-01-PLAN.md (schema extension + packages)
+Stopped at: Completed 02-02-PLAN.md (CV parser core)
 Resume file: None
