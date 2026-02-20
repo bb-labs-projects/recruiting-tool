@@ -110,7 +110,14 @@ Plans:
 
 **Notes:** Anonymization is the business model. If employers can identify candidates without paying, the platform has no revenue. Server-side field stripping at the data access layer is non-negotiable. Tiered data disclosure: show experience ranges (not exact years), suppress firm names, use IP specialization categories (not specific matter details).
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 5 plans
+
+Plans:
+- [ ] 04-01-PLAN.md -- Schema extension, anonymization utils, DAL modules, and server actions
+- [ ] 04-02-PLAN.md -- Employer registration flow and approval-gated layout
+- [ ] 04-03-PLAN.md -- Admin employer management (list, detail, approve/reject)
+- [ ] 04-04-PLAN.md -- Employer anonymized browse UI with search, filters, and profile detail
+- [ ] 04-05-PLAN.md -- End-to-end verification checkpoint
 
 ---
 
@@ -205,7 +212,7 @@ Plans:
 | 1 - Foundation and Auth | Complete | 2026-02-20 |
 | 2 - CV Parsing Pipeline | Complete | 2026-02-20 |
 | 3 - Admin Review and Profiles | Complete | 2026-02-20 |
-| 4 - Employer Onboarding and Browse | Not started | -- |
+| 4 - Employer Onboarding and Browse | Planned | -- |
 | 5 - Search and Discovery | Not started | -- |
 | 6 - Monetization | Not started | -- |
 | 7 - Candidate Self-Service | Not started | -- |
