@@ -23,6 +23,13 @@ async function requireAdmin() {
 // Action 1: registerEmployer
 // ---------------------------------------------------------------------------
 
+export type RegisterEmployerState =
+  | {
+      success?: boolean
+      error?: string
+    }
+  | undefined
+
 const RegisterEmployerSchema = z.object({
   companyName: z.string().min(1, 'Company name is required').max(255),
   companyWebsite: z.string().url('Must be a valid URL').optional().or(z.literal('')),
@@ -31,7 +38,16 @@ const RegisterEmployerSchema = z.object({
   phone: z.string().max(50).optional().or(z.literal('')),
 })
 
-export async function registerEmployer(formData: FormData) {
+/**
+ * Server action for employer registration form.
+ *
+ * Compatible with React useActionState:
+ *   const [state, action, pending] = useActionState(registerEmployer, undefined)
+ */
+export async function registerEmployer(
+  _prevState: RegisterEmployerState,
+  formData: FormData
+): Promise<RegisterEmployerState> {
   try {
     const user = await getUser()
     if (!user || user.role !== 'employer') {
