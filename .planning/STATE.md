@@ -5,28 +5,29 @@
 See: .planning/PROJECT.md
 
 **Core value:** Automated CV parsing and intelligent job matching for IP lawyers -- turning unstructured PDF CVs into structured candidate profiles and using AI to match candidates against job requirements.
-**Current focus:** Phase 1 complete -- ready for Phase 2
+**Current focus:** Phase 2 -- CV Parsing Pipeline (in progress)
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation and Auth) -- VERIFIED COMPLETE
-Plan: 5 of 5 (Phase 1)
-Status: Phase 1 verified (5/5 must-haves passed)
-Last activity: 2026-02-20 -- Phase 1 verified, 19 Playwright tests passed
+Phase: 2 of 8 (CV Parsing Pipeline)
+Plan: 1 of 4 (Phase 2)
+Status: In progress
+Last activity: 2026-02-20 -- Completed 02-01-PLAN.md (schema + packages)
 
-Progress: ██████████░░░░░░░░░░ ~12.5% (1 of 8 phases)
+Progress: ████████████░░░░░░░░ ~15% (6 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: ~6 min
+- Total plans completed: 6
+- Average duration: ~5.5 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
+| 2 - CV Parsing Pipeline | 1/4 | ~3 min | ~3 min |
 
 ## Accumulated Context
 
@@ -48,9 +49,11 @@ Progress: ██████████░░░░░░░░░░ ~12.5% (1
 ### Pending Todos
 
 - User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-03
-- User must run `npx drizzle-kit push` to apply schema to database
+- User must run `npx drizzle-kit push` to apply schema to database (now includes CV parsing tables)
 - User must generate SESSION_SECRET (`openssl rand -base64 32`)
 - User must configure Resend API key and email address
+- User must set ANTHROPIC_API_KEY for Claude API CV parsing
+- User must set BLOB_READ_WRITE_TOKEN for Vercel Blob PDF storage
 
 ### Blockers/Concerns
 
@@ -61,5 +64,5 @@ Progress: ██████████░░░░░░░░░░ ~12.5% (1
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Phase 1 verified complete -- ready for Phase 2
+Stopped at: Completed 02-01-PLAN.md (schema extension + packages)
 Resume file: None
