@@ -158,3 +158,183 @@ export async function updateProfileField(formData: FormData) {
     return { error: 'Failed to update field' }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Action 4: updateEducation
+// ---------------------------------------------------------------------------
+
+const UpdateEducationSchema = z.object({
+  educationId: z.string().uuid(),
+  profileId: z.string().uuid(),
+  institution: z.string().min(1, 'Institution is required'),
+  degree: z.string().min(1, 'Degree is required'),
+  field: z.string().min(1, 'Field of study is required'),
+  year: z.string().optional().or(z.literal('')),
+})
+
+export async function updateEducation(formData: FormData) {
+  try {
+    await requireAdmin()
+
+    const parsed = UpdateEducationSchema.safeParse({
+      educationId: formData.get('educationId'),
+      profileId: formData.get('profileId'),
+      institution: formData.get('institution'),
+      degree: formData.get('degree'),
+      field: formData.get('field'),
+      year: formData.get('year'),
+    })
+
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors
+      const firstError = Object.values(fieldErrors).flat()[0]
+      return { error: firstError ?? 'Invalid input' }
+    }
+
+    await db
+      .update(education)
+      .set({
+        institution: parsed.data.institution,
+        degree: parsed.data.degree,
+        field: parsed.data.field,
+        year: parsed.data.year || null,
+        confidence: 'high',
+      })
+      .where(
+        and(
+          eq(education.id, parsed.data.educationId),
+          eq(education.profileId, parsed.data.profileId),
+        )
+      )
+
+    revalidatePath(`/admin/candidates/${parsed.data.profileId}`)
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('updateEducation error:', error)
+    return { error: 'Failed to update education entry' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 5: updateWorkHistory
+// ---------------------------------------------------------------------------
+
+const UpdateWorkHistorySchema = z.object({
+  workHistoryId: z.string().uuid(),
+  profileId: z.string().uuid(),
+  employer: z.string().min(1, 'Employer is required'),
+  title: z.string().min(1, 'Title is required'),
+  startDate: z.string().optional().or(z.literal('')),
+  endDate: z.string().optional().or(z.literal('')),
+  description: z.string().optional().or(z.literal('')),
+})
+
+export async function updateWorkHistory(formData: FormData) {
+  try {
+    await requireAdmin()
+
+    const parsed = UpdateWorkHistorySchema.safeParse({
+      workHistoryId: formData.get('workHistoryId'),
+      profileId: formData.get('profileId'),
+      employer: formData.get('employer'),
+      title: formData.get('title'),
+      startDate: formData.get('startDate'),
+      endDate: formData.get('endDate'),
+      description: formData.get('description'),
+    })
+
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors
+      const firstError = Object.values(fieldErrors).flat()[0]
+      return { error: firstError ?? 'Invalid input' }
+    }
+
+    await db
+      .update(workHistory)
+      .set({
+        employer: parsed.data.employer,
+        title: parsed.data.title,
+        startDate: parsed.data.startDate || null,
+        endDate: parsed.data.endDate || null,
+        description: parsed.data.description || null,
+        confidence: 'high',
+      })
+      .where(
+        and(
+          eq(workHistory.id, parsed.data.workHistoryId),
+          eq(workHistory.profileId, parsed.data.profileId),
+        )
+      )
+
+    revalidatePath(`/admin/candidates/${parsed.data.profileId}`)
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('updateWorkHistory error:', error)
+    return { error: 'Failed to update work history entry' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 6: updateBarAdmission
+// ---------------------------------------------------------------------------
+
+const UpdateBarAdmissionSchema = z.object({
+  barAdmissionId: z.string().uuid(),
+  profileId: z.string().uuid(),
+  jurisdiction: z.string().min(1, 'Jurisdiction is required'),
+  year: z.string().optional().or(z.literal('')),
+  status: z.string().optional().or(z.literal('')),
+})
+
+export async function updateBarAdmission(formData: FormData) {
+  try {
+    await requireAdmin()
+
+    const parsed = UpdateBarAdmissionSchema.safeParse({
+      barAdmissionId: formData.get('barAdmissionId'),
+      profileId: formData.get('profileId'),
+      jurisdiction: formData.get('jurisdiction'),
+      year: formData.get('year'),
+      status: formData.get('status'),
+    })
+
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors
+      const firstError = Object.values(fieldErrors).flat()[0]
+      return { error: firstError ?? 'Invalid input' }
+    }
+
+    await db
+      .update(barAdmissions)
+      .set({
+        jurisdiction: parsed.data.jurisdiction,
+        year: parsed.data.year || null,
+        status: parsed.data.status || null,
+        confidence: 'high',
+      })
+      .where(
+        and(
+          eq(barAdmissions.id, parsed.data.barAdmissionId),
+          eq(barAdmissions.profileId, parsed.data.profileId),
+        )
+      )
+
+    revalidatePath(`/admin/candidates/${parsed.data.profileId}`)
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('updateBarAdmission error:', error)
+    return { error: 'Failed to update bar admission entry' }
+  }
+}
