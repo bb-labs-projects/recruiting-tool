@@ -13,6 +13,7 @@ import {
 } from '@/lib/db/schema'
 import { eq, and, exists, ilike, inArray, sql, type SQL } from 'drizzle-orm'
 import { bucketExperienceYears, anonymizeWorkHistory } from '@/lib/anonymize'
+import { isProfileUnlocked } from '@/lib/dal/employer-unlocks'
 
 // Source: https://nextjs.org/docs/app/guides/data-security (DTO pattern)
 
@@ -406,6 +407,143 @@ export const getAnonymizedProfileById = cache(
           `${ba.jurisdiction}${ba.status ? ` (${ba.status})` : ''}`
       ),
       workHistorySummary: anonymizeWorkHistory(profile.workHistory),
+    }
+  }
+)
+
+/**
+ * Full profile DTO for employers who have unlocked a candidate.
+ * Includes PII fields (name, email, phone) and full work history
+ * with employer names and descriptions.
+ */
+export type FullProfileDTO = {
+  id: string
+  name: string
+  email: string | null
+  phone: string | null
+  specializations: string[]
+  technicalDomains: string[]
+  experienceRange: string
+  education: {
+    institution: string
+    degree: string
+    field: string
+    year: string | null
+  }[]
+  barAdmissions: {
+    jurisdiction: string
+    status: string | null
+    year: string | null
+  }[]
+  workHistory: {
+    employer: string
+    title: string
+    startDate: string | null
+    endDate: string | null
+    description: string | null
+  }[]
+}
+
+/**
+ * Get a full profile by ID for an employer who has unlocked it.
+ * Returns ALL fields including PII (name, email, phone) and full work history
+ * with employer names and descriptions.
+ *
+ * Access is gated by unlock record: returns null if the employer has not unlocked
+ * this profile or if the profile is not active.
+ */
+export const getFullProfileById = cache(
+  async (
+    profileId: string,
+    employerUserId: string
+  ): Promise<FullProfileDTO | null> => {
+    // Gate access: only return PII if employer has paid for this profile
+    const unlocked = await isProfileUnlocked(employerUserId, profileId)
+    if (!unlocked) return null
+
+    const profile = await db.query.profiles.findFirst({
+      where: (profiles, { eq, and }) =>
+        and(eq(profiles.id, profileId), eq(profiles.status, 'active')),
+      columns: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+      },
+      with: {
+        profileSpecializations: {
+          with: {
+            specialization: {
+              columns: { name: true },
+            },
+          },
+        },
+        profileTechnicalDomains: {
+          with: {
+            technicalDomain: {
+              columns: { name: true },
+            },
+          },
+        },
+        education: {
+          columns: {
+            institution: true,
+            degree: true,
+            field: true,
+            year: true,
+          },
+        },
+        barAdmissions: {
+          columns: {
+            jurisdiction: true,
+            status: true,
+            year: true,
+          },
+        },
+        workHistory: {
+          columns: {
+            employer: true,
+            title: true,
+            startDate: true,
+            endDate: true,
+            description: true,
+          },
+        },
+      },
+    })
+
+    if (!profile) return null
+
+    return {
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      phone: profile.phone,
+      specializations: profile.profileSpecializations.map(
+        (ps) => ps.specialization.name
+      ),
+      technicalDomains: profile.profileTechnicalDomains.map(
+        (ptd) => ptd.technicalDomain.name
+      ),
+      experienceRange: bucketExperienceYears(profile.workHistory),
+      education: profile.education.map((e) => ({
+        institution: e.institution,
+        degree: e.degree,
+        field: e.field,
+        year: e.year,
+      })),
+      barAdmissions: profile.barAdmissions.map((ba) => ({
+        jurisdiction: ba.jurisdiction,
+        status: ba.status,
+        year: ba.year,
+      })),
+      workHistory: profile.workHistory.map((wh) => ({
+        employer: wh.employer,
+        title: wh.title,
+        startDate: wh.startDate,
+        endDate: wh.endDate,
+        description: wh.description,
+      })),
     }
   }
 )
