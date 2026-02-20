@@ -20,9 +20,9 @@ key-files:
 decisions:
   - "Nav links always visible; page-level approval gates handle access control (consistent with 04-02-D1)"
 metrics:
-  duration: pending (checkpoint reached)
-  completed: pending
-status: partial -- Task 1 complete, Task 2 (human-verify) pending
+  duration: ~5 min
+  completed: 2026-02-20
+status: complete
 ---
 
 # Phase 5 Plan 3: Saved Profiles Page and End-to-End Verification Summary
@@ -50,8 +50,17 @@ Saved profiles list page with employer navigation bar, plus dashboard card updat
 - Updated `src/app/(authenticated)/employer/page.tsx`:
   - Changed Saved Profiles dashboard card from "Coming soon" static card to clickable Link
 
-### Task 2: End-to-End Verification (PENDING)
-Awaiting human verification of the full Phase 5 search and discovery feature.
+### Task 2: End-to-End Verification (APPROVED)
+Human verification of the full Phase 5 search and discovery feature completed. All 9 tests passed:
+- Filter by specialization works with URL param sync
+- Multiple combined filters (AND between types, OR within types)
+- Free-text search with debounce, no PII leakage
+- Patent bar and location filters
+- Save/unsave with optimistic UI and database persistence
+- Saved profiles page shows correct profiles with unsave capability
+- Empty states provide actionable guidance
+- Pagination with filter persistence and page reset
+- URL shareability (copy URL, paste in new tab, same results)
 
 ## Deviations from Plan
 
@@ -87,4 +96,5 @@ Awaiting human verification of the full Phase 5 search and discovery feature.
 
 - Saved profiles page is complete and renders the same ProfileCard grid as browse
 - Employer navigation provides easy access between Dashboard, Browse, and Saved
-- End-to-end verification pending human testing (Task 2)
+- End-to-end verification passed -- all search, filter, save, and navigation features working correctly
+- Ready for Phase 5 Plan 4 (AI matching) and Plan 5 (profile unlock/payment)
