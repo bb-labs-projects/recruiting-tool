@@ -70,22 +70,24 @@ export default async function EmployerDashboardPage() {
           </Card>
         </Link>
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Bookmark className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Saved Profiles</CardTitle>
-            </div>
-            <CardDescription>
-              View your shortlisted candidates
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Coming soon.
-            </p>
-          </CardContent>
-        </Card>
+        <Link href="/employer/saved" className="block">
+          <Card className="h-full transition-colors hover:border-primary/50">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Bookmark className="h-5 w-5 text-muted-foreground" />
+                <CardTitle>Saved Profiles</CardTitle>
+              </div>
+              <CardDescription>
+                View your shortlisted candidates
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Review profiles you&apos;ve saved for later.
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
 
         <Card>
           <CardHeader>
