@@ -35,12 +35,12 @@ const TECHNICAL_DOMAINS = [
 ]
 
 const EXPERIENCE_RANGES = [
-  { value: '<2', label: '< 2 years' },
-  { value: '2-5', label: '2-5 years' },
-  { value: '5-10', label: '5-10 years' },
-  { value: '10-15', label: '10-15 years' },
-  { value: '15-20', label: '15-20 years' },
-  { value: '20+', label: '20+ years' },
+  { value: '< 2 years', label: '< 2 years' },
+  { value: '2-5 years', label: '2-5 years' },
+  { value: '5-10 years', label: '5-10 years' },
+  { value: '10-15 years', label: '10-15 years' },
+  { value: '15-20 years', label: '15-20 years' },
+  { value: '20+ years', label: '20+ years' },
 ]
 
 /**
