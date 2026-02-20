@@ -12,6 +12,9 @@ import {
   technicalDomains,
   employerProfiles,
   savedProfiles,
+  profileUnlocks,
+  profileViews,
+  stripeEvents,
 } from './schema'
 
 export const profilesRelations = relations(profiles, ({ many }) => ({
@@ -22,6 +25,8 @@ export const profilesRelations = relations(profiles, ({ many }) => ({
   profileTechnicalDomains: many(profileTechnicalDomains),
   cvUploads: many(cvUploads),
   savedProfiles: many(savedProfiles),
+  profileUnlocks: many(profileUnlocks),
+  profileViews: many(profileViews),
 }))
 
 export const educationRelations = relations(education, ({ one }) => ({
@@ -86,6 +91,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [employerProfiles.userId],
   }),
   savedProfiles: many(savedProfiles),
+  profileUnlocks: many(profileUnlocks),
+  profileViews: many(profileViews),
 }))
 
 export const employerProfilesRelations = relations(
@@ -111,6 +118,28 @@ export const savedProfilesRelations = relations(savedProfiles, ({ one }) => ({
   }),
   profile: one(profiles, {
     fields: [savedProfiles.profileId],
+    references: [profiles.id],
+  }),
+}))
+
+export const profileUnlocksRelations = relations(profileUnlocks, ({ one }) => ({
+  user: one(users, {
+    fields: [profileUnlocks.employerUserId],
+    references: [users.id],
+  }),
+  profile: one(profiles, {
+    fields: [profileUnlocks.profileId],
+    references: [profiles.id],
+  }),
+}))
+
+export const profileViewsRelations = relations(profileViews, ({ one }) => ({
+  user: one(users, {
+    fields: [profileViews.employerUserId],
+    references: [users.id],
+  }),
+  profile: one(profiles, {
+    fields: [profileViews.profileId],
     references: [profiles.id],
   }),
 }))

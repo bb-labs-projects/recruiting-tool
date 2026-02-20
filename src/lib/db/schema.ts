@@ -6,6 +6,7 @@ import {
   boolean,
   timestamp,
   text,
+  integer,
   index,
   uniqueIndex,
   primaryKey,
@@ -222,4 +223,49 @@ export const savedProfiles = pgTable('saved_profiles', {
   primaryKey({ columns: [table.employerUserId, table.profileId] }),
   index('saved_profiles_employer_idx').on(table.employerUserId),
   index('saved_profiles_profile_idx').on(table.profileId),
+])
+
+// Stripe event deduplication table
+export const stripeEvents = pgTable('stripe_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  stripeEventId: varchar('stripe_event_id', { length: 255 }).unique().notNull(),
+  eventType: varchar('event_type', { length: 100 }).notNull(),
+  processedAt: timestamp('processed_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('stripe_events_event_id_idx').on(table.stripeEventId),
+])
+
+// Profile unlocks table (which employer unlocked which candidate)
+export const profileUnlocks = pgTable('profile_unlocks', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  employerUserId: uuid('employer_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
+  stripeSessionId: varchar('stripe_session_id', { length: 255 }).notNull(),
+  amountPaid: integer('amount_paid').notNull(),
+  currency: varchar('currency', { length: 3 }).notNull().default('usd'),
+  unlockedAt: timestamp('unlocked_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex('profile_unlocks_employer_profile_idx').on(table.employerUserId, table.profileId),
+  index('profile_unlocks_employer_idx').on(table.employerUserId),
+  index('profile_unlocks_profile_idx').on(table.profileId),
+])
+
+// Profile views table (analytics tracking)
+export const profileViews = pgTable('profile_views', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  employerUserId: uuid('employer_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
+  viewedAt: timestamp('viewed_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index('profile_views_profile_idx').on(table.profileId),
+  index('profile_views_employer_idx').on(table.employerUserId),
+  index('profile_views_viewed_at_idx').on(table.viewedAt),
 ])
