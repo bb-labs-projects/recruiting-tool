@@ -82,7 +82,14 @@ Plans:
 
 **Notes:** This phase ensures data quality before any employer-facing features. The review UI is critical -- bad data that slips through here poisons search results, matching, and employer trust.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 5 plans
+
+Plans:
+- [ ] 03-01-PLAN.md -- Schema extension, Drizzle relations, packages, badge components
+- [ ] 03-02-PLAN.md -- Server actions for profile CRUD (approve, reject, edit)
+- [ ] 03-03-PLAN.md -- Candidate list page with TanStack Table
+- [ ] 03-04-PLAN.md -- Profile detail page with inline editing and PDF side-by-side view
+- [ ] 03-05-PLAN.md -- End-to-end verification checkpoint
 
 ---
 
@@ -197,7 +204,7 @@ Plans:
 |-------|--------|-----------|
 | 1 - Foundation and Auth | Complete | 2026-02-20 |
 | 2 - CV Parsing Pipeline | Planned | -- |
-| 3 - Admin Review and Profiles | Not started | -- |
+| 3 - Admin Review and Profiles | Planned | -- |
 | 4 - Employer Onboarding and Browse | Not started | -- |
 | 5 - Search and Discovery | Not started | -- |
 | 6 - Monetization | Not started | -- |
