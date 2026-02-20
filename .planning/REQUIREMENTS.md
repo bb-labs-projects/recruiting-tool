@@ -4,9 +4,9 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can request a magic link via email and log in without a password
-- [ ] **AUTH-02**: System routes user to candidate or employer experience based on role after login
-- [ ] **AUTH-03**: Admin can log in with super-user privileges to access the admin dashboard
+- [x] **AUTH-01**: User can request a magic link via email and log in without a password
+- [x] **AUTH-02**: System routes user to candidate or employer experience based on role after login
+- [x] **AUTH-03**: Admin can log in with super-user privileges to access the admin dashboard
 - [ ] **AUTH-04**: New employer accounts require admin approval before they can browse profiles
 
 ### CV Parsing & Profiles
@@ -56,9 +56,9 @@
 
 | Requirement | Phase | Plan | Status |
 |-------------|-------|------|--------|
-| AUTH-01 | Phase 1 | -- | Pending |
-| AUTH-02 | Phase 1 | -- | Pending |
-| AUTH-03 | Phase 1 | -- | Pending |
+| AUTH-01 | Phase 1 | 01-03, 01-05 | Complete |
+| AUTH-02 | Phase 1 | 01-04, 01-05 | Complete |
+| AUTH-03 | Phase 1 | 01-02, 01-04 | Complete |
 | AUTH-04 | Phase 4 | -- | Pending |
 | PROF-01 | Phase 2 | -- | Pending |
 | PROF-02 | Phase 2 | -- | Pending |
@@ -77,4 +77,4 @@
 | ADMN-04 | Phase 2 | -- | Pending |
 
 ---
-*Last updated: 2026-02-19 after roadmap creation*
+*Last updated: 2026-02-20 after Phase 1 completion*

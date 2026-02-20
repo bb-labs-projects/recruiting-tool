@@ -30,11 +30,11 @@ This roadmap follows the critical path to revenue identified in research: authen
 **Plans:** 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md -- Project scaffolding, dependencies, database schema
-- [ ] 01-02-PLAN.md -- Auth libraries (session, tokens, rate limit) + DAL + proxy
-- [ ] 01-03-PLAN.md -- Auth API routes, server action, email template
-- [ ] 01-04-PLAN.md -- Route group structure, layouts, role-based placeholder pages
-- [ ] 01-05-PLAN.md -- Auth UI components, wiring, end-to-end verification
+- [x] 01-01-PLAN.md -- Project scaffolding, dependencies, database schema
+- [x] 01-02-PLAN.md -- Auth libraries (session, tokens, rate limit) + DAL + proxy
+- [x] 01-03-PLAN.md -- Auth API routes, server action, email template
+- [x] 01-04-PLAN.md -- Route group structure, layouts, role-based placeholder pages
+- [x] 01-05-PLAN.md -- Auth UI components, wiring, end-to-end verification
 
 ---
 
@@ -189,7 +189,7 @@ Plans:
 
 | Phase | Status | Completed |
 |-------|--------|-----------|
-| 1 - Foundation and Auth | Planned | -- |
+| 1 - Foundation and Auth | Complete | 2026-02-20 |
 | 2 - CV Parsing Pipeline | Not started | -- |
 | 3 - Admin Review and Profiles | Not started | -- |
 | 4 - Employer Onboarding and Browse | Not started | -- |
