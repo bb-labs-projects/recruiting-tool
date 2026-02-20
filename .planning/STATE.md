@@ -10,16 +10,16 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Phase: 3 of 8 (Admin Review and Profile Management)
-Plan: 3 of 5 (Phase 3)
+Plan: 4 of 5 (Phase 3)
 Status: In progress
-Last activity: 2026-02-20 -- Completed 03-03-PLAN.md (Candidate list page with data table)
+Last activity: 2026-02-20 -- Completed 03-04-PLAN.md (Profile detail with inline editing)
 
-Progress: ██████████████████████░░ ~30% (12 of ~40 plans)
+Progress: ███████████████████████░░ ~33% (13 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: ~5 min
 
 **By Phase:**
@@ -28,7 +28,7 @@ Progress: ██████████████████████░�
 |-------|-------|-------|----------|
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
 | 2 - CV Parsing Pipeline | 4/4 | ~11 min | ~3 min |
-| 3 - Admin Review and Profiles | 3/5 | ~9 min | ~3 min |
+| 3 - Admin Review and Profiles | 4/5 | ~14 min | ~3.5 min |
 
 ## Accumulated Context
 
@@ -46,6 +46,8 @@ Progress: ██████████████████████░�
 - [01-02-D2] Role-mismatched proxy redirects go to user's dashboard (not /login) for better UX
 - [01-03-D1] Inline HTML for email template instead of React email components (simpler, better email client compatibility)
 - [01-03-D2] Server action uses 'server-action' as IP/userAgent placeholder (Next.js server actions lack request header access)
+- [03-04-D1] Used useTransition instead of useActionState for approve/reject actions to avoid complex type narrowing issues
+- [03-04-D2] Used orientation prop instead of direction for ResizablePanelGroup (react-resizable-panels v3 API)
 
 ### Pending Todos
 
@@ -65,5 +67,5 @@ Progress: ██████████████████████░�
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 03-03-PLAN.md (Candidate list page with data table)
+Stopped at: Completed 03-04-PLAN.md (Profile detail with inline editing)
 Resume file: None
