@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md
 
 **Core value:** Automated CV parsing and intelligent job matching for IP lawyers -- turning unstructured PDF CVs into structured candidate profiles and using AI to match candidates against job requirements.
-**Current focus:** Phase 2 -- CV Parsing Pipeline (complete, pending user verification)
+**Current focus:** Phase 3 -- Admin Review and Profile Management
 
 ## Current Position
 
-Phase: 2 of 8 (CV Parsing Pipeline)
-Plan: 4 of 4 (Phase 2)
-Status: Phase complete (pending user verification checkpoint)
-Last activity: 2026-02-20 -- Completed 02-04-PLAN.md (Admin CV Upload UI)
+Phase: 3 of 8 (Admin Review and Profile Management)
+Plan: 1 of 5 (Phase 3)
+Status: In progress
+Last activity: 2026-02-20 -- Completed 03-01-PLAN.md (Schema extension, relations, packages, badges)
 
-Progress: ██████████████████░░ ~23% (9 of ~40 plans)
+Progress: ████████████████████░░ ~25% (10 of ~40 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: ~5 min
 
 **By Phase:**
@@ -28,6 +28,7 @@ Progress: ██████████████████░░ ~23% (9 o
 |-------|-------|-------|----------|
 | 1 - Foundation and Auth | 5/5 | ~30 min | ~6 min |
 | 2 - CV Parsing Pipeline | 4/4 | ~11 min | ~3 min |
+| 3 - Admin Review and Profiles | 1/5 | ~3 min | ~3 min |
 
 ## Accumulated Context
 
@@ -49,7 +50,7 @@ Progress: ██████████████████░░ ~23% (9 o
 ### Pending Todos
 
 - User must set up Neon PostgreSQL and configure DATABASE_URL before Plan 01-03
-- User must run `npx drizzle-kit push` to apply schema to database (now includes CV parsing tables)
+- User must run `npx drizzle-kit push` to apply schema to database (now includes CV parsing tables + profile status enum and review columns)
 - User must generate SESSION_SECRET (`openssl rand -base64 32`)
 - User must configure Resend API key and email address
 - User must set ANTHROPIC_API_KEY for Claude API CV parsing
@@ -64,5 +65,5 @@ Progress: ██████████████████░░ ~23% (9 o
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 02-04-PLAN.md (Admin CV Upload UI) -- checkpoint pending user verification
+Stopped at: Completed 03-01-PLAN.md (Schema extension, relations, packages, badges)
 Resume file: None
