@@ -113,11 +113,11 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 04-01-PLAN.md -- Schema extension, anonymization utils, DAL modules, and server actions
-- [ ] 04-02-PLAN.md -- Employer registration flow and approval-gated layout
-- [ ] 04-03-PLAN.md -- Admin employer management (list, detail, approve/reject)
-- [ ] 04-04-PLAN.md -- Employer anonymized browse UI with search, filters, and profile detail
-- [ ] 04-05-PLAN.md -- End-to-end verification checkpoint
+- [x] 04-01-PLAN.md -- Schema extension, anonymization utils, DAL modules, and server actions
+- [x] 04-02-PLAN.md -- Employer registration flow and approval-gated layout
+- [x] 04-03-PLAN.md -- Admin employer management (list, detail, approve/reject)
+- [x] 04-04-PLAN.md -- Employer anonymized browse UI with search, filters, and profile detail
+- [x] 04-05-PLAN.md -- End-to-end verification checkpoint
 
 ---
 
@@ -212,7 +212,7 @@ Plans:
 | 1 - Foundation and Auth | Complete | 2026-02-20 |
 | 2 - CV Parsing Pipeline | Complete | 2026-02-20 |
 | 3 - Admin Review and Profiles | Complete | 2026-02-20 |
-| 4 - Employer Onboarding and Browse | Planned | -- |
+| 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
 | 5 - Search and Discovery | Not started | -- |
 | 6 - Monetization | Not started | -- |
 | 7 - Candidate Self-Service | Not started | -- |

@@ -7,7 +7,7 @@
 - [x] **AUTH-01**: User can request a magic link via email and log in without a password
 - [x] **AUTH-02**: System routes user to candidate or employer experience based on role after login
 - [x] **AUTH-03**: Admin can log in with super-user privileges to access the admin dashboard
-- [ ] **AUTH-04**: New employer accounts require admin approval before they can browse profiles
+- [x] **AUTH-04**: New employer accounts require admin approval before they can browse profiles
 
 ### CV Parsing & Profiles
 
@@ -18,7 +18,7 @@
 
 ### Marketplace
 
-- [ ] **MARK-01**: Employers can browse anonymized candidate profiles (no name/contact details) -- enforced server-side
+- [x] **MARK-01**: Employers can browse anonymized candidate profiles (no name/contact details) -- enforced server-side
 - [ ] **MARK-02**: Employers can search and filter candidates by IP specialization, experience, location, tech background, patent bar status
 - [ ] **MARK-03**: Employers can pay per-profile via Stripe to unlock a candidate's full contact details and name
 - [ ] **MARK-04**: Employers can save/favorite profiles for later viewing
@@ -32,7 +32,7 @@
 ### Admin Dashboard
 
 - [x] **ADMN-01**: Admin can view, edit, and manage all candidate profiles and parsed data
-- [ ] **ADMN-02**: Admin can approve, manage, and view activity of employer accounts
+- [x] **ADMN-02**: Admin can approve, manage, and view activity of employer accounts
 - [ ] **ADMN-03**: Admin can view analytics: profile views, unlock conversions, popular searches, revenue
 - [x] **ADMN-04**: Admin can batch-upload multiple CVs at once (initial 95 + ongoing)
 
@@ -59,12 +59,12 @@
 | AUTH-01 | Phase 1 | 01-03, 01-05 | Complete |
 | AUTH-02 | Phase 1 | 01-04, 01-05 | Complete |
 | AUTH-03 | Phase 1 | 01-02, 01-04 | Complete |
-| AUTH-04 | Phase 4 | -- | Pending |
+| AUTH-04 | Phase 4 | 04-01, 04-02 | Complete |
 | PROF-01 | Phase 2 | 02-01, 02-02, 02-03 | Complete |
 | PROF-02 | Phase 2 | 02-02, 02-04 | Complete |
 | PROF-03 | Phase 3 | 03-03, 03-04 | Complete |
 | PROF-04 | Phase 7 | -- | Pending |
-| MARK-01 | Phase 4 | -- | Pending |
+| MARK-01 | Phase 4 | 04-01, 04-04 | Complete |
 | MARK-02 | Phase 5 | -- | Pending |
 | MARK-03 | Phase 6 | -- | Pending |
 | MARK-04 | Phase 5 | -- | Pending |
@@ -72,9 +72,9 @@
 | JOBS-02 | Phase 8 | -- | Pending |
 | JOBS-03 | Phase 8 | -- | Pending |
 | ADMN-01 | Phase 3 | 03-02, 03-04 | Complete |
-| ADMN-02 | Phase 4 | -- | Pending |
+| ADMN-02 | Phase 4 | 04-03 | Complete |
 | ADMN-03 | Phase 6 | -- | Pending |
 | ADMN-04 | Phase 2 | 02-03, 02-04 | Complete |
 
 ---
-*Last updated: 2026-02-20 after Phase 3 completion*
+*Last updated: 2026-02-20 after Phase 4 completion*
