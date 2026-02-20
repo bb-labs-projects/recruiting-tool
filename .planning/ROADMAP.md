@@ -193,10 +193,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- Schema change (userId on profiles), relations, SQL migration, candidate DAL
-- [ ] 07-02-PLAN.md -- Candidate CV upload/parse/status API routes and profile server actions
-- [ ] 07-03-PLAN.md -- Candidate navigation, layout, and profile-aware dashboard
-- [ ] 07-04-PLAN.md -- Candidate CV upload page and profile view/edit page
+- [x] 07-01-PLAN.md -- Schema change (userId on profiles), relations, SQL migration, candidate DAL
+- [x] 07-02-PLAN.md -- Candidate CV upload/parse/status API routes and profile server actions
+- [x] 07-03-PLAN.md -- Candidate navigation, layout, and profile-aware dashboard
+- [x] 07-04-PLAN.md -- Candidate CV upload page and profile view/edit page
 
 ---
 
@@ -220,10 +220,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 08-01-PLAN.md -- Schema (jobs, jobMatches tables), enums, relations, DAL modules
-- [ ] 08-02-PLAN.md -- AI matching pipeline (pre-filter, scoring, caching, orchestrator)
-- [ ] 08-03-PLAN.md -- Job CRUD server actions, employer job UI (list, create, detail with matches)
-- [ ] 08-04-PLAN.md -- Admin job management, match notifications, and end-to-end verification
+- [x] 08-01-PLAN.md -- Schema (jobs, jobMatches tables), enums, relations, migration, DAL modules
+- [x] 08-02-PLAN.md -- AI matching pipeline (pre-filter, Claude scoring, caching, async API routes, auto-notifications)
+- [x] 08-03-PLAN.md -- Employer job UI (server actions, list/create/detail/edit pages, match results display)
+- [x] 08-04-PLAN.md -- Admin job management, employer selection, manual notification re-send
 
 ---
 
@@ -237,8 +237,8 @@ Plans:
 | 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
 | 5 - Search and Discovery | Complete | 2026-02-20 |
 | 6 - Monetization | Complete | 2026-02-20 |
-| 7 - Candidate Self-Service | Planning complete | -- |
-| 8 - Job Posting and AI Matching | Planning complete | -- |
+| 7 - Candidate Self-Service | Complete | 2026-02-20 |
+| 8 - Job Posting and AI Matching | Complete | 2026-02-20 |
 
 ---
 

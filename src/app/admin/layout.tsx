@@ -26,6 +26,7 @@ export default async function AdminLayout({
     { name: 'CV Upload', href: '/admin/cv-upload' },
     { name: 'Candidates', href: '/admin/candidates' },
     { name: 'Employers', href: '/admin/employers' },
+    { name: 'Jobs', href: '/admin/jobs' },
     { name: 'Analytics', href: '/admin/analytics' },
   ]
 

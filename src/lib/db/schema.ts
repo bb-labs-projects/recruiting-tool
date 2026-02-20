@@ -15,6 +15,12 @@ import {
 // Role enum
 export const userRoleEnum = pgEnum('user_role', ['candidate', 'employer', 'admin'])
 
+// Job status enum
+export const jobStatusEnum = pgEnum('job_status', ['draft', 'open', 'closed', 'archived'])
+
+// Matching status enum
+export const matchingStatusEnum = pgEnum('matching_status', ['pending', 'running', 'completed', 'failed'])
+
 // Users table
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -79,6 +85,7 @@ export const profileStatusEnum = pgEnum('profile_status', [
 // Profiles table
 export const profiles = pgTable('profiles', {
   id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
   name: varchar('name', { length: 255 }).notNull(),
   nameConfidence: confidenceEnum('name_confidence').notNull(),
   email: varchar('email', { length: 255 }),
@@ -87,12 +94,14 @@ export const profiles = pgTable('profiles', {
   phoneConfidence: confidenceEnum('phone_confidence').notNull(),
   status: profileStatusEnum('status').notNull().default('pending_review'),
   rejectionNotes: text('rejection_notes'),
+  duplicateNotes: text('duplicate_notes'),
   reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
   reviewedBy: uuid('reviewed_by').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
   index('profiles_status_idx').on(table.status),
+  index('profiles_user_id_idx').on(table.userId),
 ])
 
 // CV uploads table
@@ -268,4 +277,53 @@ export const profileViews = pgTable('profile_views', {
   index('profile_views_profile_idx').on(table.profileId),
   index('profile_views_employer_idx').on(table.employerUserId),
   index('profile_views_viewed_at_idx').on(table.viewedAt),
+])
+
+// Jobs table
+export const jobs = pgTable('jobs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  employerUserId: uuid('employer_user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description'),
+  status: jobStatusEnum('status').notNull().default('draft'),
+  matchingStatus: matchingStatusEnum('matching_status').notNull().default('pending'),
+  requiredSpecializations: text('required_specializations').array(),
+  preferredSpecializations: text('preferred_specializations').array(),
+  minimumExperience: integer('minimum_experience'),
+  preferredLocation: varchar('preferred_location', { length: 255 }),
+  requiredBar: text('required_bar').array(),
+  requiredTechnicalDomains: text('required_technical_domains').array(),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  matchedAt: timestamp('matched_at', { withTimezone: true }),
+}, (table) => [
+  index('jobs_employer_idx').on(table.employerUserId),
+  index('jobs_status_idx').on(table.status),
+])
+
+// Job matches table (cached AI matching results)
+export const jobMatches = pgTable('job_matches', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  jobId: uuid('job_id')
+    .notNull()
+    .references(() => jobs.id, { onDelete: 'cascade' }),
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
+  overallScore: integer('overall_score').notNull(),
+  subscores: text('subscores').notNull(),
+  summary: text('summary').notNull(),
+  recommendation: varchar('recommendation', { length: 50 }).notNull(),
+  scoredAt: timestamp('scored_at', { withTimezone: true }).defaultNow().notNull(),
+  notifiedAt: timestamp('notified_at', { withTimezone: true }),
+}, (table) => [
+  uniqueIndex('job_matches_job_profile_idx').on(table.jobId, table.profileId),
+  index('job_matches_job_idx').on(table.jobId),
+  index('job_matches_profile_idx').on(table.profileId),
+  index('job_matches_score_idx').on(table.jobId, table.overallScore),
 ])

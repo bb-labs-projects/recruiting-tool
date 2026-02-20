@@ -15,9 +15,15 @@ import {
   profileUnlocks,
   profileViews,
   stripeEvents,
+  jobs,
+  jobMatches,
 } from './schema'
 
-export const profilesRelations = relations(profiles, ({ many }) => ({
+export const profilesRelations = relations(profiles, ({ one, many }) => ({
+  user: one(users, {
+    fields: [profiles.userId],
+    references: [users.id],
+  }),
   education: many(education),
   workHistory: many(workHistory),
   barAdmissions: many(barAdmissions),
@@ -27,6 +33,7 @@ export const profilesRelations = relations(profiles, ({ many }) => ({
   savedProfiles: many(savedProfiles),
   profileUnlocks: many(profileUnlocks),
   profileViews: many(profileViews),
+  jobMatches: many(jobMatches),
 }))
 
 export const educationRelations = relations(education, ({ one }) => ({
@@ -86,6 +93,10 @@ export const cvUploadsRelations = relations(cvUploads, ({ one }) => ({
 }))
 
 export const usersRelations = relations(users, ({ one, many }) => ({
+  candidateProfile: one(profiles, {
+    fields: [users.id],
+    references: [profiles.userId],
+  }),
   employerProfile: one(employerProfiles, {
     fields: [users.id],
     references: [employerProfiles.userId],
@@ -93,6 +104,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   savedProfiles: many(savedProfiles),
   profileUnlocks: many(profileUnlocks),
   profileViews: many(profileViews),
+  jobs: many(jobs, { relationName: 'jobEmployer' }),
 }))
 
 export const employerProfilesRelations = relations(
@@ -140,6 +152,31 @@ export const profileViewsRelations = relations(profileViews, ({ one }) => ({
   }),
   profile: one(profiles, {
     fields: [profileViews.profileId],
+    references: [profiles.id],
+  }),
+}))
+
+export const jobsRelations = relations(jobs, ({ one, many }) => ({
+  employer: one(users, {
+    fields: [jobs.employerUserId],
+    references: [users.id],
+    relationName: 'jobEmployer',
+  }),
+  creator: one(users, {
+    fields: [jobs.createdBy],
+    references: [users.id],
+    relationName: 'jobCreator',
+  }),
+  matches: many(jobMatches),
+}))
+
+export const jobMatchesRelations = relations(jobMatches, ({ one }) => ({
+  job: one(jobs, {
+    fields: [jobMatches.jobId],
+    references: [jobs.id],
+  }),
+  profile: one(profiles, {
+    fields: [jobMatches.profileId],
     references: [profiles.id],
   }),
 }))

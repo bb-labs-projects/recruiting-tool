@@ -1,12 +1,26 @@
+import { getUser } from '@/lib/dal'
+import { redirect } from 'next/navigation'
+import { CandidateNav } from './nav'
+
 /**
- * Candidate layout -- simple pass-through wrapper.
- * Candidate-specific navigation can be added here later.
+ * Candidate layout -- verifies candidate role and provides navigation.
  * Auth is already verified by the parent (authenticated) layout.
  */
-export default function CandidateLayout({
+export default async function CandidateLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <div className="p-6">{children}</div>
+  const user = await getUser()
+
+  if (!user || user.role !== 'candidate') {
+    redirect('/login')
+  }
+
+  return (
+    <div>
+      <CandidateNav />
+      <div className="p-6">{children}</div>
+    </div>
+  )
 }

@@ -2,23 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Search, Briefcase, Heart, Receipt } from 'lucide-react'
+import { LayoutDashboard, FileText, Upload } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { href: '/employer', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { href: '/employer/browse', label: 'Browse', icon: Search, exact: false },
-  { href: '/employer/jobs', label: 'Jobs', icon: Briefcase, exact: false },
-  { href: '/employer/saved', label: 'Saved', icon: Heart, exact: true },
-  { href: '/employer/purchases', label: 'Purchases', icon: Receipt, exact: true },
+  { href: '/candidate', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/candidate/profile', label: 'My Profile', icon: FileText, exact: true },
+  { href: '/candidate/upload', label: 'Upload CV', icon: Upload, exact: true },
 ] as const
 
-/**
- * Employer navigation bar -- client component for active link highlighting.
- * Shows Dashboard, Browse, and Saved links with icons.
- * Active link is determined by pathname matching.
- */
-export function EmployerNav() {
+export function CandidateNav() {
   const pathname = usePathname()
 
   return (
