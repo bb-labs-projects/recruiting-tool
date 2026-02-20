@@ -164,7 +164,12 @@ Plans:
 
 **Notes:** Stripe Checkout Sessions with webhook-driven fulfillment. Idempotent webhook handler with Stripe event ID deduplication. The `profile_unlocks` table records which employer unlocked which candidate, preventing double-charges and enabling permanent access.
 
-**Plans:** (created by /gsd:plan-phase)
+**Plans:** 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md -- Schema, Stripe client, checkout action, webhook handler, unlock DAL
+- [ ] 06-02-PLAN.md -- Unlock button wiring, conditional profile display, purchase history
+- [ ] 06-03-PLAN.md -- Admin analytics dashboard and live admin dashboard data
 
 ---
 
@@ -219,7 +224,7 @@ Plans:
 | 3 - Admin Review and Profiles | Complete | 2026-02-20 |
 | 4 - Employer Onboarding and Browse | Complete | 2026-02-20 |
 | 5 - Search and Discovery | Complete | 2026-02-20 |
-| 6 - Monetization | Not started | -- |
+| 6 - Monetization | Planning complete | -- |
 | 7 - Candidate Self-Service | Not started | -- |
 | 8 - Job Posting and AI Matching | Not started | -- |
 
