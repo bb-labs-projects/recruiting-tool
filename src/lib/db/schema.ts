@@ -8,6 +8,7 @@ import {
   text,
   index,
   uniqueIndex,
+  primaryKey,
 } from 'drizzle-orm/pg-core'
 
 // Role enum
@@ -57,4 +58,117 @@ export const sessions = pgTable('sessions', {
 }, (table) => [
   index('sessions_token_idx').on(table.tokenHash),
   index('sessions_user_idx').on(table.userId),
+])
+
+// CV upload status enum
+export const cvUploadStatusEnum = pgEnum('cv_upload_status', [
+  'uploaded', 'parsing', 'parsed', 'failed',
+])
+
+// Confidence level enum
+export const confidenceEnum = pgEnum('confidence_level', [
+  'high', 'medium', 'low',
+])
+
+// Profiles table
+export const profiles = pgTable('profiles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameConfidence: confidenceEnum('name_confidence').notNull(),
+  email: varchar('email', { length: 255 }),
+  emailConfidence: confidenceEnum('email_confidence').notNull(),
+  phone: varchar('phone', { length: 50 }),
+  phoneConfidence: confidenceEnum('phone_confidence').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+// CV uploads table
+export const cvUploads = pgTable('cv_uploads', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  filename: varchar('filename', { length: 255 }).notNull(),
+  blobUrl: text('blob_url').notNull(),
+  status: cvUploadStatusEnum('status').notNull().default('uploaded'),
+  errorMessage: text('error_message'),
+  uploadedBy: uuid('uploaded_by').notNull().references(() => users.id),
+  profileId: uuid('profile_id').references(() => profiles.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  parsedAt: timestamp('parsed_at', { withTimezone: true }),
+}, (table) => [
+  index('cv_uploads_status_idx').on(table.status),
+  index('cv_uploads_uploaded_by_idx').on(table.uploadedBy),
+])
+
+// Specializations lookup table
+export const specializations = pgTable('specializations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 255 }).unique().notNull(),
+})
+
+// Profile specializations junction table
+export const profileSpecializations = pgTable('profile_specializations', {
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  specializationId: uuid('specialization_id').notNull().references(() => specializations.id),
+  confidence: confidenceEnum('confidence').notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.profileId, table.specializationId] }),
+  index('profile_specializations_profile_idx').on(table.profileId),
+  index('profile_specializations_spec_idx').on(table.specializationId),
+])
+
+// Education table
+export const education = pgTable('education', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  institution: varchar('institution', { length: 255 }).notNull(),
+  degree: varchar('degree', { length: 255 }).notNull(),
+  field: varchar('field', { length: 255 }).notNull(),
+  year: varchar('year', { length: 10 }),
+  confidence: confidenceEnum('confidence').notNull(),
+}, (table) => [
+  index('education_profile_idx').on(table.profileId),
+])
+
+// Technical domains lookup table
+export const technicalDomains = pgTable('technical_domains', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 255 }).unique().notNull(),
+})
+
+// Profile technical domains junction table
+export const profileTechnicalDomains = pgTable('profile_technical_domains', {
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  technicalDomainId: uuid('technical_domain_id').notNull().references(() => technicalDomains.id),
+  confidence: confidenceEnum('confidence').notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.profileId, table.technicalDomainId] }),
+  index('profile_technical_domains_profile_idx').on(table.profileId),
+  index('profile_technical_domains_domain_idx').on(table.technicalDomainId),
+])
+
+// Bar admissions table
+export const barAdmissions = pgTable('bar_admissions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  jurisdiction: varchar('jurisdiction', { length: 255 }).notNull(),
+  year: varchar('year', { length: 10 }),
+  status: varchar('status', { length: 100 }),
+  confidence: confidenceEnum('confidence').notNull(),
+}, (table) => [
+  index('bar_admissions_profile_idx').on(table.profileId),
+])
+
+// Work history table
+export const workHistory = pgTable('work_history', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  employer: varchar('employer', { length: 255 }).notNull(),
+  title: varchar('title', { length: 255 }).notNull(),
+  startDate: varchar('start_date', { length: 20 }),
+  endDate: varchar('end_date', { length: 20 }),
+  description: text('description'),
+  confidence: confidenceEnum('confidence').notNull(),
+}, (table) => [
+  index('work_history_profile_idx').on(table.profileId),
 ])
