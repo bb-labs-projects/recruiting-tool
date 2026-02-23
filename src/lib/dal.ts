@@ -27,19 +27,25 @@ export const verifySession = cache(async () => {
   }
 
   // Verify session exists in database and is not expired
-  const [session] = await db
-    .select({
-      id: sessions.id,
-      userId: sessions.userId,
-    })
-    .from(sessions)
-    .where(
-      and(
-        eq(sessions.id, payload.sessionId),
-        gt(sessions.expiresAt, new Date())
+  let session: { id: string; userId: string } | undefined
+  try {
+    ;[session] = await db
+      .select({
+        id: sessions.id,
+        userId: sessions.userId,
+      })
+      .from(sessions)
+      .where(
+        and(
+          eq(sessions.id, payload.sessionId),
+          gt(sessions.expiresAt, new Date())
+        )
       )
-    )
-    .limit(1)
+      .limit(1)
+  } catch (error) {
+    console.error('verifySession DB error:', error)
+    redirect('/login')
+  }
 
   if (!session) {
     redirect('/login')
@@ -59,16 +65,21 @@ export const verifySession = cache(async () => {
 export const getUser = cache(async () => {
   const session = await verifySession()
 
-  const [user] = await db
-    .select({
-      id: users.id,
-      email: users.email,
-      role: users.role,
-      emailVerified: users.emailVerified,
-    })
-    .from(users)
-    .where(eq(users.id, session.userId))
-    .limit(1)
+  try {
+    const [user] = await db
+      .select({
+        id: users.id,
+        email: users.email,
+        role: users.role,
+        emailVerified: users.emailVerified,
+      })
+      .from(users)
+      .where(eq(users.id, session.userId))
+      .limit(1)
 
-  return user ?? null
+    return user ?? null
+  } catch (error) {
+    console.error('getUser DB error:', error)
+    return null
+  }
 })

@@ -4,7 +4,10 @@ import * as schema from './schema'
 import * as relations from './relations'
 
 const createDb = () => {
-  const client = postgres(process.env.DATABASE_URL!, { prepare: false })
+  const client = postgres(process.env.DATABASE_URL!, {
+    prepare: false,
+    connect_timeout: 10,
+  })
   return drizzle(client, { schema: { ...schema, ...relations } })
 }
 
