@@ -19,7 +19,8 @@ import {
 import { CvParsedDataSchema } from './schema'
 import { CV_EXTRACTION_PROMPT } from './prompt'
 
-const anthropic = new Anthropic()
+let _anthropic: Anthropic
+const anthropic = () => (_anthropic ??= new Anthropic())
 
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -65,7 +66,7 @@ export async function parseSingleCv(
     )
 
     // Call Claude API with structured output
-    const response = await anthropic.messages.create({
+    const response = await anthropic().messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 4096,
       messages: [

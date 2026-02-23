@@ -10,7 +10,8 @@ import {
   markMatchesNotified,
 } from '@/lib/dal/job-matches'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend
+const resend = () => (_resend ??= new Resend(process.env.RESEND_API_KEY))
 
 function chunks<T>(arr: T[], size: number): T[][] {
   const result: T[][] = []
@@ -43,7 +44,7 @@ export async function notifyMatchResults(
     const topScore = unnotifiedMatches[0].overallScore
 
     // Send employer notification
-    await resend.emails.send({
+    await resend().emails.send({
       from: emailFrom,
       to: [job.employerEmail],
       subject: `${unnotifiedMatches.length} candidates match your "${job.title}" posting`,
@@ -158,7 +159,7 @@ export async function notifyMatchResults(
 
     // Send candidate emails in batches of 100
     for (const batch of chunks(candidateEmails, 100)) {
-      await resend.batch.send(batch)
+      await resend().batch.send(batch)
     }
 
     // Mark all matches as notified
