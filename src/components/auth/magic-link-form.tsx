@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useActionState } from 'react'
 import { requestMagicLink, type MagicLinkState } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
@@ -12,15 +13,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { User, Briefcase } from 'lucide-react'
 
 /**
- * Magic link login form.
+ * Magic link login form with role selection.
  *
- * Uses React 19 useActionState to wire the form to the requestMagicLink
- * server action. Shows a success message after submission, or validation
- * and rate-limit errors inline.
+ * New users choose whether they're a candidate or employer.
+ * Returning users' existing role is preserved regardless of selection.
  */
 export function MagicLinkForm() {
+  const [role, setRole] = useState<'candidate' | 'employer'>('candidate')
   const [state, action, pending] = useActionState<MagicLinkState, FormData>(
     requestMagicLink,
     undefined
@@ -59,6 +62,38 @@ export function MagicLinkForm() {
       </CardHeader>
       <CardContent>
         <form action={action} className="space-y-4">
+          <div className="space-y-2">
+            <Label>I am a</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setRole('candidate')}
+                className={cn(
+                  'flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors',
+                  role === 'candidate'
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-input bg-background hover:bg-muted'
+                )}
+              >
+                <User className="size-4" />
+                Candidate
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('employer')}
+                className={cn(
+                  'flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors',
+                  role === 'employer'
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-input bg-background hover:bg-muted'
+                )}
+              >
+                <Briefcase className="size-4" />
+                Employer
+              </button>
+            </div>
+            <input type="hidden" name="role" value={role} />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input

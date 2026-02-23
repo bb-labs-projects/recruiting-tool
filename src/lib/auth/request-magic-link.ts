@@ -26,8 +26,9 @@ export async function handleMagicLinkRequest(params: {
   email: string
   ip: string
   userAgent: string
+  role?: 'candidate' | 'employer'
 }): Promise<MagicLinkResult> {
-  const { ip, userAgent } = params
+  const { ip, userAgent, role = 'candidate' } = params
   const email = params.email.toLowerCase().trim()
 
   try {
@@ -41,10 +42,10 @@ export async function handleMagicLinkRequest(params: {
     let userId: string
 
     if (!existingUser) {
-      // Auto-create user with role=candidate, emailVerified=false
+      // Auto-create user with selected role, emailVerified=false
       const [newUser] = await db
         .insert(users)
-        .values({ email, role: 'candidate', emailVerified: false })
+        .values({ email, role, emailVerified: false })
         .returning({ id: users.id })
 
       userId = newUser.id

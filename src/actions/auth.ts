@@ -12,6 +12,7 @@ export type MagicLinkState =
 
 const RequestMagicLinkSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
+  role: z.enum(['candidate', 'employer']).optional().default('candidate'),
 })
 
 /**
@@ -30,7 +31,9 @@ export async function requestMagicLink(
   try {
     const rawEmail = formData.get('email')
 
-    const parsed = RequestMagicLinkSchema.safeParse({ email: rawEmail })
+    const rawRole = formData.get('role')
+
+    const parsed = RequestMagicLinkSchema.safeParse({ email: rawEmail, role: rawRole })
 
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors
@@ -44,6 +47,7 @@ export async function requestMagicLink(
       email: parsed.data.email,
       ip: 'server-action',
       userAgent: 'server-action',
+      role: parsed.data.role,
     })
 
     if (!result.success && result.rateLimited) {
