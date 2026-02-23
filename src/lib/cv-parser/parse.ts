@@ -16,6 +16,7 @@ import {
   barAdmissions,
   workHistory,
 } from '@/lib/db/schema'
+import { getSupabase, CV_BUCKET } from '@/lib/supabase'
 import { CvParsedDataSchema } from './schema'
 import { CV_EXTRACTION_PROMPT } from './prompt'
 
@@ -24,6 +25,20 @@ const anthropic = () => (_anthropic ??= new Anthropic())
 
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/**
+ * Extract the storage path from a Supabase public URL.
+ * e.g. "https://xxx.supabase.co/storage/v1/object/public/cvs/candidate/123/file.pdf"
+ *   -> "candidate/123/file.pdf"
+ */
+function extractStoragePath(publicUrl: string): string {
+  const marker = `/object/public/${CV_BUCKET}/`
+  const idx = publicUrl.indexOf(marker)
+  if (idx === -1) {
+    throw new Error(`Could not extract storage path from URL: ${publicUrl}`)
+  }
+  return decodeURIComponent(publicUrl.slice(idx + marker.length))
 }
 
 export async function parseSingleCv(
@@ -54,14 +69,19 @@ export async function parseSingleCv(
       .set({ status: 'parsing', updatedAt: new Date() })
       .where(eq(cvUploads.id, cvUploadId))
 
-    // Fetch PDF from Vercel Blob and convert to base64
-    const pdfResponse = await fetch(upload.blobUrl)
-    if (!pdfResponse.ok) {
+    // Download PDF from Supabase Storage using the service role client
+    const storagePath = extractStoragePath(upload.blobUrl)
+    const supabase = getSupabase()
+    const { data: pdfData, error: downloadError } = await supabase.storage
+      .from(CV_BUCKET)
+      .download(storagePath)
+
+    if (downloadError || !pdfData) {
       throw new Error(
-        `Failed to fetch PDF from blob storage: ${pdfResponse.status} ${pdfResponse.statusText}`
+        `Failed to download PDF from storage: ${downloadError?.message ?? 'no data returned'}`
       )
     }
-    const pdfBase64 = Buffer.from(await pdfResponse.arrayBuffer()).toString(
+    const pdfBase64 = Buffer.from(await pdfData.arrayBuffer()).toString(
       'base64'
     )
 
