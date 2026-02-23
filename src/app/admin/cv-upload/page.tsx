@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { upload } from '@vercel/blob/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -116,15 +115,28 @@ export default function CvUploadPage() {
 
     for (const file of valid) {
       try {
-        const blob = await upload(file.name, file, {
-          access: 'public',
-          handleUploadUrl: '/api/admin/cv/upload',
+        // Step 1: Get signed upload URL
+        const signedRes = await fetch('/api/admin/cv/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: file.name }),
         })
+        if (!signedRes.ok) throw new Error('Failed to get upload URL')
+        const { signedUrl, path } = await signedRes.json()
 
+        // Step 2: Upload directly to Supabase Storage
+        const uploadRes = await fetch(signedUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': file.type },
+          body: file,
+        })
+        if (!uploadRes.ok) throw new Error('Upload to storage failed')
+
+        // Step 3: Create DB record
         await fetch('/api/admin/cv/upload', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: file.name, blobUrl: blob.url }),
+          body: JSON.stringify({ filename: file.name, path }),
         })
 
         setFileStates((prev) =>

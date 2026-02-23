@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { upload } from '@vercel/blob/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -102,20 +101,31 @@ export default function CandidateUploadPage() {
     }
 
     try {
-      // Step 1: Upload to blob storage
+      // Step 1: Get signed upload URL
       setStatus('uploading')
       setErrorMessage(null)
 
-      const blob = await upload(file.name, file, {
-        access: 'public',
-        handleUploadUrl: '/api/candidate/cv/upload',
+      const signedRes = await fetch('/api/candidate/cv/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name }),
       })
+      if (!signedRes.ok) throw new Error('Failed to get upload URL')
+      const { signedUrl, path } = await signedRes.json()
 
-      // Step 2: Create DB record via PUT
+      // Step 2: Upload directly to Supabase Storage
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+      if (!uploadRes.ok) throw new Error('Upload to storage failed')
+
+      // Step 3: Create DB record via PUT
       const putRes = await fetch('/api/candidate/cv/upload', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: file.name, blobUrl: blob.url }),
+        body: JSON.stringify({ filename: file.name, path }),
       })
 
       if (!putRes.ok) {

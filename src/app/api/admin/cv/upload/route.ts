@@ -1,35 +1,37 @@
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { cvUploads } from '@/lib/db/schema'
 import { requireAdmin } from '@/lib/auth/require-admin'
+import { getSupabase, CV_BUCKET } from '@/lib/supabase'
 
+/**
+ * POST: Generate a signed upload URL for the client to upload directly to Supabase Storage.
+ */
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as HandleUploadBody
+    await requireAdmin()
 
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async () => {
-        await requireAdmin()
-        return {
-          allowedContentTypes: ['application/pdf'],
-          maximumSizeInBytes: 10 * 1024 * 1024,
-        }
-      },
-      onUploadCompleted: async ({ blob }) => {
-        const { userId } = await requireAdmin()
-        await db.insert(cvUploads).values({
-          filename: blob.pathname,
-          blobUrl: blob.url,
-          uploadedBy: userId,
-          status: 'uploaded',
-        })
-      },
+    const { filename } = await request.json()
+    if (!filename) {
+      return NextResponse.json({ error: 'filename is required' }, { status: 400 })
+    }
+
+    const path = `admin/${crypto.randomUUID()}-${filename}`
+    const supabase = getSupabase()
+
+    const { data, error } = await supabase.storage
+      .from(CV_BUCKET)
+      .createSignedUploadUrl(path)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({
+      signedUrl: data.signedUrl,
+      path: data.path,
+      token: data.token,
     })
-
-    return NextResponse.json(jsonResponse)
   } catch (error) {
     if (error instanceof Error && error.message === 'Forbidden') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -38,16 +40,24 @@ export async function POST(request: Request) {
   }
 }
 
+/**
+ * PUT: Create a DB record after the client has uploaded to Supabase Storage.
+ */
 export async function PUT(request: Request) {
   try {
     const { userId } = await requireAdmin()
-    const { filename, blobUrl } = await request.json()
+    const { filename, path } = await request.json()
+
+    const supabase = getSupabase()
+    const { data: urlData } = supabase.storage
+      .from(CV_BUCKET)
+      .getPublicUrl(path)
 
     const [record] = await db
       .insert(cvUploads)
       .values({
         filename,
-        blobUrl,
+        blobUrl: urlData.publicUrl,
         uploadedBy: userId,
         status: 'uploaded',
       })
