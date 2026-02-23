@@ -23,6 +23,7 @@ export const verifySession = cache(async () => {
   const payload = await decrypt(sessionCookie)
 
   if (!payload?.sessionId) {
+    cookieStore.delete(AUTH_CONSTANTS.SESSION_COOKIE_NAME)
     redirect('/login')
   }
 
@@ -44,10 +45,12 @@ export const verifySession = cache(async () => {
       .limit(1)
   } catch (error) {
     console.error('verifySession DB error:', error)
+    cookieStore.delete(AUTH_CONSTANTS.SESSION_COOKIE_NAME)
     redirect('/login')
   }
 
   if (!session) {
+    cookieStore.delete(AUTH_CONSTANTS.SESSION_COOKIE_NAME)
     redirect('/login')
   }
 
