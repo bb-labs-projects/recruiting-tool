@@ -35,7 +35,8 @@ export async function POST(request: Request) {
       path: data.path,
       token: data.token,
     })
-  } catch {
+  } catch (error) {
+    console.error('CV upload POST error:', error)
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
   }
 }
@@ -68,7 +69,8 @@ export async function PUT(request: Request) {
       .returning()
 
     return NextResponse.json(record)
-  } catch {
+  } catch (error) {
+    console.error('CV upload PUT error:', error)
     return NextResponse.json({ error: 'Failed to create upload record' }, { status: 500 })
   }
 }
