@@ -79,7 +79,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(result)
-  } catch {
+  } catch (error) {
+    console.error('CV parse error:', error)
     return NextResponse.json({ error: 'Parse failed' }, { status: 500 })
   }
 }

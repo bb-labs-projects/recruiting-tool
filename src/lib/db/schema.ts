@@ -109,6 +109,7 @@ export const cvUploads = pgTable('cv_uploads', {
   id: uuid('id').defaultRandom().primaryKey(),
   filename: varchar('filename', { length: 255 }).notNull(),
   blobUrl: text('blob_url').notNull(),
+  storagePath: text('storage_path'),
   status: cvUploadStatusEnum('status').notNull().default('uploaded'),
   errorMessage: text('error_message'),
   uploadedBy: uuid('uploaded_by').notNull().references(() => users.id),

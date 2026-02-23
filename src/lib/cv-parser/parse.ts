@@ -70,7 +70,7 @@ export async function parseSingleCv(
       .where(eq(cvUploads.id, cvUploadId))
 
     // Download PDF from Supabase Storage using the service role client
-    const storagePath = extractStoragePath(upload.blobUrl)
+    const storagePath = upload.storagePath ?? extractStoragePath(upload.blobUrl)
     const supabase = getSupabase()
     const { data: pdfData, error: downloadError } = await supabase.storage
       .from(CV_BUCKET)

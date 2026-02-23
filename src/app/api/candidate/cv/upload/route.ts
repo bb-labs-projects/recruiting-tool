@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { eq, and, inArray } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { cvUploads } from '@/lib/db/schema'
 import { getUser } from '@/lib/dal'
@@ -53,6 +54,16 @@ export async function PUT(request: Request) {
 
     const { filename, path } = await request.json()
 
+    // Clean up orphaned uploads (uploaded or failed) for this user
+    await db
+      .delete(cvUploads)
+      .where(
+        and(
+          eq(cvUploads.uploadedBy, user.id),
+          inArray(cvUploads.status, ['uploaded', 'failed'])
+        )
+      )
+
     const supabase = getSupabase()
     const { data: urlData } = supabase.storage
       .from(CV_BUCKET)
@@ -63,6 +74,7 @@ export async function PUT(request: Request) {
       .values({
         filename,
         blobUrl: urlData.publicUrl,
+        storagePath: path,
         uploadedBy: user.id,
         status: 'uploaded',
       })
