@@ -1,11 +1,12 @@
-import { drizzle } from 'drizzle-orm/neon-http'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 import * as schema from './schema'
 import * as relations from './relations'
 
-const createDb = () =>
-  drizzle(process.env.DATABASE_URL!, {
-    schema: { ...schema, ...relations },
-  })
+const createDb = () => {
+  const client = postgres(process.env.DATABASE_URL!, { prepare: false })
+  return drizzle(client, { schema: { ...schema, ...relations } })
+}
 
 type Db = ReturnType<typeof createDb>
 
