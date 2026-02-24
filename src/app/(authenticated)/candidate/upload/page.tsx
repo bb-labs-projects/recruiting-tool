@@ -182,11 +182,11 @@ export default function CandidateUploadPage() {
         body: JSON.stringify({ cvUploadId }),
       })
 
-      if (!parseRes.ok) {
-        throw new Error('Failed to trigger parsing')
-      }
-
       const parseResult = await parseRes.json()
+
+      if (!parseRes.ok) {
+        throw new Error(parseResult.error || 'Failed to trigger parsing')
+      }
 
       if (parseResult.success) {
         setCurrentUpload((prev) =>
