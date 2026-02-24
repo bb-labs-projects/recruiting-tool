@@ -53,16 +53,12 @@ export async function DELETE(
 
     // Delete file from Supabase Storage
     const storagePath = upload.storagePath || extractStoragePath(upload.blobUrl)
-    console.log('CV storage delete:', { storagePath, rawStoragePath: upload.storagePath, blobUrl: upload.blobUrl, bucket: CV_BUCKET })
     if (storagePath) {
       const supabase = getSupabase()
-      const { data: storageData, error: storageError } = await supabase.storage.from(CV_BUCKET).remove([storagePath])
-      console.log('CV storage delete result:', { data: storageData, error: storageError })
+      const { error: storageError } = await supabase.storage.from(CV_BUCKET).remove([storagePath])
       if (storageError) {
         console.error('Failed to delete storage file:', storagePath, storageError)
       }
-    } else {
-      console.warn('No storage path found for upload:', id, 'blobUrl:', upload.blobUrl)
     }
 
     return NextResponse.json({ success: true })
