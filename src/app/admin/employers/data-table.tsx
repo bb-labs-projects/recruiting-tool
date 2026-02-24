@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   type ColumnDef,
   type SortingState,
@@ -39,6 +40,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter()
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'createdAt', desc: true },
   ])
@@ -126,7 +128,14 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="even:bg-muted/30 hover:bg-accent/40 transition-colors">
+                <TableRow
+                  key={row.id}
+                  className="even:bg-muted/30 hover:bg-accent/40 transition-colors cursor-pointer"
+                  onClick={() => {
+                    const id = (row.original as Record<string, unknown>).id
+                    router.push(`/admin/employers/${id}`)
+                  }}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
