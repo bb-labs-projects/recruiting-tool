@@ -34,6 +34,7 @@ Fields to extract:
    Include both formal degrees and practical technical experience areas.
 7. **Bar Admissions**: Each entry should include jurisdiction (e.g., "California", "USPTO"), year of admission (YYYY format), and current status ("active", "inactive", or empty string if unknown).
 8. **Work History**: Each entry should include employer name, job title, start date, end date, and a brief description of responsibilities. Use YYYY or YYYY-MM format for dates. Use "Present" for current positions.
+9. **Languages**: Each entry should include the language name and proficiency level (e.g., "native", "fluent", "advanced", "intermediate", "basic"). If proficiency isn't stated, use empty string.
 
 Rules:
 - If a field cannot be found in the document, use an empty string (for scalar values) or an empty array (for list values), with "low" confidence.

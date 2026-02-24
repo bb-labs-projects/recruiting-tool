@@ -148,6 +148,7 @@ export const education = pgTable('education', {
   field: varchar('field', { length: 255 }).notNull(),
   year: varchar('year', { length: 10 }),
   confidence: confidenceEnum('confidence').notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 }, (table) => [
   index('education_profile_idx').on(table.profileId),
 ])
@@ -177,6 +178,7 @@ export const barAdmissions = pgTable('bar_admissions', {
   year: varchar('year', { length: 10 }),
   status: varchar('status', { length: 100 }),
   confidence: confidenceEnum('confidence').notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 }, (table) => [
   index('bar_admissions_profile_idx').on(table.profileId),
 ])
@@ -191,8 +193,21 @@ export const workHistory = pgTable('work_history', {
   endDate: varchar('end_date', { length: 20 }),
   description: text('description'),
   confidence: confidenceEnum('confidence').notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 }, (table) => [
   index('work_history_profile_idx').on(table.profileId),
+])
+
+// Languages table
+export const languages = pgTable('languages', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  profileId: uuid('profile_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  language: varchar('language', { length: 255 }).notNull(),
+  proficiency: varchar('proficiency', { length: 100 }),
+  confidence: confidenceEnum('confidence').notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
+}, (table) => [
+  index('languages_profile_idx').on(table.profileId),
 ])
 
 // Employer status enum

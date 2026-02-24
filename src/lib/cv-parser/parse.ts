@@ -15,6 +15,7 @@ import {
   profileTechnicalDomains,
   barAdmissions,
   workHistory,
+  languages,
 } from '@/lib/db/schema'
 import { getSupabase, CV_BUCKET } from '@/lib/supabase'
 import { CvParsedDataSchema } from './schema'
@@ -206,6 +207,16 @@ export async function parseSingleCv(
           endDate: work.endDate || null,
           description: work.description || null,
           confidence: parsed.workHistory.confidence,
+        })
+      }
+
+      // Insert languages
+      for (const lang of parsed.languages.value) {
+        await tx.insert(languages).values({
+          profileId: pid,
+          language: lang.language,
+          proficiency: lang.proficiency || null,
+          confidence: parsed.languages.confidence,
         })
       }
 

@@ -25,6 +25,7 @@ export default async function ProfileDetailPage({
       education: true,
       workHistory: true,
       barAdmissions: true,
+      languages: true,
       profileSpecializations: { with: { specialization: true } },
       profileTechnicalDomains: { with: { technicalDomain: true } },
       cvUploads: true,
@@ -51,6 +52,7 @@ export default async function ProfileDetailPage({
       field: edu.field,
       year: edu.year,
       confidence: edu.confidence,
+      sortOrder: edu.sortOrder,
     })),
     workHistory: profile.workHistory.map((wh) => ({
       id: wh.id,
@@ -60,6 +62,7 @@ export default async function ProfileDetailPage({
       endDate: wh.endDate,
       description: wh.description,
       confidence: wh.confidence,
+      sortOrder: wh.sortOrder,
     })),
     barAdmissions: profile.barAdmissions.map((ba) => ({
       id: ba.id,
@@ -67,6 +70,14 @@ export default async function ProfileDetailPage({
       year: ba.year,
       status: ba.status,
       confidence: ba.confidence,
+      sortOrder: ba.sortOrder,
+    })),
+    languages: profile.languages.map((lang) => ({
+      id: lang.id,
+      language: lang.language,
+      proficiency: lang.proficiency,
+      confidence: lang.confidence,
+      sortOrder: lang.sortOrder,
     })),
     specializations: profile.profileSpecializations.map((ps) => ({
       name: ps.specialization.name,

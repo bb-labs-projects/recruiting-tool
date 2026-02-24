@@ -31,6 +31,11 @@ const WorkHistoryEntry = z.object({
   description: z.string(),
 })
 
+const LanguageEntry = z.object({
+  language: z.string(),
+  proficiency: z.string(), // "native", "fluent", "advanced", "intermediate", "basic", or empty string
+})
+
 export const CvParsedDataSchema = z.object({
   name: withConfidence(z.string()),
   email: withConfidence(z.string()),
@@ -40,6 +45,7 @@ export const CvParsedDataSchema = z.object({
   technicalBackground: withConfidence(z.array(z.string())),
   barAdmissions: withConfidence(z.array(BarAdmissionEntry)),
   workHistory: withConfidence(z.array(WorkHistoryEntry)),
+  languages: withConfidence(z.array(LanguageEntry)),
 })
 
 export type CvParsedData = z.infer<typeof CvParsedDataSchema>

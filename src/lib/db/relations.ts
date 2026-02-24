@@ -6,6 +6,7 @@ import {
   education,
   workHistory,
   barAdmissions,
+  languages,
   profileSpecializations,
   profileTechnicalDomains,
   specializations,
@@ -29,6 +30,7 @@ export const profilesRelations = relations(profiles, ({ one, many }) => ({
   barAdmissions: many(barAdmissions),
   profileSpecializations: many(profileSpecializations),
   profileTechnicalDomains: many(profileTechnicalDomains),
+  languages: many(languages),
   cvUploads: many(cvUploads),
   savedProfiles: many(savedProfiles),
   profileUnlocks: many(profileUnlocks),
@@ -46,6 +48,13 @@ export const educationRelations = relations(education, ({ one }) => ({
 export const workHistoryRelations = relations(workHistory, ({ one }) => ({
   profile: one(profiles, {
     fields: [workHistory.profileId],
+    references: [profiles.id],
+  }),
+}))
+
+export const languagesRelations = relations(languages, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [languages.profileId],
     references: [profiles.id],
   }),
 }))
