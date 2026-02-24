@@ -6,6 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   Upload,
   Loader2,
   CheckCircle,
@@ -34,7 +42,7 @@ export default function CandidateUploadPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<CvUpload | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -226,7 +234,6 @@ export default function CandidateUploadPage() {
 
   async function handleDelete(uploadId: string) {
     setDeletingId(uploadId)
-    setConfirmDeleteId(null)
     try {
       const res = await fetch(`/api/candidate/cv/${uploadId}`, {
         method: 'DELETE',
@@ -269,6 +276,7 @@ export default function CandidateUploadPage() {
       setErrorMessage('Failed to delete upload')
     } finally {
       setDeletingId(null)
+      setDeleteTarget(null)
     }
   }
 
@@ -459,6 +467,35 @@ export default function CandidateUploadPage() {
         </CardContent>
       </Card>
 
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Upload</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <span className="font-medium text-foreground">{deleteTarget?.filename}</span>?
+              {deleteTarget?.status === 'parsed' && (
+                <> This will also delete the associated profile and all parsed data.</>
+              )}
+              {' '}This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={!!deletingId}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={!!deletingId}
+              onClick={() => deleteTarget && handleDelete(deleteTarget.id)}
+            >
+              {deletingId ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Upload History */}
       {allUploads.length > 0 && view !== 'loading' && (
         <Card className="mt-6">
@@ -519,39 +556,15 @@ export default function CandidateUploadPage() {
                       </Button>
                     )}
 
-                    {confirmDeleteId === upload.id ? (
-                      <div className="flex items-center gap-1">
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled={deletingId === upload.id}
-                          onClick={() => handleDelete(upload.id)}
-                        >
-                          {deletingId === upload.id ? (
-                            <Loader2 className="size-3 animate-spin" />
-                          ) : (
-                            'Confirm'
-                          )}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setConfirmDeleteId(null)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={upload.status === 'parsing' || deletingId === upload.id}
-                        onClick={() => setConfirmDeleteId(upload.id)}
-                        title={upload.status === 'parsing' ? 'Cannot delete while analyzing' : 'Delete upload'}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={upload.status === 'parsing' || deletingId === upload.id}
+                      onClick={() => setDeleteTarget(upload)}
+                      title={upload.status === 'parsing' ? 'Cannot delete while analyzing' : 'Delete upload'}
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
                   </div>
                 </div>
               ))}

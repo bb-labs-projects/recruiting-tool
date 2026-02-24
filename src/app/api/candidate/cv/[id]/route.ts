@@ -48,15 +48,19 @@ export async function DELETE(
       await db.delete(profiles).where(eq(profiles.id, upload.profileId))
     }
 
-    // Delete file from Supabase Storage
+    // Delete the DB record first so the user sees it disappear immediately
+    await db.delete(cvUploads).where(eq(cvUploads.id, id))
+
+    // Delete file from Supabase Storage (best-effort — don't fail the request)
     const storagePath = upload.storagePath || extractStoragePath(upload.blobUrl)
     if (storagePath) {
-      const supabase = getSupabase()
-      await supabase.storage.from(CV_BUCKET).remove([storagePath])
+      try {
+        const supabase = getSupabase()
+        await supabase.storage.from(CV_BUCKET).remove([storagePath])
+      } catch (err) {
+        console.error('Failed to delete storage file:', storagePath, err)
+      }
     }
-
-    // Delete the DB record
-    await db.delete(cvUploads).where(eq(cvUploads.id, id))
 
     return NextResponse.json({ success: true })
   } catch (error) {
