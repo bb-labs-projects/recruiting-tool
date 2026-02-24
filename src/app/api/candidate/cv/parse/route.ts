@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server'
 import { eq, and } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import {
-  cvUploads,
-  profiles,
-  profileSpecializations,
-  profileTechnicalDomains,
-  education,
-  workHistory,
-  barAdmissions,
-} from '@/lib/db/schema'
+import { cvUploads, profiles } from '@/lib/db/schema'
 import { getUser } from '@/lib/dal'
 import { getCandidateProfile, checkDuplicateProfiles } from '@/lib/dal/candidate-profiles'
 import { parseSingleCv } from '@/lib/cv-parser/parse'
@@ -42,11 +34,8 @@ export async function POST(request: Request) {
     // If candidate already has a profile, delete it and related data (re-upload)
     const existingProfile = await getCandidateProfile(user.id)
     if (existingProfile) {
-      await db.delete(profileSpecializations).where(eq(profileSpecializations.profileId, existingProfile.id))
-      await db.delete(profileTechnicalDomains).where(eq(profileTechnicalDomains.profileId, existingProfile.id))
-      await db.delete(education).where(eq(education.profileId, existingProfile.id))
-      await db.delete(workHistory).where(eq(workHistory.profileId, existingProfile.id))
-      await db.delete(barAdmissions).where(eq(barAdmissions.profileId, existingProfile.id))
+      // Unlink any cv_uploads referencing this profile before deleting it
+      await db.update(cvUploads).set({ profileId: null }).where(eq(cvUploads.profileId, existingProfile.id))
       await db.delete(profiles).where(eq(profiles.id, existingProfile.id))
     }
 

@@ -4,12 +4,14 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import {
   Upload,
   Loader2,
   CheckCircle,
   XCircle,
   FileText,
+  Trash2,
 } from 'lucide-react'
 
 type CvUpload = {
@@ -28,18 +30,27 @@ export default function CandidateUploadPage() {
   const router = useRouter()
   const [view, setView] = useState<PageView>('loading')
   const [currentUpload, setCurrentUpload] = useState<CvUpload | null>(null)
+  const [allUploads, setAllUploads] = useState<CvUpload[]>([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const refreshUploads = useCallback(async (): Promise<CvUpload[]> => {
+    const res = await fetch('/api/candidate/cv/status')
+    if (!res.ok) return []
+    const uploads: CvUpload[] = await res.json()
+    setAllUploads(uploads)
+    return uploads
+  }, [])
 
   const pollForCompletion = useCallback(
     (cvUploadId: string) => {
       pollingRef.current = setInterval(async () => {
         try {
-          const res = await fetch('/api/candidate/cv/status')
-          if (!res.ok) return
-          const uploads: CvUpload[] = await res.json()
+          const uploads = await refreshUploads()
           const target = uploads.find((u) => u.id === cvUploadId)
           if (!target) return
 
@@ -60,19 +71,14 @@ export default function CandidateUploadPage() {
         }
       }, 3000)
     },
-    []
+    [refreshUploads]
   )
 
   // Fetch existing upload state on mount
   useEffect(() => {
     async function checkExisting() {
       try {
-        const res = await fetch('/api/candidate/cv/status')
-        if (!res.ok) {
-          setView('dropzone')
-          return
-        }
-        const uploads: CvUpload[] = await res.json()
+        const uploads = await refreshUploads()
         if (uploads.length === 0) {
           setView('dropzone')
           return
@@ -98,7 +104,7 @@ export default function CandidateUploadPage() {
       }
     }
     checkExisting()
-  }, [pollForCompletion])
+  }, [pollForCompletion, refreshUploads])
 
   // Cleanup polling on unmount
   useEffect(() => {
@@ -160,6 +166,7 @@ export default function CandidateUploadPage() {
 
       const record: CvUpload = await putRes.json()
       setCurrentUpload(record)
+      await refreshUploads()
 
       // Step 4: Trigger parse
       await triggerParse(record.id)
@@ -193,12 +200,14 @@ export default function CandidateUploadPage() {
           prev ? { ...prev, status: 'parsed', profileId: parseResult.profileId } : prev
         )
         setView('complete')
+        await refreshUploads()
       } else if (parseResult.error) {
         setErrorMessage(parseResult.error)
         setCurrentUpload((prev) =>
           prev ? { ...prev, status: 'failed', errorMessage: parseResult.error } : prev
         )
         setView('existing')
+        await refreshUploads()
       } else {
         // Parse is async, poll for completion
         pollForCompletion(cvUploadId)
@@ -211,6 +220,55 @@ export default function CandidateUploadPage() {
         prev ? { ...prev, status: 'failed' } : prev
       )
       setView('existing')
+      await refreshUploads()
+    }
+  }
+
+  async function handleDelete(uploadId: string) {
+    setDeletingId(uploadId)
+    setConfirmDeleteId(null)
+    try {
+      const res = await fetch(`/api/candidate/cv/${uploadId}`, {
+        method: 'DELETE',
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setErrorMessage(data.error || 'Failed to delete upload')
+        return
+      }
+
+      // If we deleted the current top-level upload, reset the view
+      if (currentUpload?.id === uploadId) {
+        setCurrentUpload(null)
+        setErrorMessage(null)
+      }
+
+      const uploads = await refreshUploads()
+
+      // Update the top-level view based on remaining uploads
+      if (currentUpload?.id === uploadId) {
+        if (uploads.length === 0) {
+          setView('dropzone')
+        } else {
+          const latest = uploads[0]
+          setCurrentUpload(latest)
+          if (latest.status === 'parsed') {
+            setView('complete')
+          } else if (latest.status === 'parsing') {
+            setView('parsing')
+            pollForCompletion(latest.id)
+          } else {
+            if (latest.status === 'failed') {
+              setErrorMessage(latest.errorMessage || 'CV parsing failed')
+            }
+            setView('existing')
+          }
+        }
+      }
+    } catch {
+      setErrorMessage('Failed to delete upload')
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -230,6 +288,29 @@ export default function CandidateUploadPage() {
   function showDropzone() {
     setView('dropzone')
     setErrorMessage(null)
+  }
+
+  function formatDate(dateStr: string) {
+    return new Date(dateStr).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  function statusBadge(status: CvUpload['status']) {
+    switch (status) {
+      case 'uploaded':
+        return <Badge variant="secondary">Uploaded</Badge>
+      case 'parsing':
+        return <Badge variant="default">Parsing...</Badge>
+      case 'parsed':
+        return <Badge className="bg-green-600 text-white hover:bg-green-600">Parsed</Badge>
+      case 'failed':
+        return <Badge variant="destructive">Failed</Badge>
+    }
   }
 
   const dropzoneUI = (
@@ -377,6 +458,107 @@ export default function CandidateUploadPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Upload History */}
+      {allUploads.length > 0 && view !== 'loading' && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Your Uploads</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="divide-y">
+              {allUploads.map((upload) => (
+                <div
+                  key={upload.id}
+                  className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <FileText className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="truncate text-sm font-medium">
+                        {upload.filename}
+                      </span>
+                      {statusBadge(upload.status)}
+                    </div>
+                    <div className="mt-1 flex flex-col gap-0.5 pl-6">
+                      <span className="text-xs text-muted-foreground">
+                        {formatDate(upload.createdAt)}
+                      </span>
+                      {upload.status === 'failed' && upload.errorMessage && (
+                        <span className="text-xs text-red-600">
+                          {upload.errorMessage}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-2">
+                    {(upload.status === 'uploaded' || upload.status === 'failed') && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setCurrentUpload(upload)
+                          if (upload.status === 'failed') {
+                            setErrorMessage(upload.errorMessage || 'CV parsing failed')
+                          }
+                          triggerParse(upload.id)
+                        }}
+                      >
+                        Analyze
+                      </Button>
+                    )}
+
+                    {upload.status === 'parsed' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.push('/candidate/profile')}
+                      >
+                        View Profile
+                      </Button>
+                    )}
+
+                    {confirmDeleteId === upload.id ? (
+                      <div className="flex items-center gap-1">
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={deletingId === upload.id}
+                          onClick={() => handleDelete(upload.id)}
+                        >
+                          {deletingId === upload.id ? (
+                            <Loader2 className="size-3 animate-spin" />
+                          ) : (
+                            'Confirm'
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setConfirmDeleteId(null)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={upload.status === 'parsing' || deletingId === upload.id}
+                        onClick={() => setConfirmDeleteId(upload.id)}
+                        title={upload.status === 'parsing' ? 'Cannot delete while analyzing' : 'Delete upload'}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
