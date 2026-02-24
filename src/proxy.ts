@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { decrypt } from '@/lib/auth/session'
-import { AUTH_CONSTANTS } from '@/lib/auth/constants'
+import { jwtVerify } from 'jose'
 
 const publicRoutes = ['/login', '/auth/verify']
 
-/**
- * Get the role-based dashboard path for a user.
- */
 function getDashboardPath(role: string): string {
   switch (role) {
     case 'admin':
@@ -22,24 +18,45 @@ function getDashboardPath(role: string): string {
 }
 
 /**
- * Proxy-based route protection (Next.js 16 convention).
+ * Decrypt session JWT directly using jose.
+ * Self-contained — no imports from session.ts to avoid Edge Runtime issues.
+ */
+async function decryptSession(cookie: string | undefined) {
+  if (!cookie) return null
+
+  const secret = process.env.SESSION_SECRET
+  if (!secret) {
+    console.error('[proxy] SESSION_SECRET env var is not set')
+    return null
+  }
+
+  try {
+    const key = new TextEncoder().encode(secret)
+    const { payload } = await jwtVerify(cookie, key, { algorithms: ['HS256'] })
+    return {
+      sessionId: payload.sessionId as string,
+      userId: payload.userId as string,
+      role: payload.role as string,
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Proxy-based route protection (Next.js 16).
  *
- * This is the first layer of defense-in-depth:
- * - Optimistic cookie check only (fast, no database calls)
- * - The DAL (Data Access Layer) handles secure database verification
- *   in server components and server actions
- *
- * IMPORTANT: This function does NOT make database calls. It only reads
- * and decrypts the cookie. This keeps it fast since the proxy runs on
- * every matched route including prefetches.
+ * Optimistic cookie check only (fast, no database calls).
+ * The DAL handles secure database verification in server components.
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isPublicRoute = publicRoutes.includes(pathname)
 
-  // Decrypt session cookie (fast, no DB call)
-  const cookie = request.cookies.get(AUTH_CONSTANTS.SESSION_COOKIE_NAME)?.value
-  const session = await decrypt(cookie)
+  const cookie = request.cookies.get('session')?.value
+  const session = await decryptSession(cookie)
+
+  console.log(`[proxy] ${pathname} | cookie=${!!cookie} | session=${!!session} | role=${session?.role ?? 'none'}`)
 
   // Unauthenticated user on protected route -> redirect to login
   if (!isPublicRoute && !session) {
@@ -49,35 +66,36 @@ export async function proxy(request: NextRequest) {
   // Authenticated user on public route -> redirect to role-based dashboard
   if (isPublicRoute && session) {
     const dashboardPath = getDashboardPath(session.role)
+    console.log(`[proxy] Redirecting authenticated user from ${pathname} to ${dashboardPath}`)
     return NextResponse.redirect(new URL(dashboardPath, request.nextUrl))
   }
 
   // Role-based route protection for authenticated users
   if (session) {
-    // Admin routes: only admin can access
     if (pathname.startsWith('/admin') && session.role !== 'admin') {
-      const dashboardPath = getDashboardPath(session.role)
-      return NextResponse.redirect(new URL(dashboardPath, request.nextUrl))
+      return NextResponse.redirect(
+        new URL(getDashboardPath(session.role), request.nextUrl)
+      )
     }
 
-    // Employer routes: only employer and admin can access
     if (
       pathname.startsWith('/employer') &&
       session.role !== 'employer' &&
       session.role !== 'admin'
     ) {
-      const dashboardPath = getDashboardPath(session.role)
-      return NextResponse.redirect(new URL(dashboardPath, request.nextUrl))
+      return NextResponse.redirect(
+        new URL(getDashboardPath(session.role), request.nextUrl)
+      )
     }
 
-    // Candidate routes: only candidate and admin can access
     if (
       pathname.startsWith('/candidate') &&
       session.role !== 'candidate' &&
       session.role !== 'admin'
     ) {
-      const dashboardPath = getDashboardPath(session.role)
-      return NextResponse.redirect(new URL(dashboardPath, request.nextUrl))
+      return NextResponse.redirect(
+        new URL(getDashboardPath(session.role), request.nextUrl)
+      )
     }
   }
 
