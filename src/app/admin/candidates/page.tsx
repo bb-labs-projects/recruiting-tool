@@ -76,8 +76,8 @@ export default async function CandidatesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Candidates</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Candidates</h1>
         <p className="text-muted-foreground">
           Review and manage candidate profiles
         </p>
@@ -85,44 +85,44 @@ export default async function CandidatesPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{totalCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Pending Review
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-amber-600">{pendingCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">{pendingCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Active
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">{activeCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">{activeCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Rejected
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-600">{rejectedCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-red-600">{rejectedCount}</p>
           </CardContent>
         </Card>
       </div>

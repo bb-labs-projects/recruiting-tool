@@ -34,5 +34,9 @@ export default async function LoginPage() {
     }
   }
 
-  return <MagicLinkForm />
+  return (
+    <div className="flex justify-center">
+      <MagicLinkForm />
+    </div>
+  )
 }

@@ -22,8 +22,8 @@ export function EmployerNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="border-b bg-background px-6">
-      <div className="flex h-10 items-center gap-6">
+    <nav className="border-b border-border/60 bg-card px-6">
+      <div className="flex h-11 items-center gap-1">
         {navLinks.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact
             ? pathname === href
@@ -34,10 +34,10 @@ export function EmployerNav() {
               key={href}
               href={href}
               className={cn(
-                'flex items-center gap-1.5 text-sm transition-colors hover:text-foreground',
+                'flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all',
                 isActive
-                  ? 'text-foreground font-medium'
-                  : 'text-muted-foreground'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >
               <Icon className="size-4" />

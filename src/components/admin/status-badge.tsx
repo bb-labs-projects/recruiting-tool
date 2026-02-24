@@ -2,9 +2,9 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 const statusStyles = {
-  pending_review: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  active: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  pending_review: 'bg-amber-50 text-amber-700 border-amber-200',
+  active: 'bg-teal-50 text-teal-700 border-teal-200',
+  rejected: 'bg-red-50 text-red-700 border-red-200',
 } as const
 
 const statusLabels = {
@@ -23,7 +23,7 @@ export function StatusBadge({
   return (
     <Badge
       variant="outline"
-      className={cn(statusStyles[status], 'border-transparent', className)}
+      className={cn(statusStyles[status], className)}
     >
       {statusLabels[status]}
     </Badge>

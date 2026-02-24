@@ -16,9 +16,9 @@ import { EmployerActions } from '@/components/admin/employer-actions'
 import { cn } from '@/lib/utils'
 
 const employerStatusStyles = {
-  pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  pending: 'bg-amber-50 text-amber-700 border-amber-200',
+  approved: 'bg-teal-50 text-teal-700 border-teal-200',
+  rejected: 'bg-red-50 text-red-700 border-red-200',
 } as const
 
 const employerStatusLabels = {
@@ -72,13 +72,12 @@ export default async function EmployerDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold">{employer.companyName}</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">{employer.companyName}</h1>
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
               className={cn(
-                employerStatusStyles[employer.status],
-                'border-transparent'
+                employerStatusStyles[employer.status]
               )}
             >
               {employerStatusLabels[employer.status]}
@@ -100,18 +99,18 @@ export default async function EmployerDetailPage({
 
       {/* Rejection reason banner */}
       {employer.status === 'rejected' && employer.rejectionReason && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
-          <p className="text-sm font-medium text-destructive">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+          <p className="text-sm font-medium text-red-700">
             Rejection Reason:
           </p>
-          <p className="text-sm text-destructive/80 mt-1">
+          <p className="text-sm text-red-600 mt-1">
             {employer.rejectionReason}
           </p>
         </div>
       )}
 
       {/* Company Details */}
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>Company Information</CardTitle>
         </CardHeader>
@@ -149,7 +148,7 @@ export default async function EmployerDetailPage({
       <Separator />
 
       {/* Contact Details */}
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>Contact Information</CardTitle>
         </CardHeader>
@@ -194,7 +193,7 @@ export default async function EmployerDetailPage({
       <Separator />
 
       {/* Account Details */}
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>Account Details</CardTitle>
         </CardHeader>

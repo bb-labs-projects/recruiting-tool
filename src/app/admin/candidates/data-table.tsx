@@ -104,7 +104,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Table */}
-      <div className="rounded-md border">
+      <div className="rounded-xl border overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -125,7 +125,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className="even:bg-muted/30 hover:bg-accent/40 transition-colors">
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -160,6 +160,7 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
+            className="rounded-lg transition-all"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -168,6 +169,7 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
+            className="rounded-lg transition-all"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

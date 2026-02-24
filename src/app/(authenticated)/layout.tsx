@@ -21,10 +21,12 @@ export default async function AuthenticatedLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="border-b border-border/60 bg-card card-warm">
         <div className="flex h-14 items-center justify-between px-6">
-          <span className="text-lg font-semibold">IP Lawyer Recruiting</span>
+          <span className="font-[family-name:var(--font-outfit)] text-lg font-bold tracking-tight text-foreground">
+            IP Lawyer Recruiting
+          </span>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{user.email}</span>
             <LogoutButton />

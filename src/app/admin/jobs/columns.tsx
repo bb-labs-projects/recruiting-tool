@@ -17,17 +17,17 @@ type JobRow = {
 }
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  open: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  closed: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-  archived: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  draft: 'bg-amber-50 text-amber-700 border-amber-200',
+  open: 'bg-teal-50 text-teal-700 border-teal-200',
+  closed: 'bg-stone-100 text-stone-600 border-stone-200',
+  archived: 'bg-stone-100 text-stone-600 border-stone-200',
 }
 
 const matchingStatusColors: Record<string, string> = {
-  pending: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  running: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-  completed: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  failed: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  pending: 'bg-amber-50 text-amber-700 border-amber-200',
+  running: 'bg-blue-50 text-blue-700 border-blue-200',
+  completed: 'bg-teal-50 text-teal-700 border-teal-200',
+  failed: 'bg-red-50 text-red-700 border-red-200',
 }
 
 export type { JobRow }

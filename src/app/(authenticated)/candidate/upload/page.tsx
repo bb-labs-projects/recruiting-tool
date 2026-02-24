@@ -311,13 +311,13 @@ export default function CandidateUploadPage() {
   function statusBadge(status: CvUpload['status']) {
     switch (status) {
       case 'uploaded':
-        return <Badge variant="secondary">Uploaded</Badge>
+        return <Badge variant="outline" className="border-amber-200 text-amber-700 bg-amber-50">Uploaded</Badge>
       case 'parsing':
-        return <Badge variant="default">Parsing...</Badge>
+        return <Badge variant="outline" className="border-amber-200 text-amber-700 bg-amber-50">Parsing...</Badge>
       case 'parsed':
-        return <Badge className="bg-green-600 text-white hover:bg-green-600">Parsed</Badge>
+        return <Badge variant="outline" className="border-teal-200 text-teal-700 bg-teal-50">Parsed</Badge>
       case 'failed':
-        return <Badge variant="destructive">Failed</Badge>
+        return <Badge variant="outline" className="border-red-200 text-red-700 bg-red-50">Failed</Badge>
     }
   }
 
@@ -333,7 +333,7 @@ export default function CandidateUploadPage() {
           e.preventDefault()
           setDragOver(false)
         }}
-        className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-10 transition-colors ${
+        className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-colors ${
           dragOver
             ? 'border-primary bg-primary/5'
             : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -349,6 +349,7 @@ export default function CandidateUploadPage() {
         <Button
           variant="outline"
           size="sm"
+          className="rounded-lg transition-all"
           onClick={() => fileInputRef.current?.click()}
         >
           Select file
@@ -369,15 +370,15 @@ export default function CandidateUploadPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Upload CV</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Upload CV</h1>
         <p className="text-muted-foreground">
           Upload your CV in PDF format. Our system will automatically extract
           your qualifications and experience.
         </p>
       </div>
 
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>
             {view === 'loading' && 'Loading...'}
@@ -415,11 +416,12 @@ export default function CandidateUploadPage() {
 
               <div className="flex gap-3">
                 <Button
+                  className="rounded-lg transition-all"
                   onClick={() => triggerParse(currentUpload.id)}
                 >
                   {currentUpload.status === 'failed' ? 'Retry Analysis' : 'Analyze CV'}
                 </Button>
-                <Button variant="outline" onClick={showDropzone}>
+                <Button variant="outline" className="rounded-lg transition-all" onClick={showDropzone}>
                   Upload Different CV
                 </Button>
               </div>
@@ -450,15 +452,15 @@ export default function CandidateUploadPage() {
 
           {view === 'complete' && (
             <div className="flex flex-col items-center py-10">
-              <CheckCircle className="mb-3 size-10 text-green-500" />
+              <CheckCircle className="mb-3 size-10 text-teal-500" />
               <p className="mb-4 text-sm font-medium">
                 Your profile has been created!
               </p>
               <div className="flex gap-3">
-                <Button onClick={() => router.push('/candidate/profile')}>
+                <Button className="rounded-lg transition-all" onClick={() => router.push('/candidate/profile')}>
                   View Profile
                 </Button>
-                <Button variant="outline" onClick={showDropzone}>
+                <Button variant="outline" className="rounded-lg transition-all" onClick={showDropzone}>
                   Upload New CV
                 </Button>
               </div>
@@ -481,11 +483,12 @@ export default function CandidateUploadPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={!!deletingId}>
+            <Button variant="outline" className="rounded-lg transition-all" onClick={() => setDeleteTarget(null)} disabled={!!deletingId}>
               Cancel
             </Button>
             <Button
               variant="destructive"
+              className="rounded-lg transition-all"
               disabled={!!deletingId}
               onClick={() => deleteTarget && handleDelete(deleteTarget.id)}
             >
@@ -498,7 +501,7 @@ export default function CandidateUploadPage() {
 
       {/* Upload History */}
       {allUploads.length > 0 && view !== 'loading' && (
-        <Card className="mt-6">
+        <Card className="mt-6 rounded-xl shadow-sm">
           <CardHeader>
             <CardTitle>Your Uploads</CardTitle>
           </CardHeader>
@@ -534,6 +537,7 @@ export default function CandidateUploadPage() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="rounded-lg transition-all"
                         onClick={() => {
                           setCurrentUpload(upload)
                           if (upload.status === 'failed') {
@@ -550,6 +554,7 @@ export default function CandidateUploadPage() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="rounded-lg transition-all"
                         onClick={() => router.push('/candidate/profile')}
                       >
                         View Profile

@@ -82,7 +82,7 @@ export default async function ProfileDetailPage({
   const pdfUrl = cvWithPdf?.blobUrl ?? null
 
   const headerContent = (
-    <div className="space-y-4 mb-6">
+    <div className="space-y-4 mb-8">
       <Link
         href="/admin/candidates"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -92,7 +92,7 @@ export default async function ProfileDetailPage({
       </Link>
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold">{profile.name}</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">{profile.name}</h1>
           <div className="flex items-center gap-2">
             <StatusBadge status={profile.status} />
             {profile.reviewedAt && (
@@ -109,9 +109,9 @@ export default async function ProfileDetailPage({
         />
       </div>
       {profile.status === 'rejected' && profile.rejectionNotes && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
-          <p className="text-sm font-medium text-destructive">Rejection Notes:</p>
-          <p className="text-sm text-destructive/80 mt-1">{profile.rejectionNotes}</p>
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+          <p className="text-sm font-medium text-red-700">Rejection Notes:</p>
+          <p className="text-sm text-red-600 mt-1">{profile.rejectionNotes}</p>
         </div>
       )}
     </div>

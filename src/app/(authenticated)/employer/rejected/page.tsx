@@ -35,12 +35,12 @@ export default async function EmployerRejectedPage() {
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <Card className="w-full max-w-md text-center">
+      <Card className="w-full max-w-md rounded-xl shadow-sm text-center">
         <CardHeader>
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/30">
             <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
-          <CardTitle>Account Not Approved</CardTitle>
+          <CardTitle className="font-[family-name:var(--font-outfit)]">Account Not Approved</CardTitle>
           <CardDescription>
             {profile.companyName}
           </CardDescription>

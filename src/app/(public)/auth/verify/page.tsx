@@ -14,14 +14,16 @@ export const metadata: Metadata = {
  */
 export default function VerifyPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center">
-          <p className="text-sm text-muted-foreground">Loading...</p>
-        </div>
-      }
-    >
-      <MagicLinkVerify />
-    </Suspense>
+    <div className="flex justify-center">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center">
+            <p className="text-sm text-muted-foreground">Loading...</p>
+          </div>
+        }
+      >
+        <MagicLinkVerify />
+      </Suspense>
+    </div>
   )
 }

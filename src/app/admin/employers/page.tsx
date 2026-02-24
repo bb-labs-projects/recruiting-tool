@@ -32,8 +32,8 @@ export default async function EmployersPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
           Employer Management
         </h1>
         <p className="text-muted-foreground">
@@ -43,48 +43,48 @@ export default async function EmployersPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{totalCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Pending
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-amber-600">
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">
               {pendingCount}
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Approved
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">
               {approvedCount}
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Rejected
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-600">{rejectedCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-red-600">{rejectedCount}</p>
           </CardContent>
         </Card>
       </div>

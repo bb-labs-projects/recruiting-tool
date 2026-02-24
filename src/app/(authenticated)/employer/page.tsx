@@ -41,8 +41,8 @@ export default async function EmployerDashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">
+      <div className="mb-8">
+        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
           Employer Dashboard
         </h1>
         <p className="text-muted-foreground">
@@ -52,10 +52,10 @@ export default async function EmployerDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link href="/employer/browse" className="block">
-          <Card className="h-full transition-colors hover:border-primary/50">
+          <Card className="h-full rounded-xl shadow-sm transition-shadow hover:shadow-md">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-muted-foreground" />
+                <Search className="h-5 w-5 text-teal-600" />
                 <CardTitle>Browse Candidates</CardTitle>
               </div>
               <CardDescription>
@@ -71,10 +71,10 @@ export default async function EmployerDashboardPage() {
         </Link>
 
         <Link href="/employer/saved" className="block">
-          <Card className="h-full transition-colors hover:border-primary/50">
+          <Card className="h-full rounded-xl shadow-sm transition-shadow hover:shadow-md">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Bookmark className="h-5 w-5 text-muted-foreground" />
+                <Bookmark className="h-5 w-5 text-teal-600" />
                 <CardTitle>Saved Profiles</CardTitle>
               </div>
               <CardDescription>
@@ -89,10 +89,10 @@ export default async function EmployerDashboardPage() {
           </Card>
         </Link>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-muted-foreground" />
+              <Briefcase className="h-5 w-5 text-teal-600" />
               <CardTitle>My Jobs</CardTitle>
             </div>
             <CardDescription>

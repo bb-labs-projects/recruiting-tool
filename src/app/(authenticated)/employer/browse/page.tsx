@@ -111,8 +111,8 @@ export default async function BrowsePage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="mb-2">
+        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
           Browse Candidates
         </h1>
         <p className="text-muted-foreground mt-1">
@@ -144,9 +144,9 @@ export default async function BrowsePage({
         </div>
       ) : (
         /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-          <Users className="text-muted-foreground mb-4 size-12" />
-          <h3 className="text-lg font-semibold">No candidates found</h3>
+        <div className="flex flex-col items-center justify-center rounded-xl py-20">
+          <Users className="text-teal-400 mb-4 size-12" />
+          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No candidates found</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             {hasActiveFilters
               ? 'Try broadening your filters or clearing some to see more candidates.'
@@ -166,6 +166,7 @@ export default async function BrowsePage({
           <Button
             variant="outline"
             size="sm"
+            className="rounded-lg transition-all"
             asChild={page > 1}
             disabled={page <= 1}
           >
@@ -189,6 +190,7 @@ export default async function BrowsePage({
           <Button
             variant="outline"
             size="sm"
+            className="rounded-lg transition-all"
             asChild={page < totalPages}
             disabled={page >= totalPages}
           >

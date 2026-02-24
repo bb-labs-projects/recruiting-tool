@@ -28,7 +28,7 @@ export default async function EmployerLayout({
   return (
     <div>
       <EmployerNav />
-      <div className="p-6">{children}</div>
+      <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
     </div>
   )
 }

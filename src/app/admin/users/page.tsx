@@ -57,7 +57,7 @@ export default function AdminUsersPage() {
   function roleBadge(role: string) {
     switch (role) {
       case 'admin':
-        return <Badge className="bg-purple-600 text-white hover:bg-purple-600">Admin</Badge>
+        return <Badge className="bg-teal-600 text-white hover:bg-teal-600">Admin</Badge>
       case 'employer':
         return <Badge variant="secondary">Employer</Badge>
       case 'candidate':
@@ -80,8 +80,8 @@ export default function AdminUsersPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Manage Users</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Manage Users</h1>
         <p className="text-muted-foreground">
           Promote users to admin or revoke admin access.
         </p>
@@ -124,7 +124,7 @@ export default function AdminUsersPage() {
       </Dialog>
 
       {admins.length > 0 && (
-        <Card className="mb-6">
+        <Card className="mb-6 rounded-xl shadow-sm">
           <CardHeader>
             <CardTitle>Admins ({admins.length})</CardTitle>
           </CardHeader>
@@ -133,7 +133,7 @@ export default function AdminUsersPage() {
               {admins.map((user) => (
                 <div key={user.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center gap-3">
-                    <Shield className="size-4 text-purple-600" />
+                    <Shield className="size-4 text-teal-600" />
                     <span className="text-sm font-medium">{user.email}</span>
                     {roleBadge(user.role)}
                   </div>
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
         </Card>
       )}
 
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>All Users ({nonAdmins.length})</CardTitle>
         </CardHeader>

@@ -18,9 +18,9 @@ export type EmployerRow = {
 }
 
 const employerStatusStyles = {
-  pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  pending: 'bg-amber-50 text-amber-700 border-amber-200',
+  approved: 'bg-teal-50 text-teal-700 border-teal-200',
+  rejected: 'bg-red-50 text-red-700 border-red-200',
 } as const
 
 const employerStatusLabels = {
@@ -70,8 +70,7 @@ export const columns: ColumnDef<EmployerRow>[] = [
       <Badge
         variant="outline"
         className={cn(
-          employerStatusStyles[row.original.status],
-          'border-transparent'
+          employerStatusStyles[row.original.status]
         )}
       >
         {employerStatusLabels[row.original.status]}

@@ -34,20 +34,20 @@ export default async function AdminLayout({
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="flex w-64 flex-col bg-gray-900 text-white">
-        <div className="flex h-14 items-center gap-2 border-b border-gray-700 px-6">
-          <span className="text-lg font-semibold">Admin</span>
-          <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+      <aside className="flex w-64 flex-col bg-sidebar text-sidebar-foreground">
+        <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-6">
+          <span className="font-[family-name:var(--font-outfit)] text-lg font-bold tracking-tight">Admin</span>
+          <span className="rounded-full bg-sidebar-primary px-2 py-0.5 text-xs font-medium text-sidebar-primary-foreground">
             admin
           </span>
         </div>
-        <nav className="flex-1 px-4 py-4">
+        <nav className="flex-1 px-3 py-4">
           <ul className="space-y-1">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="block rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
+                  className="block rounded-lg px-3 py-2 text-sm text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   {link.name}
                 </a>
@@ -55,8 +55,8 @@ export default async function AdminLayout({
             ))}
           </ul>
         </nav>
-        <div className="border-t border-gray-700 px-6 py-4">
-          <p className="truncate text-sm text-gray-400">{user.email}</p>
+        <div className="border-t border-sidebar-border px-6 py-4">
+          <p className="truncate text-sm text-sidebar-foreground/60">{user.email}</p>
           <div className="mt-2">
             <LogoutButton />
           </div>
@@ -64,8 +64,8 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between border-b bg-background px-6">
+      <div className="flex flex-1 flex-col bg-background">
+        <header className="flex h-14 items-center justify-between border-b border-border/60 bg-card px-6">
           <span className="text-sm text-muted-foreground">
             Signed in as {user.email}
           </span>

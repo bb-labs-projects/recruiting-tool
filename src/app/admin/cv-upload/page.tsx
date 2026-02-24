@@ -229,15 +229,15 @@ export default function CvUploadPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">CV Upload</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">CV Upload</h1>
         <p className="text-muted-foreground">
           Upload PDF CVs, trigger parsing, and monitor progress
         </p>
       </div>
 
       {/* Upload Area */}
-      <Card className="mb-6">
+      <Card className="mb-6 rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>Upload CVs</CardTitle>
         </CardHeader>
@@ -313,8 +313,8 @@ export default function CvUploadPage() {
       </Card>
 
       {/* Batch Actions */}
-      <Card className="mb-6">
-        <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Card className="mb-6 rounded-xl shadow-sm">
+        <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-4 text-sm">
               <span>
@@ -342,9 +342,9 @@ export default function CvUploadPage() {
                 <div className="mb-1 text-xs text-muted-foreground">
                   Parsing: {parsedCount + failedCount}/{totalCount} complete
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-stone-200">
                   <div
-                    className="h-full rounded-full bg-green-500 transition-all"
+                    className="h-full rounded-full bg-teal-500 transition-all"
                     style={{
                       width: `${((parsedCount + failedCount) / totalCount) * 100}%`,
                     }}
@@ -357,6 +357,7 @@ export default function CvUploadPage() {
           <Button
             onClick={handleParseAll}
             disabled={isParsing || uploadedCount === 0}
+            className="rounded-lg transition-all"
           >
             {isParsing ? (
               <>
@@ -374,7 +375,7 @@ export default function CvUploadPage() {
       </Card>
 
       {/* Upload List */}
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardHeader>
           <CardTitle>CV Uploads</CardTitle>
         </CardHeader>
@@ -384,7 +385,7 @@ export default function CvUploadPage() {
               No CVs uploaded yet. Drop PDF files above to get started.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-xl overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
@@ -397,7 +398,7 @@ export default function CvUploadPage() {
                 </thead>
                 <tbody>
                   {uploads.map((u) => (
-                    <tr key={u.id} className="border-b last:border-b-0">
+                    <tr key={u.id} className="border-b last:border-b-0 even:bg-muted/30 hover:bg-accent/40 transition-colors">
                       <td className="max-w-[200px] truncate py-3 pr-4">
                         <div className="flex items-center gap-2">
                           <FileText className="size-4 shrink-0 text-muted-foreground" />
@@ -448,13 +449,10 @@ function StatusBadge({
   errorMessage: string | null
 }) {
   const styles = {
-    uploaded:
-      'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    parsing:
-      'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-    parsed:
-      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    uploaded: 'bg-blue-50 text-blue-700 border border-blue-200',
+    parsing: 'bg-amber-50 text-amber-700 border border-amber-200',
+    parsed: 'bg-teal-50 text-teal-700 border border-teal-200',
+    failed: 'bg-red-50 text-red-700 border border-red-200',
   }
 
   const icons = {

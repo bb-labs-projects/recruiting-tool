@@ -31,8 +31,8 @@ export default async function CandidateDashboardPage() {
     // Case A: No profile exists
     return (
       <div>
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
             Welcome to the IP Lawyer Network
           </h1>
           <p className="text-muted-foreground">
@@ -41,7 +41,7 @@ export default async function CandidateDashboardPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card>
+          <Card className="rounded-xl shadow-sm">
             <CardHeader>
               <CardTitle>Complete Your Profile</CardTitle>
               <CardDescription>
@@ -51,7 +51,7 @@ export default async function CandidateDashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild>
+              <Button asChild className="rounded-lg transition-all">
                 <Link href="/candidate/upload">
                   <Upload className="size-4" />
                   Upload Your CV
@@ -60,7 +60,7 @@ export default async function CandidateDashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-xl shadow-sm">
             <CardHeader>
               <CardTitle>How It Works</CardTitle>
             </CardHeader>
@@ -97,19 +97,19 @@ export default async function CandidateDashboardPage() {
     pending_review: {
       label: 'Pending Review',
       variant: 'outline' as const,
-      className: 'border-amber-500 text-amber-700 bg-amber-50',
+      className: 'border-amber-200 text-amber-700 bg-amber-50',
       icon: Clock,
     },
     active: {
       label: 'Active',
       variant: 'outline' as const,
-      className: 'border-green-500 text-green-700 bg-green-50',
+      className: 'border-teal-200 text-teal-700 bg-teal-50',
       icon: CheckCircle,
     },
     rejected: {
       label: 'Rejected',
       variant: 'outline' as const,
-      className: 'border-red-500 text-red-700 bg-red-50',
+      className: 'border-red-200 text-red-700 bg-red-50',
       icon: XCircle,
     },
   }
@@ -119,15 +119,15 @@ export default async function CandidateDashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
           Candidate Dashboard
         </h1>
         <p className="text-muted-foreground">{user.email}</p>
       </div>
 
       {/* Profile Summary */}
-      <Card className="mb-6">
+      <Card className="mb-6 rounded-xl shadow-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -158,22 +158,22 @@ export default async function CandidateDashboardPage() {
 
       {/* Stats Grid */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardContent className="flex items-center gap-3 pt-6">
-            <Scale className="size-5 text-muted-foreground" />
+            <Scale className="size-5 text-primary" />
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">
                 {profile.profileSpecializations.length}
               </p>
               <p className="text-sm text-muted-foreground">Specializations</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardContent className="flex items-center gap-3 pt-6">
-            <Briefcase className="size-5 text-muted-foreground" />
+            <Briefcase className="size-5 text-primary" />
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">
                 {profile.workHistory.length}
               </p>
               <p className="text-sm text-muted-foreground">
@@ -182,11 +182,11 @@ export default async function CandidateDashboardPage() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardContent className="flex items-center gap-3 pt-6">
-            <GraduationCap className="size-5 text-muted-foreground" />
+            <GraduationCap className="size-5 text-primary" />
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">
                 {profile.education.length}
               </p>
               <p className="text-sm text-muted-foreground">Education Entries</p>
@@ -197,13 +197,13 @@ export default async function CandidateDashboardPage() {
 
       {/* Quick Actions */}
       <div className="flex gap-3">
-        <Button asChild>
+        <Button asChild className="rounded-lg transition-all">
           <Link href="/candidate/profile">
             <FileText className="size-4" />
             View &amp; Edit Profile
           </Link>
         </Button>
-        <Button variant="outline" asChild>
+        <Button variant="outline" asChild className="rounded-lg transition-all">
           <Link href="/candidate/upload">
             <Upload className="size-4" />
             Re-upload CV

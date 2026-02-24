@@ -52,8 +52,8 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
           Admin Dashboard
         </h1>
         <p className="text-muted-foreground">
@@ -62,39 +62,39 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Candidates</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{activeCandidates}</p>
+            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">{activeCandidates}</p>
             <p className="text-sm text-muted-foreground">
               Active candidate profiles
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Employers</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{approvedEmployers}</p>
+            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">{approvedEmployers}</p>
             <p className="text-sm text-muted-foreground">
               Approved employer accounts
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">
+            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">
               ${(totalRevenue / 100).toFixed(2)}
             </p>
             <p className="text-sm text-muted-foreground">
@@ -103,7 +103,7 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Quick Links</CardTitle>
           </CardHeader>

@@ -29,9 +29,9 @@ export function MagicLinkVerify() {
 
   if (!token) {
     return (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Invalid Link</CardTitle>
+      <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+        <CardHeader className="text-center">
+          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Invalid Link</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
@@ -39,7 +39,7 @@ export function MagicLinkVerify() {
           </p>
           <Button
             variant="outline"
-            className="mt-4 w-full"
+            className="mt-4 w-full rounded-lg"
             onClick={() => router.push('/login')}
           >
             Request New Link
@@ -83,9 +83,9 @@ export function MagicLinkVerify() {
 
   if (status === 'success') {
     return (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Success!</CardTitle>
+      <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+        <CardHeader className="text-center">
+          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Success!</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
@@ -98,15 +98,15 @@ export function MagicLinkVerify() {
 
   if (status === 'error') {
     return (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Sign In Failed</CardTitle>
+      <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+        <CardHeader className="text-center">
+          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Sign In Failed</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-destructive">{errorMessage}</p>
           <Button
             variant="outline"
-            className="mt-4 w-full"
+            className="mt-4 w-full rounded-lg"
             onClick={() => router.push('/login')}
           >
             Request New Link
@@ -117,16 +117,16 @@ export function MagicLinkVerify() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Confirm Sign In</CardTitle>
+    <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+      <CardHeader className="text-center">
+        <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Confirm Sign In</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-sm text-muted-foreground">
           Click the button below to complete your sign in.
         </p>
         <Button
-          className="w-full"
+          className="w-full rounded-lg"
           onClick={handleConfirm}
           disabled={status === 'loading'}
         >

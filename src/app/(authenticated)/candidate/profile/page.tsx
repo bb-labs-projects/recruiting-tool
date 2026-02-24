@@ -66,17 +66,17 @@ export default async function CandidateProfilePage() {
   const statusConfig = {
     pending_review: {
       label: 'Pending Review',
-      className: 'border-amber-500 text-amber-700 bg-amber-50',
+      className: 'border-amber-200 text-amber-700 bg-amber-50',
       icon: Clock,
     },
     active: {
       label: 'Active',
-      className: 'border-green-500 text-green-700 bg-green-50',
+      className: 'border-teal-200 text-teal-700 bg-teal-50',
       icon: CheckCircle,
     },
     rejected: {
       label: 'Rejected',
-      className: 'border-red-500 text-red-700 bg-red-50',
+      className: 'border-red-200 text-red-700 bg-red-50',
       icon: XCircle,
     },
   }
@@ -87,9 +87,9 @@ export default async function CandidateProfilePage() {
   return (
     <div>
       {/* Header with status */}
-      <div className="mb-6 flex items-start justify-between">
+      <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">My Profile</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">My Profile</h1>
           <p className="text-muted-foreground">{profile.name}</p>
         </div>
         <Badge variant="outline" className={status.className}>
@@ -100,7 +100,7 @@ export default async function CandidateProfilePage() {
 
       {/* Status banners */}
       {profile.status === 'active' && (
-        <div className="mb-6 flex items-start gap-3 rounded-md border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
           <Info className="mt-0.5 size-4 shrink-0" />
           <p>
             Your profile is live and visible to employers. Editing will send it
@@ -110,7 +110,7 @@ export default async function CandidateProfilePage() {
       )}
 
       {profile.status === 'rejected' && (
-        <div className="mb-6 flex items-start gap-3 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" />
           <div>
             <p className="font-medium">Your profile needs changes</p>
@@ -125,7 +125,7 @@ export default async function CandidateProfilePage() {
       )}
 
       {profile.status === 'pending_review' && (
-        <div className="mb-6 flex items-start gap-3 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           <Clock className="mt-0.5 size-4 shrink-0" />
           <p>
             Your profile is being reviewed by our team. You can still edit your
@@ -148,10 +148,10 @@ export default async function CandidateProfilePage() {
             }}
           >
             <input type="hidden" name="profileId" value={profile.id} />
-            <Button type="submit">Submit for Review</Button>
+            <Button type="submit" className="rounded-lg transition-all">Submit for Review</Button>
           </form>
         )}
-        <Button variant="outline" asChild>
+        <Button variant="outline" asChild className="rounded-lg transition-all">
           <Link href="/candidate/upload">
             <Upload className="size-4" />
             Re-upload CV

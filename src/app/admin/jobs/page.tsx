@@ -28,58 +28,58 @@ export default async function AdminJobsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Job Listings</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Job Listings</h1>
           <p className="text-muted-foreground">
             Manage job listings across all employers
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="rounded-lg transition-all">
           <Link href="/admin/jobs/new">Create Job</Link>
         </Button>
       </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{totalCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Draft
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-gray-600">{draftCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">{draftCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Open
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">{openCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">{openCount}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Closed / Archived
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-yellow-600">{closedCount}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-stone-600">{closedCount}</p>
           </CardContent>
         </Card>
       </div>

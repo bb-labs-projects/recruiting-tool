@@ -46,8 +46,8 @@ export default async function AdminAnalyticsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Analytics</h1>
         <p className="text-muted-foreground">
           Platform metrics and activity overview
         </p>
@@ -55,7 +55,7 @@ export default async function AdminAnalyticsPage() {
 
       {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Revenue
@@ -63,7 +63,7 @@ export default async function AdminAnalyticsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">
               ${(summary.totalRevenue / 100).toFixed(2)}
             </p>
             <p className="text-xs text-muted-foreground">
@@ -72,7 +72,7 @@ export default async function AdminAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Unlocks
@@ -80,14 +80,14 @@ export default async function AdminAnalyticsPage() {
             <Unlock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{summary.totalUnlocks}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.totalUnlocks}</p>
             <p className="text-xs text-muted-foreground">
               Profiles purchased by employers
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Profile Views
@@ -95,14 +95,14 @@ export default async function AdminAnalyticsPage() {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{summary.totalViews}</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.totalViews}</p>
             <p className="text-xs text-muted-foreground">
               Total profile detail views
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Conversion Rate
@@ -110,7 +110,7 @@ export default async function AdminAnalyticsPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{summary.conversionRate}%</p>
+            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.conversionRate}%</p>
             <p className="text-xs text-muted-foreground">
               Views to unlocks
             </p>
@@ -121,7 +121,7 @@ export default async function AdminAnalyticsPage() {
       {/* Two-column layout: Top Profiles + Recent Unlocks */}
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {/* Most Viewed Profiles */}
-        <Card>
+        <Card className="rounded-xl shadow-sm overflow-hidden">
           <CardHeader>
             <CardTitle>Most Viewed Profiles</CardTitle>
             <CardDescription>
@@ -144,7 +144,7 @@ export default async function AdminAnalyticsPage() {
                 </TableHeader>
                 <TableBody>
                   {topProfiles.map((profile) => (
-                    <TableRow key={profile.profileId}>
+                    <TableRow key={profile.profileId} className="even:bg-muted/30 hover:bg-accent/40">
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {profile.specializations.length > 0 ? (
@@ -183,7 +183,7 @@ export default async function AdminAnalyticsPage() {
         </Card>
 
         {/* Recent Unlocks */}
-        <Card>
+        <Card className="rounded-xl shadow-sm overflow-hidden">
           <CardHeader>
             <CardTitle>Recent Unlocks</CardTitle>
             <CardDescription>
@@ -207,7 +207,7 @@ export default async function AdminAnalyticsPage() {
                 </TableHeader>
                 <TableBody>
                   {recentUnlocks.map((unlock) => (
-                    <TableRow key={`${unlock.profileId}-${unlock.employerEmail}`}>
+                    <TableRow key={`${unlock.profileId}-${unlock.employerEmail}`} className="even:bg-muted/30 hover:bg-accent/40">
                       <TableCell className="text-sm">
                         {unlock.employerEmail}
                       </TableCell>

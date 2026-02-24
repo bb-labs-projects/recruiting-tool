@@ -31,9 +31,9 @@ export function MagicLinkForm() {
 
   if (state?.success) {
     return (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Check your email</CardTitle>
+      <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+        <CardHeader className="text-center">
+          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Check your email</CardTitle>
           <CardDescription>
             We sent a login link to your email address. Click the link in the
             email to sign in.
@@ -53,9 +53,9 @@ export function MagicLinkForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Sign In</CardTitle>
+    <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
+      <CardHeader className="text-center">
+        <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Sign In</CardTitle>
         <CardDescription>
           Enter your email to receive a login link
         </CardDescription>
@@ -64,12 +64,12 @@ export function MagicLinkForm() {
         <form action={action} className="space-y-4">
           <div className="space-y-2">
             <Label>I am a</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setRole('candidate')}
                 className={cn(
-                  'flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all',
                   role === 'candidate'
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-input bg-background hover:bg-muted'
@@ -82,7 +82,7 @@ export function MagicLinkForm() {
                 type="button"
                 onClick={() => setRole('employer')}
                 className={cn(
-                  'flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all',
                   role === 'employer'
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-input bg-background hover:bg-muted'
@@ -112,7 +112,7 @@ export function MagicLinkForm() {
               </p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={pending}>
+          <Button type="submit" className="w-full rounded-lg" disabled={pending}>
             {pending ? 'Sending...' : 'Send Login Link'}
           </Button>
         </form>

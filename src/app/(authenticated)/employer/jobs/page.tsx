@@ -10,10 +10,10 @@ import { Plus, Briefcase } from 'lucide-react'
 import { PublishButton } from './publish-button'
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  open: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  closed: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-  archived: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  draft: 'bg-amber-50 text-amber-700 border border-amber-200',
+  open: 'bg-teal-50 text-teal-700 border border-teal-200',
+  closed: 'bg-red-50 text-red-700 border border-red-200',
+  archived: 'bg-stone-100 text-stone-600 border border-stone-200',
 }
 
 export default async function EmployerJobsPage() {
@@ -30,12 +30,12 @@ export default async function EmployerJobsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Jobs</h1>
+          <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">My Jobs</h1>
           <p className="text-muted-foreground mt-1">
             Manage your job listings and view matched candidates
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="rounded-lg transition-all">
           <Link href="/employer/jobs/new">
             <Plus className="mr-2 size-4" />
             Create Job
@@ -44,14 +44,14 @@ export default async function EmployerJobsPage() {
       </div>
 
       {jobs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-          <Briefcase className="text-muted-foreground mb-4 size-12" />
-          <h3 className="text-lg font-semibold">No job listings yet</h3>
+        <div className="flex flex-col items-center justify-center rounded-xl py-20">
+          <Briefcase className="text-teal-400 mb-4 size-12" />
+          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No job listings yet</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             You haven&apos;t created any job listings yet. Create your first job
             to start matching with qualified candidates.
           </p>
-          <Button asChild className="mt-4">
+          <Button asChild className="mt-4 rounded-lg transition-all">
             <Link href="/employer/jobs/new">
               <Plus className="mr-2 size-4" />
               Create Job
@@ -61,7 +61,7 @@ export default async function EmployerJobsPage() {
       ) : (
         <div className="space-y-3">
           {jobs.map((job) => (
-            <Card key={job.id}>
+            <Card key={job.id} className="rounded-xl shadow-sm">
               <CardContent className="flex items-center justify-between py-4">
                 <div className="flex items-center gap-4">
                   <div>

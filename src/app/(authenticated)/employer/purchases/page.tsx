@@ -35,8 +35,8 @@ export default async function PurchaseHistoryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Purchase History</h1>
+      <div className="mb-2">
+        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">Purchase History</h1>
         <p className="text-muted-foreground mt-1">
           Profiles you&apos;ve unlocked via payment
         </p>
@@ -51,7 +51,7 @@ export default async function PurchaseHistoryPage() {
       {purchases.length > 0 ? (
         <div className="space-y-3">
           {purchases.map((purchase) => (
-            <Card key={purchase.profileId}>
+            <Card key={purchase.profileId} className="rounded-xl shadow-sm">
               <CardContent className="flex items-center justify-between py-4">
                 <div className="space-y-1">
                   {/* Specializations */}
@@ -82,7 +82,7 @@ export default async function PurchaseHistoryPage() {
                     {purchase.currency.toUpperCase()}
                   </p>
                 </div>
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm" className="rounded-lg transition-all">
                   <Link href={`/employer/browse/${purchase.profileId}`}>
                     <ExternalLink className="size-4" />
                     View Profile
@@ -94,9 +94,9 @@ export default async function PurchaseHistoryPage() {
         </div>
       ) : (
         /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-          <Receipt className="text-muted-foreground mb-4 size-12" />
-          <h3 className="text-lg font-semibold">No purchases yet</h3>
+        <div className="flex flex-col items-center justify-center rounded-xl py-20">
+          <Receipt className="text-teal-400 mb-4 size-12" />
+          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No purchases yet</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             Browse candidates and unlock profiles to see their full details.
           </p>

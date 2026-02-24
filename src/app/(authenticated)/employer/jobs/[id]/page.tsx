@@ -12,10 +12,10 @@ import { MatchResults } from '@/components/jobs/match-results'
 import { MatchingTrigger } from './matching-trigger'
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  open: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  closed: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-  archived: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  draft: 'bg-amber-50 text-amber-700 border border-amber-200',
+  open: 'bg-teal-50 text-teal-700 border border-teal-200',
+  closed: 'bg-red-50 text-red-700 border border-red-200',
+  archived: 'bg-stone-100 text-stone-600 border border-stone-200',
 }
 
 export default async function JobDetailPage({
@@ -54,7 +54,7 @@ export default async function JobDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{job.title}</h1>
+          <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">{job.title}</h1>
           <div className="mt-2 flex items-center gap-2">
             <Badge className={statusColors[job.status] ?? ''}>
               {job.status}
@@ -70,7 +70,7 @@ export default async function JobDetailPage({
           </div>
         </div>
         {canEdit && (
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="rounded-lg transition-all">
             <Link href={`/employer/jobs/${job.id}/edit`}>
               <Pencil className="mr-2 size-4" />
               Edit Job
@@ -80,7 +80,7 @@ export default async function JobDetailPage({
       </div>
 
       {/* Job Details */}
-      <Card>
+      <Card className="rounded-xl shadow-sm">
         <CardContent className="space-y-4 pt-6">
           {job.description && (
             <div>
@@ -176,12 +176,12 @@ export default async function JobDetailPage({
 
       {/* Matching Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Candidate Matches</h2>
+        <h2 className="font-[family-name:var(--font-outfit)] text-xl font-semibold">Candidate Matches</h2>
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
           <MatchResults matches={matches} />
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
-          <Card>
+          <Card className="rounded-xl shadow-sm">
             <CardContent className="py-8 text-center">
               <p className="text-muted-foreground text-sm">
                 No matching candidates found. Try broadening your job
