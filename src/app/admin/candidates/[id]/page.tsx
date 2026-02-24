@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { StatusBadge } from '@/components/admin/status-badge'
 import { ProfileForm, type ProfileFormData } from '@/components/admin/profile-form'
 import { ProfileActions } from './profile-actions'
+import { PdfViewer } from '@/components/admin/pdf-viewer'
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -79,7 +80,9 @@ export default async function ProfileDetailPage({
 
   // Find a CV with a blobUrl for the PDF viewer
   const cvWithPdf = profile.cvUploads.find((cv) => cv.blobUrl)
-  const pdfUrl = cvWithPdf?.blobUrl ?? null
+  const cvStoragePath = cvWithPdf?.storagePath ?? null
+  const cvPublicUrl = cvWithPdf?.blobUrl ?? null
+  const hasPdf = !!(cvStoragePath || cvPublicUrl)
 
   const headerContent = (
     <div className="space-y-4 mb-8">
@@ -118,15 +121,11 @@ export default async function ProfileDetailPage({
   )
 
   // Side-by-side layout when PDF exists
-  if (pdfUrl) {
+  if (hasPdf) {
     return (
       <ResizablePanelGroup orientation="horizontal" className="min-h-[calc(100vh-8rem)]">
         <ResizablePanel defaultSize={45} minSize={25}>
-          <iframe
-            src={pdfUrl}
-            className="h-full w-full border-0"
-            title="Original CV"
-          />
+          <PdfViewer storagePath={cvStoragePath} publicUrl={cvPublicUrl} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={55} minSize={30}>

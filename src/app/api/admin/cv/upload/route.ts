@@ -16,7 +16,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'filename is required' }, { status: 400 })
     }
 
-    const path = `admin/${crypto.randomUUID()}-${filename}`
+    // Sanitize filename for storage path: strip accents, replace non-alphanumeric chars
+    const safeName = filename
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9._-]/g, '_')
+    const path = `admin/${crypto.randomUUID()}-${safeName}`
     const supabase = getSupabase()
 
     const { data, error } = await supabase.storage
@@ -58,6 +63,7 @@ export async function PUT(request: Request) {
       .values({
         filename,
         blobUrl: urlData.publicUrl,
+        storagePath: path,
         uploadedBy: userId,
         status: 'uploaded',
       })
