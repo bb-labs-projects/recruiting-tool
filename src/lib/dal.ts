@@ -29,6 +29,7 @@ export const verifySession = cache(async () => {
 
   // Verify session exists in database and is not expired
   let session: { id: string; userId: string } | undefined
+  let dbError = false
   try {
     ;[session] = await db
       .select({
@@ -45,11 +46,17 @@ export const verifySession = cache(async () => {
       .limit(1)
   } catch (error) {
     console.error('verifySession DB error:', error)
-    cookieStore.delete(AUTH_CONSTANTS.SESSION_COOKIE_NAME)
+    dbError = true
+  }
+
+  // On DB error, redirect without deleting cookie so the session
+  // survives transient failures (cold starts, pool timeouts, etc.)
+  if (dbError) {
     redirect('/login')
   }
 
   if (!session) {
+    // Session genuinely not found or expired — clear the cookie
     cookieStore.delete(AUTH_CONSTANTS.SESSION_COOKIE_NAME)
     redirect('/login')
   }
