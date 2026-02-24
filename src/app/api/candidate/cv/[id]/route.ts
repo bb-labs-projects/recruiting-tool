@@ -42,24 +42,25 @@ export async function DELETE(
       )
     }
 
-    // If a linked profile exists, unlink then delete it (cascade handles related data)
+    // If a linked profile exists, unlink ALL cv_uploads referencing it, then delete
     if (upload.profileId) {
-      await db.update(cvUploads).set({ profileId: null }).where(eq(cvUploads.id, id))
+      await db.update(cvUploads).set({ profileId: null }).where(eq(cvUploads.profileId, upload.profileId))
       await db.delete(profiles).where(eq(profiles.id, upload.profileId))
     }
 
-    // Delete the DB record first so the user sees it disappear immediately
+    // Delete the DB record
     await db.delete(cvUploads).where(eq(cvUploads.id, id))
 
-    // Delete file from Supabase Storage (best-effort — don't fail the request)
+    // Delete file from Supabase Storage
     const storagePath = upload.storagePath || extractStoragePath(upload.blobUrl)
     if (storagePath) {
-      try {
-        const supabase = getSupabase()
-        await supabase.storage.from(CV_BUCKET).remove([storagePath])
-      } catch (err) {
-        console.error('Failed to delete storage file:', storagePath, err)
+      const supabase = getSupabase()
+      const { error: storageError } = await supabase.storage.from(CV_BUCKET).remove([storagePath])
+      if (storageError) {
+        console.error('Failed to delete storage file:', storagePath, storageError)
       }
+    } else {
+      console.warn('No storage path found for upload:', id, 'blobUrl:', upload.blobUrl)
     }
 
     return NextResponse.json({ success: true })
