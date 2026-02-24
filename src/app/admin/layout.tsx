@@ -28,6 +28,7 @@ export default async function AdminLayout({
     { name: 'Employers', href: '/admin/employers' },
     { name: 'Jobs', href: '/admin/jobs' },
     { name: 'Analytics', href: '/admin/analytics' },
+    { name: 'Users', href: '/admin/users' },
   ]
 
   return (

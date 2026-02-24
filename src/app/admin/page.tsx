@@ -130,6 +130,13 @@ export default async function AdminDashboardPage() {
                 Manage Employers
                 <ArrowRight className="h-3 w-3" />
               </Link>
+              <Link
+                href="/admin/users"
+                className="flex items-center justify-between text-sm text-primary hover:underline underline-offset-4"
+              >
+                Manage Users
+                <ArrowRight className="h-3 w-3" />
+              </Link>
             </nav>
           </CardContent>
         </Card>
