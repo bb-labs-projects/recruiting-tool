@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm'
 import { decrypt } from '@/lib/auth/session'
 import { generateMfaSecret } from '@/lib/auth/mfa'
 import { AUTH_CONSTANTS } from '@/lib/auth/constants'
-import QRCode from 'qrcode'
+import * as QRCode from 'qrcode'
 
 /**
  * POST /api/auth/mfa/setup
