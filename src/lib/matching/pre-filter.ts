@@ -10,7 +10,7 @@ import {
   barAdmissions,
   employerProfiles,
 } from '@/lib/db/schema'
-import { eq, and, exists, inArray, sql, type SQL } from 'drizzle-orm'
+import { eq, and, or, exists, inArray, sql, type SQL } from 'drizzle-orm'
 import type { JobForScoring } from './schema'
 import { buildSuppressionConditions } from '@/lib/suppression'
 
@@ -54,9 +54,14 @@ export async function preFilterCandidates(
     }
   }
 
-  // Required specializations: EXISTS subquery on junction table (OR logic -- any overlap)
+  // Requirement filters: use OR across categories so candidates matching ANY
+  // requirement category pass through to AI scoring. The AI scorer handles
+  // nuanced partial-match evaluation -- the pre-filter only gates on having
+  // at least some relevance to the job.
+  const requirementChecks: SQL[] = []
+
   if (job.requiredSpecializations.length > 0) {
-    conditions.push(
+    requirementChecks.push(
       exists(
         db
           .select({ id: sql`1` })
@@ -75,9 +80,8 @@ export async function preFilterCandidates(
     )
   }
 
-  // Required bar admissions: EXISTS subquery
   if (job.requiredBar.length > 0) {
-    conditions.push(
+    requirementChecks.push(
       exists(
         db
           .select({ id: sql`1` })
@@ -92,9 +96,8 @@ export async function preFilterCandidates(
     )
   }
 
-  // Required technical domains: EXISTS subquery on junction table
   if (job.requiredTechnicalDomains.length > 0) {
-    conditions.push(
+    requirementChecks.push(
       exists(
         db
           .select({ id: sql`1` })
@@ -111,6 +114,10 @@ export async function preFilterCandidates(
           )
       )
     )
+  }
+
+  if (requirementChecks.length > 0) {
+    conditions.push(or(...requirementChecks)!)
   }
 
   const rows = await db
