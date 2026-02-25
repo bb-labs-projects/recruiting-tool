@@ -2,9 +2,8 @@ import { getUser } from '@/lib/dal'
 import { getEmployerProfile } from '@/lib/dal/admin-employers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { createJobAction } from '@/actions/jobs'
-import { JobForm } from '@/components/jobs/job-form'
 import { ArrowLeft } from 'lucide-react'
+import { NewJobContent } from '@/components/jobs/new-job-content'
 
 export default async function NewJobPage() {
   const user = await getUser()
@@ -33,7 +32,7 @@ export default async function NewJobPage() {
         </p>
       </div>
 
-      <JobForm mode="create" action={createJobAction} />
+      <NewJobContent />
     </div>
   )
 }

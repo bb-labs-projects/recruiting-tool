@@ -12,12 +12,12 @@ import {
   RotateCcw,
 } from 'lucide-react'
 
-type CvUpload = {
+type JobAdUpload = {
   id: string
   filename: string
   status: 'uploaded' | 'parsing' | 'parsed' | 'failed'
   errorMessage: string | null
-  profileId: string | null
+  jobId: string | null
   createdAt: string
   parsedAt: string | null
 }
@@ -28,8 +28,8 @@ type FileUploadState = {
   error?: string
 }
 
-export default function CvUploadPage() {
-  const [uploads, setUploads] = useState<CvUpload[]>([])
+export default function JobAdUploadPage() {
+  const [uploads, setUploads] = useState<JobAdUpload[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [isParsing, setIsParsing] = useState(false)
   const [fileStates, setFileStates] = useState<FileUploadState[]>([])
@@ -39,7 +39,7 @@ export default function CvUploadPage() {
 
   const fetchUploads = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/cv/status')
+      const res = await fetch('/api/admin/job-ads/status')
       if (res.ok) {
         const data = await res.json()
         setUploads(data)
@@ -79,8 +79,11 @@ export default function CvUploadPage() {
     const errors: string[] = []
 
     for (const file of files) {
-      const ext = file.name.toLowerCase().split('.').pop()
-      if (ext !== 'pdf' && ext !== 'docx') {
+      const ext = file.name.toLowerCase()
+      const isPdf = ext.endsWith('.pdf')
+      const isDocx = ext.endsWith('.docx')
+
+      if (!isPdf && !isDocx) {
         errors.push(`${file.name}: Not a PDF or DOCX file`)
       } else if (file.size > 10 * 1024 * 1024) {
         errors.push(`${file.name}: Exceeds 10MB limit`)
@@ -117,7 +120,7 @@ export default function CvUploadPage() {
     for (const file of valid) {
       try {
         // Step 1: Get signed upload URL
-        const signedRes = await fetch('/api/admin/cv/upload', {
+        const signedRes = await fetch('/api/admin/job-ads/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filename: file.name }),
@@ -134,7 +137,7 @@ export default function CvUploadPage() {
         if (!uploadRes.ok) throw new Error('Upload to storage failed')
 
         // Step 3: Create DB record
-        await fetch('/api/admin/cv/upload', {
+        await fetch('/api/admin/job-ads/upload', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filename: file.name, path }),
@@ -201,21 +204,21 @@ export default function CvUploadPage() {
     const BATCH_SIZE = 10
     for (let i = 0; i < uploadedIds.length; i += BATCH_SIZE) {
       const batch = uploadedIds.slice(i, i + BATCH_SIZE)
-      await fetch('/api/admin/cv/batch', {
+      await fetch('/api/admin/job-ads/batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cvUploadIds: batch }),
+        body: JSON.stringify({ jobAdUploadIds: batch }),
       })
     }
 
     await fetchUploads()
   }
 
-  async function handleRetry(cvUploadId: string) {
-    await fetch('/api/admin/cv/parse', {
+  async function handleRetry(jobAdUploadId: string) {
+    await fetch('/api/admin/job-ads/parse', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cvUploadId }),
+      body: JSON.stringify({ jobAdUploadId }),
     })
 
     setIsParsing(true)
@@ -231,16 +234,16 @@ export default function CvUploadPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">CV Upload</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Job Ad Upload</h1>
         <p className="text-muted-foreground">
-          Upload PDF or DOCX CVs, trigger parsing, and monitor progress
+          Upload PDF or DOCX job ads, trigger parsing, and monitor progress
         </p>
       </div>
 
       {/* Upload Area */}
       <Card className="mb-6 rounded-xl shadow-sm">
         <CardHeader>
-          <CardTitle>Upload CVs</CardTitle>
+          <CardTitle>Upload Job Ads</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -378,12 +381,12 @@ export default function CvUploadPage() {
       {/* Upload List */}
       <Card className="rounded-xl shadow-sm">
         <CardHeader>
-          <CardTitle>CV Uploads</CardTitle>
+          <CardTitle>Job Ad Uploads</CardTitle>
         </CardHeader>
         <CardContent>
           {uploads.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No CVs uploaded yet. Drop PDF or DOCX files above to get started.
+              No job ads uploaded yet. Drop PDF or DOCX files above to get started.
             </p>
           ) : (
             <div className="overflow-x-auto rounded-xl overflow-hidden">
@@ -446,7 +449,7 @@ function StatusBadge({
   status,
   errorMessage,
 }: {
-  status: CvUpload['status']
+  status: JobAdUpload['status']
   errorMessage: string | null
 }) {
   const styles = {

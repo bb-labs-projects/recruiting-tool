@@ -23,6 +23,7 @@
     "drizzle-orm": "^0.45.1",
     "jose": "^6.1.3",
     "lucide-react": "^0.575.0",
+    "mammoth": "^1.11.0",
     "next": "16.1.6",
     "otpauth": "^9.5.0",
     "postgres": "^3.4.8",

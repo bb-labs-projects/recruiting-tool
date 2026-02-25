@@ -18,6 +18,7 @@ import {
   languages,
 } from '@/lib/db/schema'
 import { getSupabase, CV_BUCKET } from '@/lib/supabase'
+import { convertDocxToText } from '@/lib/docx-to-text'
 import { CvParsedDataSchema } from './schema'
 import { CV_EXTRACTION_PROMPT } from './prompt'
 
@@ -70,21 +71,50 @@ export async function parseSingleCv(
       .set({ status: 'parsing', updatedAt: new Date() })
       .where(eq(cvUploads.id, cvUploadId))
 
-    // Download PDF from Supabase Storage using the service role client
+    // Download file from Supabase Storage using the service role client
     const storagePath = upload.storagePath ?? extractStoragePath(upload.blobUrl)
     const supabase = getSupabase()
-    const { data: pdfData, error: downloadError } = await supabase.storage
+    const { data: fileData, error: downloadError } = await supabase.storage
       .from(CV_BUCKET)
       .download(storagePath)
 
-    if (downloadError || !pdfData) {
+    if (downloadError || !fileData) {
       throw new Error(
-        `Failed to download PDF from storage: ${downloadError?.message ?? 'no data returned'}`
+        `Failed to download file from storage: ${downloadError?.message ?? 'no data returned'}`
       )
     }
-    const pdfBase64 = Buffer.from(await pdfData.arrayBuffer()).toString(
-      'base64'
-    )
+
+    const isDocx = upload.filename?.toLowerCase().endsWith('.docx')
+    const fileBuffer = Buffer.from(await fileData.arrayBuffer())
+
+    // Build content array based on file type
+    let content: Anthropic.MessageCreateParams['messages'][0]['content']
+
+    if (isDocx) {
+      const docxText = await convertDocxToText(fileBuffer)
+      content = [
+        {
+          type: 'text',
+          text: 'CV Document Content:\n\n' + docxText + '\n\n' + CV_EXTRACTION_PROMPT,
+        },
+      ]
+    } else {
+      const pdfBase64 = fileBuffer.toString('base64')
+      content = [
+        {
+          type: 'document',
+          source: {
+            type: 'base64',
+            media_type: 'application/pdf',
+            data: pdfBase64,
+          },
+        },
+        {
+          type: 'text',
+          text: CV_EXTRACTION_PROMPT,
+        },
+      ]
+    }
 
     // Call Claude API with structured output
     const response = await anthropic().messages.create({
@@ -93,20 +123,7 @@ export async function parseSingleCv(
       messages: [
         {
           role: 'user',
-          content: [
-            {
-              type: 'document',
-              source: {
-                type: 'base64',
-                media_type: 'application/pdf',
-                data: pdfBase64,
-              },
-            },
-            {
-              type: 'text',
-              text: CV_EXTRACTION_PROMPT,
-            },
-          ],
+          content,
         },
       ],
       output_config: {

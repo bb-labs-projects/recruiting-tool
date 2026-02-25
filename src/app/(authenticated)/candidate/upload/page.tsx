@@ -124,8 +124,9 @@ export default function CandidateUploadPage() {
   }, [])
 
   function validateFile(file: File): string | null {
-    if (file.type !== 'application/pdf') {
-      return 'Only PDF files are accepted'
+    const ext = file.name.toLowerCase().split('.').pop()
+    if (ext !== 'pdf' && ext !== 'docx') {
+      return 'Only PDF and DOCX files are accepted'
     }
     if (file.size > 10 * 1024 * 1024) {
       return 'File size exceeds 10MB limit'
@@ -344,7 +345,7 @@ export default function CandidateUploadPage() {
           Drag and drop your CV here
         </p>
         <p className="mb-4 text-xs text-muted-foreground">
-          PDF only, max 10MB
+          PDF or DOCX, max 10MB
         </p>
         <Button
           variant="outline"
@@ -357,7 +358,7 @@ export default function CandidateUploadPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".pdf,application/pdf"
+          accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           className="hidden"
           onChange={handleFileSelect}
         />
@@ -373,7 +374,7 @@ export default function CandidateUploadPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Upload CV</h1>
         <p className="text-muted-foreground">
-          Upload your CV in PDF format. Our system will automatically extract
+          Upload your CV in PDF or DOCX format. Our system will automatically extract
           your qualifications and experience.
         </p>
       </div>

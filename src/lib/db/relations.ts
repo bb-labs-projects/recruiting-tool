@@ -17,6 +17,7 @@ import {
   profileViews,
   stripeEvents,
   jobs,
+  jobAdUploads,
   jobMatches,
   mfaRecoveryCodes,
 } from './schema'
@@ -179,6 +180,18 @@ export const jobsRelations = relations(jobs, ({ one, many }) => ({
     relationName: 'jobCreator',
   }),
   matches: many(jobMatches),
+  jobAdUploads: many(jobAdUploads),
+}))
+
+export const jobAdUploadsRelations = relations(jobAdUploads, ({ one }) => ({
+  job: one(jobs, {
+    fields: [jobAdUploads.jobId],
+    references: [jobs.id],
+  }),
+  uploader: one(users, {
+    fields: [jobAdUploads.uploadedBy],
+    references: [users.id],
+  }),
 }))
 
 export const jobMatchesRelations = relations(jobMatches, ({ one }) => ({

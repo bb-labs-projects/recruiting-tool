@@ -350,6 +350,24 @@ export const mfaRecoveryCodes = pgTable('mfa_recovery_codes', {
   index('mfa_recovery_codes_user_idx').on(table.userId),
 ])
 
+// Job ad uploads table
+export const jobAdUploads = pgTable('job_ad_uploads', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  jobId: uuid('job_id').references(() => jobs.id, { onDelete: 'set null' }),
+  filename: varchar('filename', { length: 255 }).notNull(),
+  blobUrl: text('blob_url').notNull(),
+  storagePath: text('storage_path'),
+  status: cvUploadStatusEnum('status').notNull().default('uploaded'),
+  errorMessage: text('error_message'),
+  parsedAt: timestamp('parsed_at', { withTimezone: true }),
+  uploadedBy: uuid('uploaded_by').notNull().references(() => users.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index('job_ad_uploads_status_idx').on(table.status),
+  index('job_ad_uploads_uploaded_by_idx').on(table.uploadedBy),
+])
+
 // Job matches table (cached AI matching results)
 export const jobMatches = pgTable('job_matches', {
   id: uuid('id').defaultRandom().primaryKey(),

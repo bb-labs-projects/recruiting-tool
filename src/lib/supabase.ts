@@ -13,3 +13,4 @@ export function getSupabase() {
 }
 
 export const CV_BUCKET = 'cvs'
+export const JOB_ADS_BUCKET = 'job-ads'
