@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { getUser } from '@/lib/dal'
 import { LogoutButton } from '@/components/auth/logout-button'
 
@@ -28,6 +29,12 @@ export default async function AuthenticatedLayout({
             IP Lawyer Recruiting
           </span>
           <div className="flex items-center gap-4">
+            <Link
+              href="/settings/mfa"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Security
+            </Link>
             <span className="text-sm text-muted-foreground">{user.email}</span>
             <LogoutButton />
           </div>
