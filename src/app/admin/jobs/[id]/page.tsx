@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getJobById } from '@/lib/dal/jobs'
-import { getMatchesForJob, getUnnotifiedMatches } from '@/lib/dal/job-matches'
+import { getMatchesForJob, getUnnotifiedMatches, getMatchCardProfiles, type MatchCardProfilePreview } from '@/lib/dal/job-matches'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowLeft } from 'lucide-react'
@@ -36,6 +36,15 @@ export default async function AdminJobDetailPage({
   const matches =
     job.matchingStatus === 'completed' ? await getMatchesForJob(job.id) : []
   const unnotifiedMatches = await getUnnotifiedMatches(job.id)
+
+  // Admin view: load profile previews using the employer's userId for unlock context
+  const profilePreviews =
+    matches.length > 0
+      ? await getMatchCardProfiles(
+          matches.map((m) => m.profileId),
+          job.employerUserId
+        )
+      : new Map<string, MatchCardProfilePreview>()
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -191,7 +200,7 @@ export default async function AdminJobDetailPage({
               jobId={job.id}
               unnotifiedCount={unnotifiedMatches.length}
             />
-            <MatchResults matches={matches} />
+            <MatchResults matches={matches} profilePreviews={profilePreviews} />
           </>
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
           <Card className="rounded-xl shadow-sm">

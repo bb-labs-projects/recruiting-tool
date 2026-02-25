@@ -53,6 +53,7 @@ export async function runMatchingForJob(
       preferredLocation: job.preferredLocation,
       requiredBar: job.requiredBar ?? [],
       requiredTechnicalDomains: job.requiredTechnicalDomains ?? [],
+      preferredLanguages: [],
     }
 
     const shortlist = await preFilterCandidates(
@@ -95,10 +96,13 @@ export async function runMatchingForJob(
               columns: { institution: true, degree: true, field: true },
             },
             barAdmissions: {
-              columns: { jurisdiction: true },
+              columns: { jurisdiction: true, year: true, status: true },
             },
             workHistory: {
-              columns: { startDate: true, endDate: true },
+              columns: { title: true, description: true, startDate: true, endDate: true },
+            },
+            languages: {
+              columns: { language: true, proficiency: true },
             },
           },
         })
@@ -118,10 +122,22 @@ export async function runMatchingForJob(
             degree: e.degree,
             field: e.field,
           })),
-          barAdmissions: profile.barAdmissions.map((ba) => ba.jurisdiction),
+          barAdmissions: profile.barAdmissions.map((ba) => ({
+            jurisdiction: ba.jurisdiction,
+            year: ba.year,
+            status: ba.status,
+          })),
           technicalDomains: profile.profileTechnicalDomains.map(
             (ptd) => ptd.technicalDomain.name
           ),
+          languages: profile.languages.map((l) => ({
+            language: l.language,
+            proficiency: l.proficiency,
+          })),
+          workHistoryTitles: profile.workHistory.map((wh) => wh.title),
+          workHistoryDescriptions: profile.workHistory
+            .map((wh) => wh.description)
+            .filter((d): d is string => d != null),
         }
 
         const score = await scoreCandidate(jobForScoring, candidateForScoring)
@@ -134,9 +150,13 @@ export async function runMatchingForJob(
             specializationMatch: score.specializationMatch,
             experienceFit: score.experienceFit,
             technicalBackground: score.technicalBackground,
-            locationMatch: score.locationMatch,
-            barAdmissions: score.barAdmissions,
+            credentials: score.credentials,
+            locationAndLanguage: score.locationAndLanguage,
+            leadershipAndBD: score.leadershipAndBD,
           },
+          requirementTags: score.requirementTags,
+          strengths: score.strengths,
+          gaps: score.gaps,
           summary: score.summary,
           recommendation: score.recommendation,
         })

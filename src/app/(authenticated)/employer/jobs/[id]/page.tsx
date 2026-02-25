@@ -1,7 +1,7 @@
 import { getUser } from '@/lib/dal'
 import { getEmployerProfile } from '@/lib/dal/admin-employers'
 import { getJobById } from '@/lib/dal/jobs'
-import { getMatchesForJob } from '@/lib/dal/job-matches'
+import { getMatchesForJob, getMatchCardProfiles, type MatchCardProfilePreview } from '@/lib/dal/job-matches'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
@@ -38,6 +38,14 @@ export default async function JobDetailPage({
 
   const matches =
     job.matchingStatus === 'completed' ? await getMatchesForJob(job.id) : []
+
+  const profilePreviews =
+    matches.length > 0
+      ? await getMatchCardProfiles(
+          matches.map((m) => m.profileId),
+          user.id
+        )
+      : new Map<string, MatchCardProfilePreview>()
 
   const canEdit = job.status === 'draft' || job.status === 'open'
 
@@ -179,7 +187,7 @@ export default async function JobDetailPage({
         <h2 className="font-[family-name:var(--font-outfit)] text-xl font-semibold">Candidate Matches</h2>
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
-          <MatchResults matches={matches} />
+          <MatchResults matches={matches} profilePreviews={profilePreviews} />
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
           <Card className="rounded-xl shadow-sm">
             <CardContent className="py-8 text-center">
