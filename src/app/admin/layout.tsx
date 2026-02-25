@@ -29,7 +29,7 @@ export default async function AdminLayout({
     { name: 'Jobs', href: '/admin/jobs' },
     { name: 'Analytics', href: '/admin/analytics' },
     { name: 'Users', href: '/admin/users' },
-    { name: 'MFA Settings', href: '/settings/mfa' },
+    { name: 'MFA Settings', href: '/admin/settings/mfa' },
   ]
 
   return (
