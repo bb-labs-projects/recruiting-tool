@@ -196,20 +196,26 @@ export default async function AdminJobDetailPage({
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
           <>
-            <NotificationTrigger
-              jobId={job.id}
-              unnotifiedCount={unnotifiedMatches.length}
-            />
+            <div className="flex items-center gap-3">
+              <MatchingTrigger jobId={job.id} matchingStatus="completed" />
+              <NotificationTrigger
+                jobId={job.id}
+                unnotifiedCount={unnotifiedMatches.length}
+              />
+            </div>
             <MatchResults matches={matches} profilePreviews={profilePreviews} profileBasePath="/admin/candidates" />
           </>
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
-          <Card className="rounded-xl shadow-sm">
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground text-sm">
-                No matching candidates found.
-              </p>
-            </CardContent>
-          </Card>
+          <>
+            <MatchingTrigger jobId={job.id} matchingStatus="completed" />
+            <Card className="rounded-xl shadow-sm">
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground text-sm">
+                  No matching candidates found.
+                </p>
+              </CardContent>
+            </Card>
+          </>
         ) : (
           <MatchingTrigger
             jobId={job.id}

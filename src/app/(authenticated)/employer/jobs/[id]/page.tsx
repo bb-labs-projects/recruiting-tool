@@ -187,16 +187,22 @@ export default async function JobDetailPage({
         <h2 className="font-[family-name:var(--font-outfit)] text-xl font-semibold">Candidate Matches</h2>
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
-          <MatchResults matches={matches} profilePreviews={profilePreviews} />
+          <>
+            <MatchingTrigger jobId={job.id} matchingStatus="completed" />
+            <MatchResults matches={matches} profilePreviews={profilePreviews} />
+          </>
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
-          <Card className="rounded-xl shadow-sm">
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground text-sm">
-                No matching candidates found. Try broadening your job
-                requirements.
-              </p>
-            </CardContent>
-          </Card>
+          <>
+            <MatchingTrigger jobId={job.id} matchingStatus="completed" />
+            <Card className="rounded-xl shadow-sm">
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground text-sm">
+                  No matching candidates found. Try broadening your job
+                  requirements.
+                </p>
+              </CardContent>
+            </Card>
+          </>
         ) : (
           <MatchingTrigger
             jobId={job.id}

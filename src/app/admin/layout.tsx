@@ -24,7 +24,7 @@ export default async function AdminLayout({
   const navLinks = [
     { name: 'Dashboard', href: '/admin' },
     { name: 'CV Upload', href: '/admin/cv-upload' },
-    { name: 'Job Ads', href: '/admin/job-ads' },
+    { name: 'Job Ads Upload', href: '/admin/job-ads' },
     { name: 'Candidates', href: '/admin/candidates' },
     { name: 'Employers', href: '/admin/employers' },
     { name: 'Jobs', href: '/admin/jobs' },

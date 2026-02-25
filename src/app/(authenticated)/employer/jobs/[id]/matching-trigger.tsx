@@ -4,11 +4,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Loader2, RefreshCw } from 'lucide-react'
 
 type Props = {
   jobId: string
-  matchingStatus: 'pending' | 'running' | 'failed'
+  matchingStatus: 'pending' | 'running' | 'failed' | 'completed'
 }
 
 export function MatchingTrigger({ jobId, matchingStatus }: Props) {
@@ -27,7 +27,7 @@ export function MatchingTrigger({ jobId, matchingStatus }: Props) {
 
       if (data.status === 'completed') {
         setPolling(false)
-        setStatus('completed' as never)
+        setStatus('completed')
         router.refresh()
       } else if (data.status === 'failed') {
         setPolling(false)
@@ -67,6 +67,21 @@ export function MatchingTrigger({ jobId, matchingStatus }: Props) {
       setStatus('failed')
       setError(err instanceof Error ? err.message : 'Failed to start matching')
     }
+  }
+
+  // Compact inline rerun button when matches are already displayed
+  if (matchingStatus === 'completed' && status !== 'running') {
+    return (
+      <div className="flex items-center gap-3">
+        {error && (
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        )}
+        <Button variant="outline" size="sm" onClick={handleRunMatching}>
+          <RefreshCw className="mr-2 size-4" />
+          Rerun Matching
+        </Button>
+      </div>
+    )
   }
 
   if (status === 'running') {
