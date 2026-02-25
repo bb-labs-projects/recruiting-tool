@@ -25,11 +25,11 @@ export function MatchingTrigger({ jobId, matchingStatus }: Props) {
       if (!res.ok) return
       const data = await res.json()
 
-      if (data.status === 'completed') {
+      if (data.matchingStatus === 'completed') {
         setPolling(false)
         setStatus('completed')
         router.refresh()
-      } else if (data.status === 'failed') {
+      } else if (data.matchingStatus === 'failed') {
         setPolling(false)
         setStatus('failed')
         setError('Matching failed. You can retry.')
@@ -62,6 +62,12 @@ export function MatchingTrigger({ jobId, matchingStatus }: Props) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || 'Failed to start matching')
       }
+
+      // The run endpoint is synchronous -- matching is done when it returns.
+      // Stop polling and refresh the page to show new results.
+      setPolling(false)
+      setStatus('completed')
+      router.refresh()
     } catch (err) {
       setPolling(false)
       setStatus('failed')
