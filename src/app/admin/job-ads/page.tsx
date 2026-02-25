@@ -10,6 +10,7 @@ import {
   XCircle,
   Loader2,
   RotateCcw,
+  Trash2,
 } from 'lucide-react'
 
 type JobAdUpload = {
@@ -32,6 +33,7 @@ export default function JobAdUploadPage() {
   const [uploads, setUploads] = useState<JobAdUpload[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [isParsing, setIsParsing] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [fileStates, setFileStates] = useState<FileUploadState[]>([])
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -223,6 +225,24 @@ export default function JobAdUploadPage() {
 
     setIsParsing(true)
     await fetchUploads()
+  }
+
+  async function handleDelete(jobAdUploadId: string) {
+    if (!confirm('Delete this job ad upload? This will remove the file and any linked job.')) return
+
+    setDeletingId(jobAdUploadId)
+    try {
+      const res = await fetch(`/api/admin/job-ads/${jobAdUploadId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json()
+        alert(data.error || 'Failed to delete')
+      }
+      await fetchUploads()
+    } catch {
+      alert('Failed to delete')
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   const uploadedCount = uploads.filter((u) => u.status === 'uploaded').length
@@ -422,16 +442,34 @@ export default function JobAdUploadPage() {
                         {u.parsedAt ? formatDate(u.parsedAt) : '--'}
                       </td>
                       <td className="py-3">
-                        {u.status === 'failed' && (
-                          <Button
-                            variant="outline"
-                            size="xs"
-                            onClick={() => handleRetry(u.id)}
-                          >
-                            <RotateCcw className="size-3" />
-                            Retry
-                          </Button>
-                        )}
+                        <div className="flex items-center gap-1">
+                          {u.status === 'failed' && (
+                            <Button
+                              variant="outline"
+                              size="xs"
+                              onClick={() => handleRetry(u.id)}
+                            >
+                              <RotateCcw className="size-3" />
+                              Retry
+                            </Button>
+                          )}
+                          {u.status !== 'parsing' && (
+                            <Button
+                              variant="outline"
+                              size="xs"
+                              onClick={() => handleDelete(u.id)}
+                              disabled={deletingId === u.id}
+                              className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                            >
+                              {deletingId === u.id ? (
+                                <Loader2 className="size-3 animate-spin" />
+                              ) : (
+                                <Trash2 className="size-3" />
+                              )}
+                              Delete
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
