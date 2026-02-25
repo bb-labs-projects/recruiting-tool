@@ -4,9 +4,11 @@ import { MatchCard } from './match-card'
 export function MatchResults({
   matches,
   profilePreviews,
+  profileBasePath,
 }: {
   matches: JobMatchDTO[]
   profilePreviews: Map<string, MatchCardProfilePreview>
+  profileBasePath?: string
 }) {
   return (
     <div className="space-y-4">
@@ -19,6 +21,7 @@ export function MatchResults({
           key={match.id}
           match={match}
           profile={profilePreviews.get(match.profileId)}
+          profileBasePath={profileBasePath}
         />
       ))}
     </div>

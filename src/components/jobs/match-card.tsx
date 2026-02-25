@@ -54,9 +54,11 @@ const tagStyles = {
 export function MatchCard({
   match,
   profile,
+  profileBasePath = '/employer/browse',
 }: {
   match: JobMatchDTO
   profile?: MatchCardProfilePreview
+  profileBasePath?: string
 }) {
   const displayName = profile?.name ?? 'IP Professional'
   const initials = profile?.initialsLabel ?? 'IP'
@@ -91,7 +93,7 @@ export function MatchCard({
           <div className="flex shrink-0 flex-col items-center gap-1">
             <ScoreRing score={match.overallScore} size={56} />
             <Link
-              href={`/employer/browse/${match.profileId}`}
+              href={`${profileBasePath}/${match.profileId}`}
               className="text-xs text-primary hover:underline"
             >
               View Profile

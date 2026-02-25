@@ -200,7 +200,7 @@ export default async function AdminJobDetailPage({
               jobId={job.id}
               unnotifiedCount={unnotifiedMatches.length}
             />
-            <MatchResults matches={matches} profilePreviews={profilePreviews} />
+            <MatchResults matches={matches} profilePreviews={profilePreviews} profileBasePath="/admin/candidates" />
           </>
         ) : job.matchingStatus === 'completed' && matches.length === 0 ? (
           <Card className="rounded-xl shadow-sm">
