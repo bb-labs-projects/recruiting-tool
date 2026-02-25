@@ -54,6 +54,11 @@ export default async function BrowsePage({
     redirect('/employer')
   }
 
+  // ToB gate -- must accept Terms of Business before browsing
+  if (!employerProfile.tobAcceptedAt) {
+    redirect('/employer/terms')
+  }
+
   // Read search params (Next.js 16: searchParams is a Promise)
   const params = await searchParams
 
@@ -64,17 +69,20 @@ export default async function BrowsePage({
   const specArray = toArray(params.spec)
   const techArray = toArray(params.tech)
 
-  // Fetch anonymized profiles with all filters
-  const { profiles, total } = await getAnonymizedProfiles({
-    search: params.q,
-    specializations: specArray.length > 0 ? specArray : undefined,
-    technicalDomains: techArray.length > 0 ? techArray : undefined,
-    experienceRange: params.experience,
-    patentBar: params.patent_bar === 'true',
-    location: params.location,
-    page,
-    pageSize,
-  })
+  // Fetch anonymized profiles with all filters + candidate suppression
+  const { profiles, total } = await getAnonymizedProfiles(
+    {
+      search: params.q,
+      specializations: specArray.length > 0 ? specArray : undefined,
+      technicalDomains: techArray.length > 0 ? techArray : undefined,
+      experienceRange: params.experience,
+      patentBar: params.patent_bar === 'true',
+      location: params.location,
+      page,
+      pageSize,
+    },
+    user.id,
+  )
 
   // Load saved profile IDs for the current page (batch lookup)
   const profileIds = profiles.map((p) => p.id)

@@ -8,9 +8,11 @@ import {
   profileTechnicalDomains,
   technicalDomains,
   barAdmissions,
+  employerProfiles,
 } from '@/lib/db/schema'
 import { eq, and, exists, inArray, sql, type SQL } from 'drizzle-orm'
 import type { JobForScoring } from './schema'
+import { buildSuppressionConditions } from '@/lib/suppression'
 
 /**
  * SQL pre-filter: eliminates candidates who don't match required
@@ -25,9 +27,32 @@ export async function preFilterCandidates(
   job: Pick<
     JobForScoring,
     'requiredSpecializations' | 'requiredBar' | 'requiredTechnicalDomains'
-  >
+  >,
+  employerUserId?: string,
 ): Promise<string[]> {
   const conditions: SQL[] = [eq(profiles.status, 'active')]
+
+  // Domain-based candidate suppression
+  if (employerUserId) {
+    const [employer] = await db
+      .select({
+        companyName: employerProfiles.companyName,
+        corporateDomains: employerProfiles.corporateDomains,
+      })
+      .from(employerProfiles)
+      .where(eq(employerProfiles.userId, employerUserId))
+      .limit(1)
+
+    if (employer) {
+      const suppressionCondition = buildSuppressionConditions(
+        employer.companyName,
+        employer.corporateDomains,
+      )
+      if (suppressionCondition) {
+        conditions.push(suppressionCondition)
+      }
+    }
+  }
 
   // Required specializations: EXISTS subquery on junction table (OR logic -- any overlap)
   if (job.requiredSpecializations.length > 0) {

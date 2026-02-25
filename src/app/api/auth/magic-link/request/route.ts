@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { handleMagicLinkRequest } from '@/lib/auth/request-magic-link'
 import { buildSecurityContext } from '@/lib/auth/security-log'
+import { verifyTurnstileToken } from '@/lib/turnstile'
 
 const RequestSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -23,6 +24,12 @@ export async function POST(request: Request) {
       const message =
         fieldErrors.email?.[0] ?? 'Invalid request body'
       return NextResponse.json({ error: message }, { status: 400 })
+    }
+
+    const turnstileToken = body.turnstileToken ?? null
+    const turnstileValid = await verifyTurnstileToken(turnstileToken)
+    if (!turnstileValid) {
+      return NextResponse.json({ error: 'Bot verification failed.' }, { status: 403 })
     }
 
     const { ip, userAgent } = buildSecurityContext(request)

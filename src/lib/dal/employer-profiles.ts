@@ -10,10 +10,12 @@ import {
   technicalDomains,
   barAdmissions,
   education,
+  employerProfiles,
 } from '@/lib/db/schema'
 import { eq, and, exists, ilike, inArray, sql, type SQL } from 'drizzle-orm'
 import { bucketExperienceYears, anonymizeWorkHistory } from '@/lib/anonymize'
 import { isProfileUnlocked } from '@/lib/dal/employer-unlocks'
+import { buildSuppressionConditions } from '@/lib/suppression'
 
 // Source: https://nextjs.org/docs/app/guides/data-security (DTO pattern)
 
@@ -193,11 +195,35 @@ function buildFilterConditions(filters: SearchFilters): SQL[] {
  */
 export const getAnonymizedProfiles = cache(
   async (
-    filters?: SearchFilters
+    filters?: SearchFilters,
+    employerUserId?: string,
   ): Promise<{ profiles: AnonymizedProfileDTO[]; total: number }> => {
     const page = filters?.page ?? 1
     const pageSize = filters?.pageSize ?? 12
     const conditions = buildFilterConditions(filters ?? {})
+
+    // Domain-based candidate suppression
+    if (employerUserId) {
+      const [employer] = await db
+        .select({
+          companyName: employerProfiles.companyName,
+          corporateDomains: employerProfiles.corporateDomains,
+        })
+        .from(employerProfiles)
+        .where(eq(employerProfiles.userId, employerUserId))
+        .limit(1)
+
+      if (employer) {
+        const suppressionCondition = buildSuppressionConditions(
+          employer.companyName,
+          employer.corporateDomains,
+        )
+        if (suppressionCondition) {
+          conditions.push(suppressionCondition)
+        }
+      }
+    }
+
     const whereConditions = and(...conditions)
 
     // Step 1: Filter query -- get all matching profile IDs (no pagination yet)

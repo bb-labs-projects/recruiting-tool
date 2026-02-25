@@ -55,11 +55,14 @@ export async function runMatchingForJob(
       requiredTechnicalDomains: job.requiredTechnicalDomains ?? [],
     }
 
-    const shortlist = await preFilterCandidates({
-      requiredSpecializations: jobForScoring.requiredSpecializations,
-      requiredBar: jobForScoring.requiredBar,
-      requiredTechnicalDomains: jobForScoring.requiredTechnicalDomains,
-    })
+    const shortlist = await preFilterCandidates(
+      {
+        requiredSpecializations: jobForScoring.requiredSpecializations,
+        requiredBar: jobForScoring.requiredBar,
+        requiredTechnicalDomains: jobForScoring.requiredTechnicalDomains,
+      },
+      job.employerUserId,
+    )
 
     let matchCount = 0
     const errors: string[] = []

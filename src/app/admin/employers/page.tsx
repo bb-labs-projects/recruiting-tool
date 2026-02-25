@@ -15,6 +15,9 @@ export default async function EmployersPage() {
     createdAt: employer.createdAt.toISOString(),
     reviewedAt: employer.reviewedAt?.toISOString() ?? null,
     userEmail: employer.userEmail,
+    corporateEmailDomain: employer.corporateEmailDomain ?? null,
+    isFreemailDomain: employer.isFreemailDomain,
+    tobAcceptedAt: employer.tobAcceptedAt?.toISOString() ?? null,
   }))
 
   // Compute summary counts

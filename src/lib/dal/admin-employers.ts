@@ -35,6 +35,11 @@ export const getAllEmployerProfiles = cache(async () => {
       createdAt: employerProfiles.createdAt,
       reviewedAt: employerProfiles.reviewedAt,
       userEmail: users.email,
+      tobAcceptedAt: employerProfiles.tobAcceptedAt,
+      tobVersion: employerProfiles.tobVersion,
+      corporateEmailDomain: employerProfiles.corporateEmailDomain,
+      isFreemailDomain: employerProfiles.isFreemailDomain,
+      corporateDomains: employerProfiles.corporateDomains,
     })
     .from(employerProfiles)
     .innerJoin(users, eq(employerProfiles.userId, users.id))

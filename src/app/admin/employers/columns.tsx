@@ -1,7 +1,7 @@
 'use client'
 
 import { type ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -15,6 +15,9 @@ export type EmployerRow = {
   createdAt: string
   reviewedAt: string | null
   userEmail: string
+  corporateEmailDomain: string | null
+  isFreemailDomain: boolean
+  tobAcceptedAt: string | null
 }
 
 const employerStatusStyles = {
@@ -64,6 +67,25 @@ export const columns: ColumnDef<EmployerRow>[] = [
     ),
   },
   {
+    accessorKey: 'corporateEmailDomain',
+    header: 'Domain',
+    cell: ({ row }) => (
+      <span className="flex items-center gap-1.5">
+        <span className="text-muted-foreground">
+          {row.original.corporateEmailDomain ?? '-'}
+        </span>
+        {row.original.isFreemailDomain && (
+          <Badge
+            variant="outline"
+            className="bg-amber-50 text-amber-700 border-amber-200 text-[10px] px-1.5 py-0"
+          >
+            Freemail
+          </Badge>
+        )}
+      </span>
+    ),
+  },
+  {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => (
@@ -77,6 +99,16 @@ export const columns: ColumnDef<EmployerRow>[] = [
       </Badge>
     ),
     filterFn: 'equals',
+  },
+  {
+    accessorKey: 'tobAcceptedAt',
+    header: 'ToB',
+    cell: ({ row }) =>
+      row.original.tobAcceptedAt ? (
+        <CheckCircle2 className="size-4 text-teal-600" />
+      ) : (
+        <span className="text-muted-foreground text-xs">Not accepted</span>
+      ),
   },
   {
     accessorKey: 'createdAt',

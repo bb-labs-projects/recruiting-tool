@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Search, Bookmark, Briefcase } from 'lucide-react'
+import { Search, Bookmark, Briefcase, AlertTriangle } from 'lucide-react'
 
 /**
  * Employer dashboard page.
@@ -49,6 +49,24 @@ export default async function EmployerDashboardPage() {
           Welcome back, {profile.companyName}
         </p>
       </div>
+
+      {profile.status === 'approved' && !profile.tobAcceptedAt && (
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-600" />
+          <div>
+            <p className="text-sm font-medium text-amber-800">
+              Terms of Business required
+            </p>
+            <p className="mt-1 text-sm text-amber-700">
+              You must{' '}
+              <Link href="/employer/terms" className="font-medium underline">
+                accept the Terms of Business
+              </Link>{' '}
+              before you can browse or save candidate profiles.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link href="/employer/browse" className="block">

@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { handleMagicLinkRequest } from '@/lib/auth/request-magic-link'
+import { verifyTurnstileToken } from '@/lib/turnstile'
 
 export type MagicLinkState =
   | {
@@ -38,6 +39,12 @@ export async function requestMagicLink(
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors
       return { error: fieldErrors.email?.[0] ?? 'Invalid email address' }
+    }
+
+    const turnstileToken = formData.get('turnstileToken') as string | null
+    const turnstileValid = await verifyTurnstileToken(turnstileToken)
+    if (!turnstileValid) {
+      return { error: 'Bot verification failed. Please try again.' }
     }
 
     // Server actions don't have easy access to request headers.

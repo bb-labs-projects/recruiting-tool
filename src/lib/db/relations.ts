@@ -18,6 +18,7 @@ import {
   stripeEvents,
   jobs,
   jobMatches,
+  mfaRecoveryCodes,
 } from './schema'
 
 export const profilesRelations = relations(profiles, ({ one, many }) => ({
@@ -114,6 +115,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   profileUnlocks: many(profileUnlocks),
   profileViews: many(profileViews),
   jobs: many(jobs, { relationName: 'jobEmployer' }),
+  mfaRecoveryCodes: many(mfaRecoveryCodes),
 }))
 
 export const employerProfilesRelations = relations(
@@ -187,5 +189,12 @@ export const jobMatchesRelations = relations(jobMatches, ({ one }) => ({
   profile: one(profiles, {
     fields: [jobMatches.profileId],
     references: [profiles.id],
+  }),
+}))
+
+export const mfaRecoveryCodesRelations = relations(mfaRecoveryCodes, ({ one }) => ({
+  user: one(users, {
+    fields: [mfaRecoveryCodes.userId],
+    references: [users.id],
   }),
 }))

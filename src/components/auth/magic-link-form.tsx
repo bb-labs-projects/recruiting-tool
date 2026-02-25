@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useActionState } from 'react'
 import { requestMagicLink, type MagicLinkState } from '@/actions/auth'
+import { TurnstileWidget } from '@/components/turnstile-widget'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,6 +25,7 @@ import { User, Briefcase } from 'lucide-react'
  */
 export function MagicLinkForm() {
   const [role, setRole] = useState<'candidate' | 'employer'>('candidate')
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [state, action, pending] = useActionState<MagicLinkState, FormData>(
     requestMagicLink,
     undefined
@@ -93,6 +95,7 @@ export function MagicLinkForm() {
               </button>
             </div>
             <input type="hidden" name="role" value={role} />
+            <input type="hidden" name="turnstileToken" value={turnstileToken} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -112,6 +115,7 @@ export function MagicLinkForm() {
               </p>
             )}
           </div>
+          <TurnstileWidget onSuccess={setTurnstileToken} />
           <Button type="submit" className="w-full rounded-lg" disabled={pending}>
             {pending ? 'Sending...' : 'Send Login Link'}
           </Button>

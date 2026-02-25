@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
-const publicRoutes = ['/login', '/auth/verify']
+const publicRoutes = ['/login', '/auth/verify', '/auth/mfa-challenge']
 
 function getDashboardPath(role: string): string {
   switch (role) {
@@ -37,6 +37,7 @@ async function decryptSession(cookie: string | undefined) {
       sessionId: payload.sessionId as string,
       userId: payload.userId as string,
       role: payload.role as string,
+      mfaVerified: payload.mfaVerified !== undefined ? (payload.mfaVerified as boolean) : true,
     }
   } catch {
     return null
@@ -61,6 +62,20 @@ export async function proxy(request: NextRequest) {
   // Unauthenticated user on protected route -> redirect to login
   if (!isPublicRoute && !session) {
     return NextResponse.redirect(new URL('/login', request.nextUrl))
+  }
+
+  // MFA check: if user has MFA but hasn't verified, redirect to challenge
+  // This must run before the "authenticated user on public route" redirect,
+  // otherwise users with pending MFA get bounced away from /auth/mfa-challenge.
+  if (session && session.mfaVerified === false) {
+    const isMfaPath = pathname.startsWith('/auth/mfa-challenge')
+    const isApiPath = pathname.startsWith('/api')
+    const isLogoutPath = pathname === '/logout'
+    if (!isMfaPath && !isApiPath && !isLogoutPath) {
+      return NextResponse.redirect(new URL('/auth/mfa-challenge', request.nextUrl))
+    }
+    // If on MFA path, let them through
+    return NextResponse.next()
   }
 
   // Authenticated user on public route -> redirect to role-based dashboard

@@ -28,6 +28,11 @@ export default async function SavedProfilesPage() {
     redirect('/employer')
   }
 
+  // ToB gate -- must accept Terms of Business before accessing saved profiles
+  if (!employerProfile.tobAcceptedAt) {
+    redirect('/employer/terms')
+  }
+
   // Load saved profile IDs (ordered by most recently saved)
   const savedProfileIds = await getSavedProfiles(user.id)
 

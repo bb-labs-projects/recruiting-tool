@@ -9,6 +9,7 @@ export interface SessionPayload {
   userId: string
   role: string
   expiresAt: Date
+  mfaVerified: boolean
 }
 
 const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET)
@@ -19,6 +20,7 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
     userId: payload.userId,
     role: payload.role,
     expiresAt: payload.expiresAt.toISOString(),
+    mfaVerified: payload.mfaVerified,
   })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -41,6 +43,7 @@ export async function decrypt(
       userId: payload.userId as string,
       role: payload.role as string,
       expiresAt: new Date(payload.expiresAt as string),
+      mfaVerified: payload.mfaVerified !== undefined ? (payload.mfaVerified as boolean) : true,
     }
   } catch {
     return null
@@ -50,13 +53,14 @@ export async function decrypt(
 export async function createSession(
   sessionId: string,
   userId: string,
-  role: string
+  role: string,
+  mfaVerified: boolean = true
 ): Promise<void> {
   const expiresAt = new Date(
     Date.now() + AUTH_CONSTANTS.SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000
   )
 
-  const session = await encrypt({ sessionId, userId, role, expiresAt })
+  const session = await encrypt({ sessionId, userId, role, expiresAt, mfaVerified })
 
   const cookieStore = await cookies()
   cookieStore.set(AUTH_CONSTANTS.SESSION_COOKIE_NAME, session, {

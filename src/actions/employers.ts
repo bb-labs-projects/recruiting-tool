@@ -6,6 +6,8 @@ import { employerProfiles } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { getUser } from '@/lib/dal'
+import { extractDomain, isFreemailDomain } from '@/lib/freemail-domains'
+import { verifyTurnstileToken } from '@/lib/turnstile'
 
 // ---------------------------------------------------------------------------
 // Helper: require admin role
@@ -67,6 +69,12 @@ export async function registerEmployer(
       return { error: Object.values(fieldErrors).flat()[0] ?? 'Invalid input' }
     }
 
+    const turnstileToken = formData.get('turnstileToken') as string | null
+    const turnstileValid = await verifyTurnstileToken(turnstileToken)
+    if (!turnstileValid) {
+      return { error: 'Bot verification failed. Please try again.' }
+    }
+
     // Check if employer profile already exists (prevent duplicates)
     const [existing] = await db
       .select({ id: employerProfiles.id })
@@ -78,6 +86,16 @@ export async function registerEmployer(
       return { error: 'Employer profile already exists' }
     }
 
+    const emailDomain = extractDomain(user.email)
+    const isFreemail = isFreemailDomain(emailDomain)
+
+    // Parse comma-separated corporate domains
+    const rawDomains = (formData.get('corporateDomains') as string) ?? ''
+    const corporateDomains = rawDomains
+      .split(',')
+      .map(d => d.trim().toLowerCase())
+      .filter(d => d.length > 0)
+
     await db.insert(employerProfiles).values({
       userId: user.id,
       companyName: parsed.data.companyName,
@@ -85,6 +103,9 @@ export async function registerEmployer(
       contactName: parsed.data.contactName,
       contactTitle: parsed.data.contactTitle || null,
       phone: parsed.data.phone || null,
+      corporateEmailDomain: emailDomain,
+      isFreemailDomain: isFreemail,
+      corporateDomains: corporateDomains.length > 0 ? corporateDomains : null,
     })
 
     revalidatePath('/employer')

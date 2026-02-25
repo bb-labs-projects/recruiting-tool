@@ -1,11 +1,12 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   registerEmployer,
   type RegisterEmployerState,
 } from '@/actions/employers'
+import { TurnstileWidget } from '@/components/turnstile-widget'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,6 +14,7 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card'
+import { TradeLicenceUpload } from '@/components/employer/trade-licence-upload'
 
 /**
  * Client component form for employer registration.
@@ -23,6 +25,7 @@ import {
  */
 export function RegistrationForm() {
   const router = useRouter()
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [state, action, pending] = useActionState<
     RegisterEmployerState,
     FormData
@@ -100,10 +103,31 @@ export function RegistrationForm() {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="corporateDomains">
+              Corporate Email Domains{' '}
+              <span className="text-muted-foreground">(optional)</span>
+            </Label>
+            <Input
+              id="corporateDomains"
+              name="corporateDomains"
+              type="text"
+              placeholder="acme.com, acme.co.uk"
+            />
+            <p className="text-xs text-muted-foreground">
+              Comma-separated list of your company email domains. Used to filter out your own employees from candidate results.
+            </p>
+          </div>
+
+          <TradeLicenceUpload />
+
+          <input type="hidden" name="turnstileToken" value={turnstileToken} />
+
           {state?.error && (
             <p className="text-sm text-destructive">{state.error}</p>
           )}
 
+          <TurnstileWidget onSuccess={setTurnstileToken} />
           <Button type="submit" className="w-full" disabled={pending}>
             {pending ? 'Submitting...' : 'Submit for Approval'}
           </Button>

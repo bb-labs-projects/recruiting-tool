@@ -131,7 +131,9 @@ export async function POST(request: Request) {
       .returning({ id: sessions.id })
 
     // Set encrypted session cookie
-    await createSession(sessionRecord.id, user.id, user.role)
+    // If MFA is enabled, mark session as not yet MFA-verified
+    const mfaVerified = !user.mfaEnabled
+    await createSession(sessionRecord.id, user.id, user.role, mfaVerified)
 
     // Log security events
     logSecurityEvent({
@@ -155,8 +157,10 @@ export async function POST(request: Request) {
     })
 
     // Determine redirect path
-    const redirectTo =
-      tokenRecord.redirectPath && tokenRecord.redirectPath !== '/'
+    // If MFA is pending, redirect to MFA challenge instead
+    const redirectTo = !mfaVerified
+      ? '/auth/mfa-challenge'
+      : tokenRecord.redirectPath && tokenRecord.redirectPath !== '/'
         ? tokenRecord.redirectPath
         : getDefaultRedirect(user.role)
 

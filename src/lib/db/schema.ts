@@ -31,6 +31,9 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
+  mfaSecret: text('mfa_secret'),
+  mfaEnabled: boolean('mfa_enabled').default(false).notNull(),
+  mfaVerifiedAt: timestamp('mfa_verified_at', { withTimezone: true }),
 }, (table) => [
   uniqueIndex('users_email_idx').on(table.email),
 ])
@@ -230,6 +233,20 @@ export const employerProfiles = pgTable('employer_profiles', {
   reviewedBy: uuid('reviewed_by').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  // Domain-based candidate suppression
+  corporateDomains: text('corporate_domains').array(),
+  // Terms of Business acceptance
+  tobAcceptedAt: timestamp('tob_accepted_at', { withTimezone: true }),
+  tobVersion: varchar('tob_version', { length: 50 }),
+  // Enhanced employer verification
+  corporateEmailDomain: varchar('corporate_email_domain', { length: 255 }),
+  isFreemailDomain: boolean('is_freemail_domain').default(false).notNull(),
+  // Trade licence upload
+  tradeLicenceStoragePath: text('trade_licence_storage_path'),
+  tradeLicenceFilename: varchar('trade_licence_filename', { length: 255 }),
+  tradeLicenceUploadedAt: timestamp('trade_licence_uploaded_at', { withTimezone: true }),
+  // Verification notes (admin)
+  verificationNotes: text('verification_notes'),
 }, (table) => [
   index('employer_profiles_user_idx').on(table.userId),
   index('employer_profiles_status_idx').on(table.status),
@@ -320,6 +337,17 @@ export const jobs = pgTable('jobs', {
 }, (table) => [
   index('jobs_employer_idx').on(table.employerUserId),
   index('jobs_status_idx').on(table.status),
+])
+
+// MFA recovery codes table
+export const mfaRecoveryCodes = pgTable('mfa_recovery_codes', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  codeHash: varchar('code_hash', { length: 64 }).notNull(),
+  usedAt: timestamp('used_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index('mfa_recovery_codes_user_idx').on(table.userId),
 ])
 
 // Job matches table (cached AI matching results)

@@ -80,6 +80,7 @@ export const getUser = cache(async () => {
       email: users.email,
       role: users.role,
       emailVerified: users.emailVerified,
+      mfaEnabled: users.mfaEnabled,
     })
     .from(users)
     .where(eq(users.id, session.userId))

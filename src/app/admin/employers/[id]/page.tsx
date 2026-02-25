@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, FileText } from 'lucide-react'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { employerProfiles, users } from '@/lib/db/schema'
@@ -12,7 +12,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { EmployerActions } from '@/components/admin/employer-actions'
+import { VerificationSection } from '@/components/admin/verification-section'
+import { updateCorporateDomains } from '@/actions/employer-domains'
 import { cn } from '@/lib/utils'
 
 const employerStatusStyles = {
@@ -47,7 +52,16 @@ export default async function EmployerDetailPage({
       rejectionReason: employerProfiles.rejectionReason,
       reviewedAt: employerProfiles.reviewedAt,
       createdAt: employerProfiles.createdAt,
+      tobAcceptedAt: employerProfiles.tobAcceptedAt,
+      tobVersion: employerProfiles.tobVersion,
       userEmail: users.email,
+      corporateEmailDomain: employerProfiles.corporateEmailDomain,
+      isFreemailDomain: employerProfiles.isFreemailDomain,
+      corporateDomains: employerProfiles.corporateDomains,
+      tradeLicenceFilename: employerProfiles.tradeLicenceFilename,
+      tradeLicenceStoragePath: employerProfiles.tradeLicenceStoragePath,
+      tradeLicenceUploadedAt: employerProfiles.tradeLicenceUploadedAt,
+      verificationNotes: employerProfiles.verificationNotes,
     })
     .from(employerProfiles)
     .innerJoin(users, eq(employerProfiles.userId, users.id))
@@ -141,7 +155,74 @@ export default async function EmployerDetailPage({
                 )}
               </dd>
             </div>
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                Email Domain
+              </dt>
+              <dd className="mt-1 text-sm flex items-center gap-2">
+                {employer.corporateEmailDomain ?? (
+                  <span className="text-muted-foreground">Unknown</span>
+                )}
+                {employer.isFreemailDomain && (
+                  <Badge
+                    variant="outline"
+                    className="bg-amber-50 text-amber-700 border-amber-200"
+                  >
+                    Freemail
+                  </Badge>
+                )}
+              </dd>
+            </div>
           </dl>
+        </CardContent>
+      </Card>
+
+      <Separator />
+
+      {/* Corporate Domains (Suppression) */}
+      <Card className="rounded-xl shadow-sm">
+        <CardHeader>
+          <CardTitle>Corporate Domains</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <dt className="text-sm font-medium text-muted-foreground">
+              Current Domains
+            </dt>
+            <dd className="mt-1 text-sm">
+              {employer.corporateDomains && employer.corporateDomains.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5">
+                  {employer.corporateDomains.map((domain) => (
+                    <Badge key={domain} variant="outline">
+                      {domain}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-muted-foreground">None configured</span>
+              )}
+            </dd>
+          </div>
+          <Separator />
+          <form action={async (formData: FormData) => { 'use server'; await updateCorporateDomains(formData) }} className="space-y-3">
+            <input type="hidden" name="employerProfileId" value={employer.id} />
+            <div className="space-y-2">
+              <Label htmlFor="corporateDomains">Update Domains</Label>
+              <Input
+                id="corporateDomains"
+                name="corporateDomains"
+                type="text"
+                defaultValue={employer.corporateDomains?.join(', ') ?? ''}
+                placeholder="acme.com, acme.co.uk"
+              />
+              <p className="text-xs text-muted-foreground">
+                Comma-separated list. Used to suppress candidates with matching email domains.
+              </p>
+            </div>
+            <Button type="submit" size="sm" variant="outline">
+              Save Domains
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -233,7 +314,61 @@ export default async function EmployerDetailPage({
                 </dd>
               </div>
             )}
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
+                Terms of Business
+              </dt>
+              <dd className="mt-1 text-sm">
+                {employer.tobAcceptedAt ? (
+                  <span>
+                    Accepted on{' '}
+                    {new Date(employer.tobAcceptedAt).toLocaleDateString()}
+                    {employer.tobVersion && ` (v${employer.tobVersion})`}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">Not accepted</span>
+                )}
+              </dd>
+            </div>
           </dl>
+        </CardContent>
+      </Card>
+
+      <Separator />
+
+      {/* Verification */}
+      <Card className="rounded-xl shadow-sm">
+        <CardHeader>
+          <CardTitle>Verification</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <dt className="text-sm font-medium text-muted-foreground">
+              Trade Licence
+            </dt>
+            <dd className="mt-1 text-sm">
+              {employer.tradeLicenceStoragePath ? (
+                <div className="flex items-center gap-2">
+                  <FileText className="size-4 text-teal-600" />
+                  <span>{employer.tradeLicenceFilename}</span>
+                  {employer.tradeLicenceUploadedAt && (
+                    <span className="text-xs text-muted-foreground">
+                      Uploaded {new Date(employer.tradeLicenceUploadedAt).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <span className="text-muted-foreground">Not uploaded</span>
+              )}
+            </dd>
+          </div>
+
+          <VerificationSection
+            employerProfileId={employer.id}
+            tradeLicenceStoragePath={employer.tradeLicenceStoragePath}
+            tradeLicenceFilename={employer.tradeLicenceFilename}
+            verificationNotes={employer.verificationNotes}
+          />
         </CardContent>
       </Card>
     </div>
