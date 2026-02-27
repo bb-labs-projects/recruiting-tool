@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
 import { getUser } from '@/lib/dal'
 import { LogoutButton } from '@/components/auth/logout-button'
 
@@ -7,8 +6,7 @@ import { LogoutButton } from '@/components/auth/logout-button'
  * Authenticated layout -- wraps all authenticated pages (candidate, employer).
  * Calls the DAL to verify session. If no valid user, redirects to /login.
  *
- * Renders a basic app shell with header and content area.
- * The header shows the app name, user email, and logout button.
+ * Renders a dark header bar with app wordmark, user info, and logout.
  */
 export default async function AuthenticatedLayout({
   children,
@@ -21,21 +19,29 @@ export default async function AuthenticatedLayout({
     redirect('/login')
   }
 
+  const initials = user.email
+    ? user.email
+        .split('@')[0]
+        .split(/[._-]/)
+        .slice(0, 2)
+        .map((s) => s[0]?.toUpperCase() ?? '')
+        .join('')
+    : '?'
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="border-b border-border/60 bg-card card-warm">
+      <header className="bg-sidebar">
         <div className="flex h-14 items-center justify-between px-6">
-          <span className="font-[family-name:var(--font-outfit)] text-lg font-bold tracking-tight text-foreground">
-            IP Lawyer Recruiting
+          <span className="font-sans text-sm font-semibold text-white">
+            Cromwell Chase
           </span>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/settings/mfa"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Security
-            </Link>
-            <span className="text-sm text-muted-foreground">{user.email}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-sidebar-foreground/60">
+              {user.email}
+            </span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent text-xs font-medium text-white">
+              {initials}
+            </div>
             <LogoutButton />
           </div>
         </div>

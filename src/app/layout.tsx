@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Outfit, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
+const geistSans = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
+const geistMono = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "IP Lawyer Recruiting",
-  description: "Connect IP lawyers with opportunities",
+  title: "Cromwell Chase",
+  description: "Legal executive search for IP professionals",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${dmSans.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <Toaster richColors position="bottom-right" />

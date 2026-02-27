@@ -1,14 +1,14 @@
 import { redirect } from 'next/navigation'
 import { getUser } from '@/lib/dal'
 import { LogoutButton } from '@/components/auth/logout-button'
+import { SidebarNav } from '@/components/admin/sidebar-nav'
 
 /**
  * Admin layout -- wraps all admin pages.
  * Verifies both authentication and admin role via the DAL.
  * If not authenticated or not admin, redirects to /login.
  *
- * Renders admin shell with sidebar navigation and main content area.
- * Includes LogoutButton in both the sidebar footer and the top header.
+ * Renders admin shell with dark sidebar navigation and main content area.
  */
 export default async function AdminLayout({
   children,
@@ -21,44 +21,25 @@ export default async function AdminLayout({
     redirect('/login')
   }
 
-  const navLinks = [
-    { name: 'Dashboard', href: '/admin' },
-    { name: 'CV Upload', href: '/admin/cv-upload' },
-    { name: 'Job Ads Upload', href: '/admin/job-ads' },
-    { name: 'Candidates', href: '/admin/candidates' },
-    { name: 'Employers', href: '/admin/employers' },
-    { name: 'Jobs', href: '/admin/jobs' },
-    { name: 'Analytics', href: '/admin/analytics' },
-    { name: 'Users', href: '/admin/users' },
-    { name: 'MFA Settings', href: '/admin/settings/mfa' },
-  ]
-
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="flex w-64 flex-col bg-sidebar text-sidebar-foreground">
-        <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-6">
-          <span className="font-[family-name:var(--font-outfit)] text-lg font-bold tracking-tight">Admin</span>
-          <span className="rounded-full bg-sidebar-primary px-2 py-0.5 text-xs font-medium text-sidebar-primary-foreground">
-            admin
+      <aside className="flex w-60 flex-col bg-sidebar text-sidebar-foreground">
+        <div className="px-5 py-4">
+          <span className="font-sans text-sm font-semibold text-white">
+            Cromwell Chase
           </span>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-sidebar-foreground/40">
+            Admin
+          </p>
         </div>
-        <nav className="flex-1 px-3 py-4">
-          <ul className="space-y-1">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="block rounded-lg px-3 py-2 text-sm text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                >
-                  {link.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="border-t border-sidebar-border px-6 py-4">
-          <p className="truncate text-sm text-sidebar-foreground/60">{user.email}</p>
+
+        <SidebarNav />
+
+        <div className="border-t border-sidebar-border px-5 py-4">
+          <p className="truncate text-xs text-sidebar-foreground/40">
+            {user.email}
+          </p>
           <div className="mt-2">
             <LogoutButton />
           </div>
@@ -67,11 +48,10 @@ export default async function AdminLayout({
 
       {/* Main content */}
       <div className="flex flex-1 flex-col bg-background">
-        <header className="flex h-14 items-center justify-between border-b border-border/60 bg-card px-6">
-          <span className="text-sm text-muted-foreground">
+        <header className="flex h-12 items-center border-b border-border px-6">
+          <span className="text-xs text-muted-foreground">
             Signed in as {user.email}
           </span>
-          <LogoutButton />
         </header>
         <main className="flex-1 p-6">{children}</main>
       </div>

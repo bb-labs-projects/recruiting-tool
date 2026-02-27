@@ -42,7 +42,7 @@ export default async function EmployerDashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight">
           Employer Dashboard
         </h1>
         <p className="text-muted-foreground">
@@ -77,7 +77,7 @@ export default async function EmployerDashboardPage() {
                 <CardTitle>Browse Candidates</CardTitle>
               </div>
               <CardDescription>
-                Search and discover IP lawyer profiles
+                Search and discover IP professional profiles
               </CardDescription>
             </CardHeader>
             <CardContent>
