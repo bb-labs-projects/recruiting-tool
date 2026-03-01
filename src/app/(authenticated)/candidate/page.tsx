@@ -154,39 +154,10 @@ export default async function CandidateDashboardPage() {
               </div>
             </div>
 
-            {/* Privacy */}
-            <div className="border-t border-[oklch(0.90_0_0)] pt-8">
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-5">
-                Your privacy
-              </h2>
-              <div className="space-y-3">
-                <div className="flex gap-2.5">
-                  <Shield className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                    <strong className="text-[oklch(0.12_0_0)]">Anonymized by default.</strong>{' '}
-                    Employers never see your name, email, or employer names.
-                  </p>
-                </div>
-                <div className="flex gap-2.5">
-                  <EyeOff className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                    <strong className="text-[oklch(0.12_0_0)]">Pay to unlock.</strong>{' '}
-                    Employers pay to see your full identity. You control your visibility.
-                  </p>
-                </div>
-                <div className="flex gap-2.5">
-                  <Eye className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                    <strong className="text-[oklch(0.12_0_0)]">Open to offers.</strong>{' '}
-                    A discreet signal to employers -- without revealing who you are.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Right column -- upload card (sticky) */}
-          <div className="lg:sticky lg:top-24">
+          {/* Right column -- upload card + privacy (sticky) */}
+          <div className="lg:sticky lg:top-24 space-y-5">
             <div className="rounded-xl border border-[oklch(0.90_0_0)] bg-white p-6 shadow-[0_1px_3px_oklch(0_0_0_/_0.06)]">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center mb-4">
@@ -225,6 +196,36 @@ export default async function CandidateDashboardPage() {
                     <UserCheck className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
                     <p className="text-[11px] text-[oklch(0.50_0_0)]">Match</p>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Privacy -- below upload card */}
+            <div className="rounded-xl border border-[oklch(0.92_0_0)] bg-[oklch(0.98_0_0)] p-5">
+              <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-3">
+                Your privacy
+              </h3>
+              <div className="space-y-2.5">
+                <div className="flex gap-2">
+                  <Shield className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.20_0_0)]">Anonymized by default.</strong>{' '}
+                    Employers never see your name, email, or employer names.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <EyeOff className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.20_0_0)]">Pay to unlock.</strong>{' '}
+                    Employers pay to see your full identity.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Eye className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.20_0_0)]">Open to offers.</strong>{' '}
+                    A discreet signal without revealing who you are.
+                  </p>
                 </div>
               </div>
             </div>
