@@ -62,7 +62,7 @@ export default async function JobDetailPage({
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6 px-6">
       <Link
         href="/employer/jobs"
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-sm transition-colors"
