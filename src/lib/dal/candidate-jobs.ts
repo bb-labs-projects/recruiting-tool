@@ -53,8 +53,7 @@ export const getOpenJobsForCandidate = cache(
       )
       .where(eq(jobs.status, 'open'))
       .orderBy(
-        sql`CASE WHEN ${jobMatches.overallScore} IS NOT NULL THEN 0 ELSE 1 END`,
-        desc(jobMatches.overallScore),
+        desc(sql<number>`coalesce(${jobMatches.overallScore}, -1)`),
         desc(jobs.createdAt)
       )
 
