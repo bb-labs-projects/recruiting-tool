@@ -41,28 +41,28 @@ export default async function CandidateDashboardPage() {
     // Case A: No profile exists -- onboarding welcome (split layout)
     return (
       <div className="max-w-5xl">
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-[oklch(0.12_0_0)] font-semibold text-[32px] tracking-tight mb-2">
-            Welcome to Cromwell Chase
-          </h1>
-          <p className="text-[14px] text-[oklch(0.40_0_0)] leading-relaxed max-w-xl">
-            We connect IP professionals with leading firms and in-house teams
-            worldwide. Upload your CV to get started.
-          </p>
-        </div>
-
-        {/* Split layout: content left, upload right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 items-start">
-          {/* Left column -- info */}
+        {/* Split layout: content left, upload + privacy right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
+          {/* Left column */}
           <div>
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-[oklch(0.12_0_0)] font-semibold text-[32px] tracking-tight mb-2">
+                Welcome to Cromwell Chase
+              </h1>
+              <p className="text-[14px] text-[oklch(0.40_0_0)] leading-relaxed">
+                We connect IP professionals with leading firms and in-house teams
+                worldwide. Upload your CV to get started.
+              </p>
+            </div>
+
             {/* How it works */}
-            <div className="mb-10">
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-6">
+            <div className="mb-8">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-5">
                 How it works
               </h2>
-              <div className="space-y-5">
-                <div className="flex gap-4">
+              <div className="space-y-4">
+                <div className="flex gap-3.5">
                   <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
                     <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">1</span>
                   </div>
@@ -77,7 +77,7 @@ export default async function CandidateDashboardPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3.5">
                   <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
                     <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">2</span>
                   </div>
@@ -92,7 +92,7 @@ export default async function CandidateDashboardPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3.5">
                   <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
                     <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">3</span>
                   </div>
@@ -110,63 +110,50 @@ export default async function CandidateDashboardPage() {
             </div>
 
             {/* What makes a strong profile */}
-            <div className="border-t border-[oklch(0.90_0_0)] pt-8 mb-10">
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-5">
+            <div className="border-t border-[oklch(0.90_0_0)] pt-6">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-4">
                 What makes a strong profile
               </h2>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+              <div className="space-y-3">
                 <div className="flex gap-2.5">
                   <Target className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Clear specializations</p>
-                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                      Patent prosecution, litigation, licensing
-                    </p>
-                  </div>
+                  <p className="text-[13px] text-[oklch(0.40_0_0)]">
+                    <strong className="text-[oklch(0.12_0_0)]">Clear specializations</strong> -- patent prosecution, litigation, licensing
+                  </p>
                 </div>
                 <div className="flex gap-2.5">
                   <Zap className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Technical depth</p>
-                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                      Biotech, software, EE, mechanical
-                    </p>
-                  </div>
+                  <p className="text-[13px] text-[oklch(0.40_0_0)]">
+                    <strong className="text-[oklch(0.12_0_0)]">Technical depth</strong> -- biotech, software, EE, mechanical
+                  </p>
                 </div>
                 <div className="flex gap-2.5">
                   <TrendingUp className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Complete work history</p>
-                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                      Dates and descriptions matter
-                    </p>
-                  </div>
+                  <p className="text-[13px] text-[oklch(0.40_0_0)]">
+                    <strong className="text-[oklch(0.12_0_0)]">Complete work history</strong> -- dates and descriptions matter
+                  </p>
                 </div>
                 <div className="flex gap-2.5">
                   <Lightbulb className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Bar admissions</p>
-                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                      Patent bar, state, international
-                    </p>
-                  </div>
+                  <p className="text-[13px] text-[oklch(0.40_0_0)]">
+                    <strong className="text-[oklch(0.12_0_0)]">Bar admissions</strong> -- patent bar, state, international
+                  </p>
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* Right column -- upload card + privacy (sticky) */}
-          <div className="lg:sticky lg:top-24 space-y-5">
+          <div className="lg:sticky lg:top-24 space-y-4">
             <div className="rounded-xl border border-[oklch(0.90_0_0)] bg-white p-6 shadow-[0_1px_3px_oklch(0_0_0_/_0.06)]">
               <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center mb-4">
+                <div className="w-11 h-11 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center mb-3">
                   <Upload className="size-5 text-[oklch(0.40_0_0)]" />
                 </div>
-                <h3 className="text-[16px] font-semibold text-[oklch(0.12_0_0)] mb-1">
+                <h3 className="text-[15px] font-semibold text-[oklch(0.12_0_0)] mb-1">
                   Get started
                 </h3>
-                <p className="text-[13px] text-[oklch(0.50_0_0)] mb-5">
+                <p className="text-[12px] text-[oklch(0.50_0_0)] mb-4 leading-relaxed">
                   Upload your CV and we&apos;ll build your profile automatically.
                 </p>
                 <Link
@@ -176,53 +163,53 @@ export default async function CandidateDashboardPage() {
                   <Upload className="size-4" />
                   Upload Your CV
                 </Link>
-                <p className="text-[11px] text-[oklch(0.55_0_0)] mt-3">
+                <p className="text-[11px] text-[oklch(0.55_0_0)] mt-2.5">
                   PDF or DOCX, up to 10 MB
                 </p>
               </div>
 
-              {/* Quick stats teaser */}
-              <div className="border-t border-[oklch(0.92_0_0)] mt-5 pt-5">
+              {/* Step icons */}
+              <div className="border-t border-[oklch(0.92_0_0)] mt-4 pt-4">
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div>
                     <FileText className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
-                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Upload</p>
+                    <p className="text-[10px] text-[oklch(0.50_0_0)]">Upload</p>
                   </div>
                   <div>
                     <ScanSearch className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
-                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Review</p>
+                    <p className="text-[10px] text-[oklch(0.50_0_0)]">Review</p>
                   </div>
                   <div>
                     <UserCheck className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
-                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Match</p>
+                    <p className="text-[10px] text-[oklch(0.50_0_0)]">Match</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Privacy -- below upload card */}
-            <div className="rounded-xl border border-[oklch(0.92_0_0)] bg-[oklch(0.98_0_0)] p-5">
+            {/* Privacy */}
+            <div className="rounded-xl border border-[oklch(0.92_0_0)] bg-[oklch(0.98_0_0)] px-5 py-4">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-3">
                 Your privacy
               </h3>
-              <div className="space-y-2.5">
+              <div className="space-y-2">
                 <div className="flex gap-2">
-                  <Shield className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                  <Shield className="size-3 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-[oklch(0.40_0_0)] leading-relaxed">
                     <strong className="text-[oklch(0.20_0_0)]">Anonymized by default.</strong>{' '}
                     Employers never see your name, email, or employer names.
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <EyeOff className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                  <EyeOff className="size-3 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-[oklch(0.40_0_0)] leading-relaxed">
                     <strong className="text-[oklch(0.20_0_0)]">Pay to unlock.</strong>{' '}
                     Employers pay to see your full identity.
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Eye className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-                  <p className="text-[12px] text-[oklch(0.40_0_0)] leading-relaxed">
+                  <Eye className="size-3 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-[oklch(0.40_0_0)] leading-relaxed">
                     <strong className="text-[oklch(0.20_0_0)]">Open to offers.</strong>{' '}
                     A discreet signal without revealing who you are.
                   </p>
