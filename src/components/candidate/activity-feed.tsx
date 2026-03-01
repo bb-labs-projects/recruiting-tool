@@ -30,45 +30,45 @@ export function ActivityFeed({ activity }: { activity: CandidateActivity }) {
 
   return (
     <div className="mb-10">
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-4">
+      <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground font-medium mb-4">
         Activity
       </h2>
 
       {/* Stats row */}
       <div className="flex items-center gap-12 mb-8">
         <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-[oklch(0.12_0_0)]">
+          <span className="font-mono text-[14px] font-medium text-foreground">
             {stats.viewsThisWeek}
           </span>
-          <span className="text-[12px] text-[oklch(0.55_0_0)]">Views this week</span>
+          <span className="text-[12px] text-muted-foreground">Views this week</span>
         </div>
-        <div className="h-8 w-[1px] bg-[oklch(0.90_0_0)]" />
+        <div className="h-8 w-[1px] bg-border" />
         <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-[oklch(0.12_0_0)]">
+          <span className="font-mono text-[14px] font-medium text-foreground">
             {stats.totalSaves}
           </span>
-          <span className="text-[12px] text-[oklch(0.55_0_0)]">Saves</span>
+          <span className="text-[12px] text-muted-foreground">Saves</span>
         </div>
-        <div className="h-8 w-[1px] bg-[oklch(0.90_0_0)]" />
+        <div className="h-8 w-[1px] bg-border" />
         <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-[oklch(0.12_0_0)]">
+          <span className="font-mono text-[14px] font-medium text-foreground">
             {stats.totalUnlocks}
           </span>
-          <span className="text-[12px] text-[oklch(0.55_0_0)]">Unlocks</span>
+          <span className="text-[12px] text-muted-foreground">Unlocks</span>
         </div>
-        <div className="h-8 w-[1px] bg-[oklch(0.90_0_0)]" />
+        <div className="h-8 w-[1px] bg-border" />
         <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-[oklch(0.12_0_0)]">
+          <span className="font-mono text-[14px] font-medium text-foreground">
             {stats.totalMatches}
           </span>
-          <span className="text-[12px] text-[oklch(0.55_0_0)]">Matches</span>
+          <span className="text-[12px] text-muted-foreground">Matches</span>
         </div>
       </div>
 
       {/* Event list */}
       {events.length > 0 ? (
         <>
-          <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-3">
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground font-medium mb-3">
             Recent
           </h3>
           <div className="space-y-3">
@@ -77,11 +77,11 @@ export function ActivityFeed({ activity }: { activity: CandidateActivity }) {
               const Icon = config.icon
               return (
                 <div key={event.id} className="flex items-center gap-3">
-                  <Icon className="size-3.5 text-[oklch(0.55_0_0)] shrink-0" />
-                  <span className="text-[13px] text-[oklch(0.30_0_0)] flex-1">
+                  <Icon className="size-3.5 text-muted-foreground shrink-0" />
+                  <span className="text-[13px] text-foreground/80 flex-1">
                     {config.label}
                   </span>
-                  <span className="font-mono text-[11px] text-[oklch(0.55_0_0)] shrink-0">
+                  <span className="font-mono text-[11px] text-muted-foreground shrink-0">
                     {relativeTime(event.timestamp)}
                   </span>
                 </div>
@@ -90,16 +90,16 @@ export function ActivityFeed({ activity }: { activity: CandidateActivity }) {
           </div>
         </>
       ) : (
-        <div className="rounded-lg border border-dashed border-[oklch(0.85_0_0)] bg-[oklch(0.98_0_0)] p-6 text-center">
-          <Eye className="size-5 text-[oklch(0.55_0_0)] mx-auto mb-2" />
-          <p className="text-[13px] text-[oklch(0.40_0_0)]">
+        <div className="rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center">
+          <Eye className="size-5 text-muted-foreground mx-auto mb-2" />
+          <p className="text-[13px] text-muted-foreground">
             No activity yet. When employers interact with your profile,
             you&apos;ll see it here.
           </p>
         </div>
       )}
 
-      <div className="border-t border-[oklch(0.90_0_0)] mt-10" />
+      <div className="border-t border-border mt-10" />
     </div>
   )
 }

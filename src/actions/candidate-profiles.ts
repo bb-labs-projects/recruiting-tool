@@ -2,7 +2,16 @@
 
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
-import { profiles, education, workHistory, barAdmissions } from '@/lib/db/schema'
+import {
+  profiles,
+  education,
+  workHistory,
+  barAdmissions,
+  specializations,
+  profileSpecializations,
+  technicalDomains,
+  profileTechnicalDomains,
+} from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { z } from 'zod'
 import { getUser } from '@/lib/dal'
@@ -371,5 +380,322 @@ export async function submitProfileForReview(formData: FormData) {
     }
     console.error('submitProfileForReview error:', error)
     return { error: 'Failed to submit profile for review' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 7: addCandidateSpecialization
+// ---------------------------------------------------------------------------
+
+const AddSpecializationSchema = z.object({
+  profileId: z.string().uuid(),
+  name: z.string().min(1, 'Name is required').max(255),
+})
+
+export async function addCandidateSpecialization(formData: FormData) {
+  try {
+    const parsed = AddSpecializationSchema.safeParse({
+      profileId: formData.get('profileId'),
+      name: formData.get('name'),
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    const { profileId, name } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    // Find or create the specialization lookup record
+    const trimmedName = name.trim()
+    let [existing] = await db
+      .select({ id: specializations.id })
+      .from(specializations)
+      .where(eq(specializations.name, trimmedName))
+      .limit(1)
+
+    if (!existing) {
+      ;[existing] = await db
+        .insert(specializations)
+        .values({ name: trimmedName })
+        .returning({ id: specializations.id })
+    }
+
+    await db
+      .insert(profileSpecializations)
+      .values({
+        profileId,
+        specializationId: existing.id,
+        confidence: 'high',
+      })
+      .onConflictDoNothing()
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('addCandidateSpecialization error:', error)
+    return { error: 'Failed to add specialization' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 8: removeCandidateSpecialization
+// ---------------------------------------------------------------------------
+
+const RemoveSpecializationSchema = z.object({
+  profileId: z.string().uuid(),
+  specializationId: z.string().uuid(),
+})
+
+export async function removeCandidateSpecialization(formData: FormData) {
+  try {
+    const parsed = RemoveSpecializationSchema.safeParse({
+      profileId: formData.get('profileId'),
+      specializationId: formData.get('specializationId'),
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    const { profileId, specializationId } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    await db
+      .delete(profileSpecializations)
+      .where(
+        and(
+          eq(profileSpecializations.profileId, profileId),
+          eq(profileSpecializations.specializationId, specializationId),
+        )
+      )
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('removeCandidateSpecialization error:', error)
+    return { error: 'Failed to remove specialization' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 9: addCandidateTechnicalDomain
+// ---------------------------------------------------------------------------
+
+const AddTechnicalDomainSchema = z.object({
+  profileId: z.string().uuid(),
+  name: z.string().min(1, 'Name is required').max(255),
+})
+
+export async function addCandidateTechnicalDomain(formData: FormData) {
+  try {
+    const parsed = AddTechnicalDomainSchema.safeParse({
+      profileId: formData.get('profileId'),
+      name: formData.get('name'),
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    const { profileId, name } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    const trimmedName = name.trim()
+    let [existing] = await db
+      .select({ id: technicalDomains.id })
+      .from(technicalDomains)
+      .where(eq(technicalDomains.name, trimmedName))
+      .limit(1)
+
+    if (!existing) {
+      ;[existing] = await db
+        .insert(technicalDomains)
+        .values({ name: trimmedName })
+        .returning({ id: technicalDomains.id })
+    }
+
+    await db
+      .insert(profileTechnicalDomains)
+      .values({
+        profileId,
+        technicalDomainId: existing.id,
+        confidence: 'high',
+      })
+      .onConflictDoNothing()
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('addCandidateTechnicalDomain error:', error)
+    return { error: 'Failed to add technical domain' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 10: removeCandidateTechnicalDomain
+// ---------------------------------------------------------------------------
+
+const RemoveTechnicalDomainSchema = z.object({
+  profileId: z.string().uuid(),
+  technicalDomainId: z.string().uuid(),
+})
+
+export async function removeCandidateTechnicalDomain(formData: FormData) {
+  try {
+    const parsed = RemoveTechnicalDomainSchema.safeParse({
+      profileId: formData.get('profileId'),
+      technicalDomainId: formData.get('technicalDomainId'),
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    const { profileId, technicalDomainId } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    await db
+      .delete(profileTechnicalDomains)
+      .where(
+        and(
+          eq(profileTechnicalDomains.profileId, profileId),
+          eq(profileTechnicalDomains.technicalDomainId, technicalDomainId),
+        )
+      )
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('removeCandidateTechnicalDomain error:', error)
+    return { error: 'Failed to remove technical domain' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 11: addCandidateBarAdmission
+// ---------------------------------------------------------------------------
+
+const AddBarAdmissionSchema = z.object({
+  profileId: z.string().uuid(),
+  jurisdiction: z.string().min(1, 'Jurisdiction is required').max(255),
+  year: z.string().optional().or(z.literal('')),
+  status: z.string().optional().or(z.literal('')),
+})
+
+export async function addCandidateBarAdmission(formData: FormData) {
+  try {
+    const parsed = AddBarAdmissionSchema.safeParse({
+      profileId: formData.get('profileId'),
+      jurisdiction: formData.get('jurisdiction'),
+      year: formData.get('year'),
+      status: formData.get('status'),
+    })
+
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors
+      const firstError = Object.values(fieldErrors).flat()[0]
+      return { error: firstError ?? 'Invalid input' }
+    }
+
+    const { profileId, jurisdiction, year, status } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    await db.insert(barAdmissions).values({
+      profileId,
+      jurisdiction: jurisdiction.trim(),
+      year: year?.trim() || null,
+      status: status?.trim() || null,
+      confidence: 'high',
+      sortOrder: 0,
+    })
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('addCandidateBarAdmission error:', error)
+    return { error: 'Failed to add bar admission' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 12: removeCandidateBarAdmission
+// ---------------------------------------------------------------------------
+
+const RemoveBarAdmissionSchema = z.object({
+  barAdmissionId: z.string().uuid(),
+  profileId: z.string().uuid(),
+})
+
+export async function removeCandidateBarAdmission(formData: FormData) {
+  try {
+    const parsed = RemoveBarAdmissionSchema.safeParse({
+      barAdmissionId: formData.get('barAdmissionId'),
+      profileId: formData.get('profileId'),
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    const { barAdmissionId, profileId } = parsed.data
+    await requireCandidateOwner(profileId)
+
+    await db
+      .delete(barAdmissions)
+      .where(
+        and(
+          eq(barAdmissions.id, barAdmissionId),
+          eq(barAdmissions.profileId, profileId),
+        )
+      )
+
+    await triggerReReviewIfActive(profileId)
+
+    revalidatePath('/candidate/profile')
+    revalidatePath('/candidate')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('removeCandidateBarAdmission error:', error)
+    return { error: 'Failed to remove bar admission' }
   }
 }

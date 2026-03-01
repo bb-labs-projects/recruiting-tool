@@ -31,8 +31,8 @@ export function OpenToOffersToggle({
       <span
         className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ${
           initialValue
-            ? 'bg-[oklch(0.55_0.14_155)]'
-            : 'bg-[oklch(0.85_0_0)]'
+            ? 'bg-emerald-600'
+            : 'bg-border'
         }`}
       >
         {/* Toggle thumb */}
@@ -42,7 +42,7 @@ export function OpenToOffersToggle({
           }`}
         />
       </span>
-      <span className="text-[13px] text-[oklch(0.40_0_0)]">
+      <span className="text-[13px] text-muted-foreground">
         {isPending
           ? 'Updating...'
           : initialValue

@@ -12,12 +12,19 @@ import {
   Scale,
   Cpu,
   Tags,
+  X,
 } from 'lucide-react'
 import {
   updateCandidateProfileField,
   updateCandidateEducation,
   updateCandidateWorkHistory,
   updateCandidateBarAdmission,
+  addCandidateSpecialization,
+  removeCandidateSpecialization,
+  addCandidateTechnicalDomain,
+  removeCandidateTechnicalDomain,
+  addCandidateBarAdmission,
+  removeCandidateBarAdmission,
 } from '@/actions/candidate-profiles'
 
 // ---------------------------------------------------------------------------
@@ -56,8 +63,8 @@ export interface CandidateProfileFormData {
   education: EducationEntry[]
   workHistory: WorkHistoryEntry[]
   barAdmissions: BarAdmissionEntry[]
-  specializations: { name: string }[]
-  technicalDomains: { name: string }[]
+  specializations: { id: string; name: string }[]
+  technicalDomains: { id: string; name: string }[]
 }
 
 // ---------------------------------------------------------------------------
@@ -298,6 +305,232 @@ function createBarAdmissionAction(
 }
 
 // ---------------------------------------------------------------------------
+// Add/Remove helper components
+// ---------------------------------------------------------------------------
+
+function AddTagInput({
+  profileId,
+  action,
+  placeholder,
+}: {
+  profileId: string
+  action: (formData: FormData) => Promise<{ error?: string; success?: boolean }>
+  placeholder: string
+}) {
+  const [value, setValue] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function handleSubmit() {
+    const trimmed = value.trim()
+    if (!trimmed) return
+
+    startTransition(async () => {
+      const formData = new FormData()
+      formData.set('profileId', profileId)
+      formData.set('name', trimmed)
+      const result = await action(formData)
+      if (result.error) {
+        setError(result.error)
+      } else {
+        setError(null)
+        setValue('')
+        inputRef.current?.focus()
+      }
+    })
+  }
+
+  return (
+    <div className="mt-3 space-y-1">
+      <div className="flex items-center gap-2">
+        <Input
+          ref={inputRef}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value)
+            setError(null)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              handleSubmit()
+            }
+          }}
+          placeholder={placeholder}
+          disabled={isPending}
+          className="h-8 text-sm"
+        />
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isPending || !value.trim()}
+          className="h-8 px-3 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shrink-0"
+        >
+          {isPending ? '...' : 'Add'}
+        </button>
+      </div>
+      {error && <p className="text-destructive text-xs">{error}</p>}
+    </div>
+  )
+}
+
+function RemovableTag({
+  label,
+  onRemove,
+}: {
+  label: string
+  onRemove: () => Promise<{ error?: string; success?: boolean }>
+}) {
+  const [isPending, startTransition] = useTransition()
+
+  function handleRemove() {
+    startTransition(async () => {
+      await onRemove()
+    })
+  }
+
+  return (
+    <Badge variant="secondary" className={`gap-1 pr-1 ${isPending ? 'opacity-50' : ''}`}>
+      {label}
+      <button
+        type="button"
+        onClick={handleRemove}
+        disabled={isPending}
+        className="ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20 transition-colors"
+        aria-label={`Remove ${label}`}
+      >
+        <X className="size-3" />
+      </button>
+    </Badge>
+  )
+}
+
+function RemoveBarAdmissionButton({
+  barAdmissionId,
+  profileId,
+}: {
+  barAdmissionId: string
+  profileId: string
+}) {
+  const [isPending, startTransition] = useTransition()
+
+  function handleRemove() {
+    startTransition(async () => {
+      const fd = new FormData()
+      fd.set('barAdmissionId', barAdmissionId)
+      fd.set('profileId', profileId)
+      await removeCandidateBarAdmission(fd)
+    })
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleRemove}
+      disabled={isPending}
+      className="text-xs text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+      aria-label="Remove bar admission"
+    >
+      {isPending ? '...' : 'Remove'}
+    </button>
+  )
+}
+
+function AddBarAdmissionForm({ profileId }: { profileId: string }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [jurisdiction, setJurisdiction] = useState('')
+  const [year, setYear] = useState('')
+  const [status, setStatus] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+
+  if (!isOpen) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="mt-3 text-sm text-brand font-medium hover:underline"
+      >
+        + Add Bar Admission
+      </button>
+    )
+  }
+
+  function handleSubmit() {
+    if (!jurisdiction.trim()) {
+      setError('Jurisdiction is required')
+      return
+    }
+
+    startTransition(async () => {
+      const formData = new FormData()
+      formData.set('profileId', profileId)
+      formData.set('jurisdiction', jurisdiction.trim())
+      formData.set('year', year.trim())
+      formData.set('status', status.trim())
+      const result = await addCandidateBarAdmission(formData)
+      if (result.error) {
+        setError(result.error)
+      } else {
+        setError(null)
+        setJurisdiction('')
+        setYear('')
+        setStatus('')
+        setIsOpen(false)
+      }
+    })
+  }
+
+  return (
+    <div className="mt-3 space-y-2 rounded-md border border-border p-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <Input
+          value={jurisdiction}
+          onChange={(e) => { setJurisdiction(e.target.value); setError(null) }}
+          placeholder="Jurisdiction"
+          disabled={isPending}
+          className="h-8 text-sm"
+        />
+        <Input
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          placeholder="Year"
+          disabled={isPending}
+          className="h-8 text-sm"
+        />
+        <Input
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          placeholder="Status (e.g., Active)"
+          disabled={isPending}
+          className="h-8 text-sm"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isPending}
+          className="h-7 px-3 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+        >
+          {isPending ? 'Adding...' : 'Add'}
+        </button>
+        <button
+          type="button"
+          onClick={() => { setIsOpen(false); setError(null) }}
+          disabled={isPending}
+          className="h-7 px-3 text-xs font-medium rounded-md text-muted-foreground hover:bg-muted transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+      {error && <p className="text-destructive text-xs">{error}</p>}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Section definitions
 // ---------------------------------------------------------------------------
 
@@ -343,21 +576,33 @@ function SpecializationsSection({
 }: {
   profile: CandidateProfileFormData
 }) {
-  if (profile.specializations.length === 0) {
-    return (
-      <p className="text-muted-foreground text-sm">
-        No specializations recorded. These are extracted from your CV.
-      </p>
-    )
-  }
-
   return (
-    <div className="flex flex-wrap gap-2">
-      {profile.specializations.map((spec) => (
-        <Badge key={spec.name} variant="secondary">
-          {spec.name}
-        </Badge>
-      ))}
+    <div>
+      {profile.specializations.length === 0 ? (
+        <p className="text-muted-foreground text-sm mb-2">
+          No specializations recorded.
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {profile.specializations.map((spec) => (
+            <RemovableTag
+              key={spec.id}
+              label={spec.name}
+              onRemove={async () => {
+                const fd = new FormData()
+                fd.set('profileId', profile.id)
+                fd.set('specializationId', spec.id)
+                return removeCandidateSpecialization(fd)
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <AddTagInput
+        profileId={profile.id}
+        action={addCandidateSpecialization}
+        placeholder="Add a specialization..."
+      />
     </div>
   )
 }
@@ -523,21 +768,33 @@ function TechnicalDomainsSection({
 }: {
   profile: CandidateProfileFormData
 }) {
-  if (profile.technicalDomains.length === 0) {
-    return (
-      <p className="text-muted-foreground text-sm">
-        No technical domains recorded. These are extracted from your CV.
-      </p>
-    )
-  }
-
   return (
-    <div className="flex flex-wrap gap-2">
-      {profile.technicalDomains.map((domain) => (
-        <Badge key={domain.name} variant="secondary">
-          {domain.name}
-        </Badge>
-      ))}
+    <div>
+      {profile.technicalDomains.length === 0 ? (
+        <p className="text-muted-foreground text-sm mb-2">
+          No technical domains recorded.
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {profile.technicalDomains.map((domain) => (
+            <RemovableTag
+              key={domain.id}
+              label={domain.name}
+              onRemove={async () => {
+                const fd = new FormData()
+                fd.set('profileId', profile.id)
+                fd.set('technicalDomainId', domain.id)
+                return removeCandidateTechnicalDomain(fd)
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <AddTagInput
+        profileId={profile.id}
+        action={addCandidateTechnicalDomain}
+        placeholder="Add a technical domain..."
+      />
     </div>
   )
 }
@@ -547,58 +804,63 @@ function BarAdmissionsSection({
 }: {
   profile: CandidateProfileFormData
 }) {
-  if (profile.barAdmissions.length === 0) {
-    return (
-      <p className="text-muted-foreground text-sm">
-        No bar admissions recorded.
-      </p>
-    )
-  }
-
   return (
-    <div className="space-y-6">
-      {profile.barAdmissions.map((bar, index) => (
-        <div key={bar.id}>
-          {index > 0 && <Separator className="mb-4" />}
-          <div className="mb-3">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              {bar.jurisdiction || `Entry ${index + 1}`}
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <CandidateEditField
-              value={bar.jurisdiction}
-              action={createBarAdmissionAction(
-                bar.id,
-                profile.id,
-                bar,
-                'jurisdiction'
-              )}
-              label="Jurisdiction"
-            />
-            <CandidateEditField
-              value={bar.year ?? ''}
-              action={createBarAdmissionAction(
-                bar.id,
-                profile.id,
-                bar,
-                'year'
-              )}
-              label="Year"
-            />
-            <CandidateEditField
-              value={bar.status ?? ''}
-              action={createBarAdmissionAction(
-                bar.id,
-                profile.id,
-                bar,
-                'status'
-              )}
-              label="Status"
-            />
-          </div>
+    <div>
+      {profile.barAdmissions.length === 0 ? (
+        <p className="text-muted-foreground text-sm mb-2">
+          No bar admissions recorded.
+        </p>
+      ) : (
+        <div className="space-y-6">
+          {profile.barAdmissions.map((bar, index) => (
+            <div key={bar.id}>
+              {index > 0 && <Separator className="mb-4" />}
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  {bar.jurisdiction || `Entry ${index + 1}`}
+                </span>
+                <RemoveBarAdmissionButton
+                  barAdmissionId={bar.id}
+                  profileId={profile.id}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CandidateEditField
+                  value={bar.jurisdiction}
+                  action={createBarAdmissionAction(
+                    bar.id,
+                    profile.id,
+                    bar,
+                    'jurisdiction'
+                  )}
+                  label="Jurisdiction"
+                />
+                <CandidateEditField
+                  value={bar.year ?? ''}
+                  action={createBarAdmissionAction(
+                    bar.id,
+                    profile.id,
+                    bar,
+                    'year'
+                  )}
+                  label="Year"
+                />
+                <CandidateEditField
+                  value={bar.status ?? ''}
+                  action={createBarAdmissionAction(
+                    bar.id,
+                    profile.id,
+                    bar,
+                    'status'
+                  )}
+                  label="Status"
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+      <AddBarAdmissionForm profileId={profile.id} />
     </div>
   )
 }

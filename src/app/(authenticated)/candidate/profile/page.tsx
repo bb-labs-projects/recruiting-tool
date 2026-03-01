@@ -56,9 +56,11 @@ export default async function CandidateProfilePage() {
       status: b.status,
     })),
     specializations: profile.profileSpecializations.map((ps) => ({
+      id: ps.specialization.id,
       name: ps.specialization.name,
     })),
     technicalDomains: profile.profileTechnicalDomains.map((ptd) => ({
+      id: ptd.technicalDomain.id,
       name: ptd.technicalDomain.name,
     })),
   }
