@@ -33,6 +33,7 @@ export function UnlockButton({
     <Button
       variant="default"
       size="lg"
+      className="group"
       disabled={isPending}
       onClick={() => {
         startTransition(async () => {
@@ -47,7 +48,10 @@ export function UnlockButton({
         </>
       ) : (
         <>
-          <Lock className="size-4" />
+          <span className="relative size-4">
+            <Lock className="size-4 absolute inset-0 transition-all duration-200 group-hover:opacity-0 group-hover:scale-90" />
+            <Unlock className="size-4 absolute inset-0 transition-all duration-200 opacity-0 scale-110 group-hover:opacity-100 group-hover:scale-100" />
+          </span>
           Unlock Full Profile
         </>
       )}
