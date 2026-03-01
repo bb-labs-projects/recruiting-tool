@@ -85,22 +85,44 @@ export default async function CandidateProfilePage() {
   const StatusIcon = status.icon
 
   return (
-    <div>
-      {/* Header with status */}
-      <div className="mb-8 flex items-start justify-between">
+    <div className="max-w-4xl mx-auto px-6 py-8">
+      {/* Header with status and actions */}
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-sans">My Profile</h1>
-          <p className="text-muted-foreground">{profile.name}</p>
+          <h1 className="text-xl font-semibold tracking-tight">My Profile</h1>
+          <p className="text-sm text-muted-foreground">{profile.name}</p>
         </div>
-        <Badge variant="outline" className={status.className}>
-          <StatusIcon className="mr-1 size-3" />
-          {status.label}
-        </Badge>
+        <div className="flex items-center gap-3">
+          {(profile.status === 'pending_review' ||
+            profile.status === 'rejected') && (
+            <form
+              action={async (fd: FormData) => {
+                'use server'
+                await submitProfileForReview(fd)
+              }}
+            >
+              <input type="hidden" name="profileId" value={profile.id} />
+              <Button type="submit" size="sm" className="rounded-lg">
+                Submit for Review
+              </Button>
+            </form>
+          )}
+          <Button variant="outline" size="sm" asChild className="rounded-lg">
+            <Link href="/candidate/upload">
+              <Upload className="size-3.5" />
+              Re-upload CV
+            </Link>
+          </Button>
+          <Badge variant="outline" className={status.className}>
+            <StatusIcon className="mr-1 size-3" />
+            {status.label}
+          </Badge>
+        </div>
       </div>
 
       {/* Status banners */}
       {profile.status === 'active' && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
           <Info className="mt-0.5 size-4 shrink-0" />
           <p>
             Your profile is live and visible to employers. Editing will send it
@@ -110,22 +132,19 @@ export default async function CandidateProfilePage() {
       )}
 
       {profile.status === 'rejected' && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" />
           <div>
             <p className="font-medium">Your profile needs changes</p>
             {profile.rejectionNotes && (
               <p className="mt-1">{profile.rejectionNotes}</p>
             )}
-            <p className="mt-1 text-muted-foreground">
-              Edit your profile below and resubmit for review.
-            </p>
           </div>
         </div>
       )}
 
       {profile.status === 'pending_review' && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
           <Clock className="mt-0.5 size-4 shrink-0" />
           <p>
             Your profile is being reviewed by our team. You can still edit your
@@ -134,30 +153,8 @@ export default async function CandidateProfilePage() {
         </div>
       )}
 
-      {/* Profile form */}
+      {/* Two-panel profile form */}
       <CandidateProfileForm profile={formData} />
-
-      {/* Action buttons */}
-      <div className="mt-6 flex gap-3">
-        {(profile.status === 'pending_review' ||
-          profile.status === 'rejected') && (
-          <form
-            action={async (formData: FormData) => {
-              'use server'
-              await submitProfileForReview(formData)
-            }}
-          >
-            <input type="hidden" name="profileId" value={profile.id} />
-            <Button type="submit" className="rounded-lg transition-all">Submit for Review</Button>
-          </form>
-        )}
-        <Button variant="outline" asChild className="rounded-lg transition-all">
-          <Link href="/candidate/upload">
-            <Upload className="size-4" />
-            Re-upload CV
-          </Link>
-        </Button>
-      </div>
     </div>
   )
 }
