@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { getUser } from '@/lib/dal'
+import { getTheme } from '@/lib/dal/settings'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { SidebarNav } from '@/components/admin/sidebar-nav'
 
@@ -21,14 +23,27 @@ export default async function AdminLayout({
     redirect('/login')
   }
 
+  const theme = await getTheme()
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside className="flex w-60 flex-col bg-sidebar text-sidebar-foreground">
         <div className="px-5 py-4">
-          <span className="font-sans text-sm font-semibold text-white">
-            Cromwell Chase
-          </span>
+          {theme === 'cromwell' ? (
+            <Image
+              src="/logo-white.svg"
+              alt="Cromwell Chase"
+              width={120}
+              height={28}
+              className="h-7 w-auto"
+              priority
+            />
+          ) : (
+            <span className="font-sans text-sm font-semibold text-white">
+              Cromwell Chase
+            </span>
+          )}
           <p className="font-mono text-[10px] uppercase tracking-widest text-sidebar-foreground/40">
             Admin
           </p>

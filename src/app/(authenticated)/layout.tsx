@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { getUser } from '@/lib/dal'
+import { getTheme } from '@/lib/dal/settings'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { HeaderNav } from '@/components/auth/header-nav'
 
@@ -20,6 +22,8 @@ export default async function AuthenticatedLayout({
     redirect('/login')
   }
 
+  const theme = await getTheme()
+
   const initials = user.email
     ? user.email
         .split('@')[0]
@@ -31,11 +35,22 @@ export default async function AuthenticatedLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="w-full bg-[oklch(0.12_0.01_260)] sticky top-0 z-50">
+      <header className="w-full bg-sidebar sticky top-0 z-50">
         <div className="flex h-14 items-center px-6 max-w-7xl mx-auto gap-12">
-          <span className="font-sans text-[16px] font-semibold tracking-tight text-white">
-            Cromwell Chase
-          </span>
+          {theme === 'cromwell' ? (
+            <Image
+              src="/logo-white.svg"
+              alt="Cromwell Chase"
+              width={120}
+              height={28}
+              className="h-7 w-auto"
+              priority
+            />
+          ) : (
+            <span className="font-sans text-[16px] font-semibold tracking-tight text-white">
+              Cromwell Chase
+            </span>
+          )}
           <HeaderNav role={user.role} />
           <div className="flex items-center gap-3">
             <span className="text-xs text-[oklch(0.60_0_0)]">

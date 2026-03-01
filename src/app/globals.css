@@ -48,7 +48,10 @@
 
 :root {
   --radius: 0.625rem;
+}
 
+/* Black & Gold theme (original) */
+:root, [data-theme="blackgold"] {
   /* Background - clean off-white */
   --background: oklch(0.98 0 0);
   --foreground: oklch(0.12 0 0);
@@ -103,6 +106,21 @@
   --sidebar-accent-foreground: oklch(0.92 0 0);
   --sidebar-border: oklch(0.20 0 0);
   --sidebar-ring: oklch(0.78 0.14 75);
+}
+
+/* Cromwell Chase theme (teal) */
+[data-theme="cromwell"] {
+  --brand: oklch(0.62 0.14 200);
+  --brand-foreground: oklch(1 0 0);
+  --primary: oklch(0.62 0.14 200);
+  --primary-foreground: oklch(1 0 0);
+  --ring: oklch(0.62 0.14 200);
+  --sidebar: oklch(0.15 0.02 220);
+  --sidebar-primary: oklch(0.62 0.14 200);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.19 0.02 220);
+  --sidebar-ring: oklch(0.62 0.14 200);
+  --chart-1: oklch(0.62 0.14 200);
 }
 
 .dark {

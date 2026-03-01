@@ -11,6 +11,7 @@ import {
   Briefcase,
   BarChart3,
   Shield,
+  Settings,
 } from 'lucide-react'
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { name: 'Jobs', href: '/admin/jobs', icon: Briefcase },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { name: 'Users', href: '/admin/users', icon: Shield },
+  { name: 'Settings', href: '/admin/settings', icon: Settings },
 ]
 
 export function SidebarNav() {

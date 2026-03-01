@@ -43,6 +43,13 @@
       "when": 1772379217470,
       "tag": "0005_careful_doctor_faustus",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772400818634,
+      "tag": "0006_add-app-settings",
+      "breakpoints": true
     }
   ]
 }

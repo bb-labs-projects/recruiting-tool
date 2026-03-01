@@ -398,3 +398,10 @@ export const jobMatches = pgTable('job_matches', {
   index('job_matches_profile_idx').on(table.profileId),
   index('job_matches_score_idx').on(table.jobId, table.overallScore),
 ])
+
+// App settings key-value store
+export const appSettings = pgTable('app_settings', {
+  key: varchar('key', { length: 100 }).primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+})
