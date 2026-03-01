@@ -110,17 +110,33 @@
 
 /* Cromwell Chase theme (teal) */
 [data-theme="cromwell"] {
-  --brand: oklch(0.62 0.14 200);
+  /* Brand: teal #2EBFD4 */
+  --brand: oklch(0.72 0.12 200);
   --brand-foreground: oklch(1 0 0);
-  --primary: oklch(0.62 0.14 200);
+
+  /* Primary matches brand */
+  --primary: oklch(0.72 0.12 200);
   --primary-foreground: oklch(1 0 0);
-  --ring: oklch(0.62 0.14 200);
-  --sidebar: oklch(0.15 0.02 220);
-  --sidebar-primary: oklch(0.62 0.14 200);
+
+  /* Ring/focus */
+  --ring: oklch(0.72 0.12 200);
+
+  /* Sidebar: dark teal-charcoal */
+  --sidebar: oklch(0.14 0.02 220);
+  --sidebar-foreground: oklch(0.92 0 0);
+  --sidebar-primary: oklch(0.72 0.12 200);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.19 0.02 220);
-  --sidebar-ring: oklch(0.62 0.14 200);
-  --chart-1: oklch(0.62 0.14 200);
+  --sidebar-accent: oklch(0.18 0.02 220);
+  --sidebar-accent-foreground: oklch(0.92 0 0);
+  --sidebar-border: oklch(0.22 0.01 220);
+  --sidebar-ring: oklch(0.72 0.12 200);
+
+  /* Charts */
+  --chart-1: oklch(0.72 0.12 200);
+  --chart-2: oklch(0.55 0.12 170);
+  --chart-3: oklch(0.50 0.10 250);
+  --chart-4: oklch(0.65 0.10 200);
+  --chart-5: oklch(0.55 0.16 20);
 }
 
 .dark {

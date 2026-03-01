@@ -53,10 +53,10 @@ export default async function AuthenticatedLayout({
           )}
           <HeaderNav role={user.role} />
           <div className="flex items-center gap-3">
-            <span className="text-xs text-[oklch(0.60_0_0)]">
+            <span className="text-xs text-sidebar-foreground/50">
               {user.email}
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[oklch(0.16_0.01_260)] text-xs font-medium text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent text-xs font-medium text-white">
               {initials}
             </div>
             <LogoutButton />

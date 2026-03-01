@@ -1,19 +1,127 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import Link from 'next/link'
-import { Settings, Palette, Shield } from 'lucide-react'
+import { Settings, Palette, Shield, Check } from 'lucide-react'
 
 type Theme = 'cromwell' | 'blackgold'
 
+const themes: {
+  id: Theme
+  name: string
+  description: string
+  brand: string
+  sidebar: string
+  sidebarAccent: string
+  accent: string
+  bg: string
+}[] = [
+  {
+    id: 'cromwell',
+    name: 'Cromwell Chase',
+    description: 'Teal brand accents, dark teal sidebar, clean and modern',
+    brand: '#2EBFD4',
+    sidebar: '#1a2a33',
+    sidebarAccent: '#243840',
+    accent: '#2EBFD4',
+    bg: '#fafafa',
+  },
+  {
+    id: 'blackgold',
+    name: 'Black & Gold',
+    description: 'Gold accents, dark blue-black sidebar, warm and premium',
+    brand: '#d4a745',
+    sidebar: '#141428',
+    sidebarAccent: '#1c1c38',
+    accent: '#d4a745',
+    bg: '#fafafa',
+  },
+]
+
+function ThemePreview({
+  theme,
+  isActive,
+}: {
+  theme: (typeof themes)[number]
+  isActive: boolean
+}) {
+  return (
+    <div
+      className="relative overflow-hidden rounded-md border"
+      style={{ borderColor: isActive ? theme.brand : 'var(--border)' }}
+    >
+      {/* Mini mockup of the admin layout */}
+      <div className="flex h-32">
+        {/* Mini sidebar */}
+        <div
+          className="flex w-14 shrink-0 flex-col p-2"
+          style={{ background: theme.sidebar }}
+        >
+          {/* Logo area */}
+          <div
+            className="mb-2 h-2 w-8 rounded-sm"
+            style={{ background: theme.brand, opacity: 0.8 }}
+          />
+          {/* Nav items */}
+          <div className="flex flex-col gap-1.5 mt-1">
+            <div
+              className="h-1.5 w-full rounded-sm"
+              style={{ background: theme.sidebarAccent }}
+            />
+            <div
+              className="h-1.5 w-9 rounded-sm"
+              style={{ background: theme.brand, opacity: 0.6 }}
+            />
+            <div
+              className="h-1.5 w-full rounded-sm"
+              style={{ background: theme.sidebarAccent }}
+            />
+            <div
+              className="h-1.5 w-8 rounded-sm"
+              style={{ background: theme.sidebarAccent }}
+            />
+          </div>
+        </div>
+
+        {/* Mini content area */}
+        <div
+          className="flex flex-1 flex-col p-2.5"
+          style={{ background: theme.bg }}
+        >
+          {/* Header bar */}
+          <div className="mb-2 flex items-center gap-1.5">
+            <div className="h-1.5 w-12 rounded-sm bg-gray-300" />
+            <div className="flex-1" />
+            <div className="h-3 w-3 rounded-full bg-gray-200" />
+          </div>
+          {/* Content blocks */}
+          <div className="flex gap-2 mb-2">
+            <div className="h-8 flex-1 rounded bg-white border border-gray-100" />
+            <div className="h-8 flex-1 rounded bg-white border border-gray-100" />
+          </div>
+          {/* Button accent */}
+          <div className="flex gap-2">
+            <div
+              className="h-4 w-14 rounded-sm"
+              style={{ background: theme.brand }}
+            />
+            <div className="h-4 w-10 rounded-sm bg-gray-200" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminSettingsPage() {
+  const router = useRouter()
   const [theme, setTheme] = useState<Theme>('cromwell')
   const [isPending, startTransition] = useTransition()
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    // Read current theme from the html data-theme attribute
     const current = document.documentElement.getAttribute('data-theme')
     if (current === 'blackgold') {
       setTheme('blackgold')
@@ -24,7 +132,7 @@ export default function AdminSettingsPage() {
   }, [])
 
   function handleThemeChange(newTheme: Theme) {
-    if (newTheme === theme) return
+    if (newTheme === theme || isPending) return
 
     startTransition(async () => {
       try {
@@ -41,16 +149,30 @@ export default function AdminSettingsPage() {
         }
 
         setTheme(newTheme)
-        // Apply theme immediately to DOM
         document.documentElement.setAttribute('data-theme', newTheme)
-        toast.success(`Theme switched to ${newTheme === 'cromwell' ? 'Cromwell Chase' : 'Black & Gold'}`)
+        // Refresh server components so layouts re-render (logo swap, etc.)
+        router.refresh()
+        toast.success(
+          `Switched to ${newTheme === 'cromwell' ? 'Cromwell Chase' : 'Black & Gold'}`
+        )
       } catch {
         toast.error('Failed to update theme')
       }
     })
   }
 
-  if (!loaded) return null
+  if (!loaded) {
+    return (
+      <div className="max-w-2xl animate-pulse">
+        <div className="h-6 w-32 rounded bg-muted mb-2" />
+        <div className="h-4 w-64 rounded bg-muted mb-8" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="h-48 rounded-lg bg-muted" />
+          <div className="h-48 rounded-lg bg-muted" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-2xl">
@@ -60,7 +182,7 @@ export default function AdminSettingsPage() {
           Settings
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage application appearance and security settings.
+          Manage application appearance and security.
         </p>
       </div>
 
@@ -72,57 +194,54 @@ export default function AdminSettingsPage() {
         </h2>
 
         <div className="grid grid-cols-2 gap-4">
-          {/* Cromwell Chase Theme Card */}
-          <button
-            onClick={() => handleThemeChange('cromwell')}
-            disabled={isPending}
-            className={`relative rounded-lg border-2 p-4 text-left transition-all ${
-              theme === 'cromwell'
-                ? 'border-[#2EBFD4] ring-2 ring-[#2EBFD4]/20'
-                : 'border-border hover:border-[#2EBFD4]/40'
-            } ${isPending ? 'opacity-60' : ''}`}
-          >
-            {theme === 'cromwell' && (
-              <span className="absolute top-2 right-2 rounded-full bg-[#2EBFD4] px-2 py-0.5 text-[10px] font-medium text-white">
-                Active
-              </span>
-            )}
-            <div className="mb-3 flex gap-2">
-              <div className="h-8 w-8 rounded" style={{ background: '#2EBFD4' }} />
-              <div className="h-8 w-8 rounded" style={{ background: '#F4F4F4' }} />
-              <div className="h-8 w-8 rounded border" style={{ background: '#ffffff' }} />
-            </div>
-            <p className="text-sm font-medium">Cromwell Chase</p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Teal accents with light, clean feel
-            </p>
-          </button>
+          {themes.map((t) => {
+            const isActive = theme === t.id
 
-          {/* Black & Gold Theme Card */}
-          <button
-            onClick={() => handleThemeChange('blackgold')}
-            disabled={isPending}
-            className={`relative rounded-lg border-2 p-4 text-left transition-all ${
-              theme === 'blackgold'
-                ? 'border-[oklch(0.78_0.14_75)] ring-2 ring-[oklch(0.78_0.14_75)]/20'
-                : 'border-border hover:border-[oklch(0.78_0.14_75)]/40'
-            } ${isPending ? 'opacity-60' : ''}`}
-          >
-            {theme === 'blackgold' && (
-              <span className="absolute top-2 right-2 rounded-full px-2 py-0.5 text-[10px] font-medium text-white" style={{ background: 'oklch(0.78 0.14 75)' }}>
-                Active
-              </span>
-            )}
-            <div className="mb-3 flex gap-2">
-              <div className="h-8 w-8 rounded" style={{ background: 'oklch(0.78 0.14 75)' }} />
-              <div className="h-8 w-8 rounded" style={{ background: 'oklch(0.12 0.01 260)' }} />
-              <div className="h-8 w-8 rounded border" style={{ background: '#ffffff' }} />
-            </div>
-            <p className="text-sm font-medium">Black & Gold</p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Gold accents with dark blue-black sidebar
-            </p>
-          </button>
+            return (
+              <button
+                key={t.id}
+                onClick={() => handleThemeChange(t.id)}
+                disabled={isPending}
+                className={`group relative rounded-lg border-2 p-3 text-left transition-all ${
+                  isActive
+                    ? 'border-brand ring-2 ring-brand/20'
+                    : 'border-border hover:border-brand/40'
+                } ${isPending ? 'opacity-60 pointer-events-none' : ''}`}
+              >
+                {/* Active indicator */}
+                {isActive && (
+                  <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand">
+                    <Check className="size-3 text-brand-foreground" />
+                  </span>
+                )}
+
+                {/* Mini preview */}
+                <ThemePreview theme={t} isActive={isActive} />
+
+                {/* Color swatches */}
+                <div className="mt-3 flex items-center gap-1.5">
+                  <div
+                    className="h-4 w-4 rounded-full border border-black/10"
+                    style={{ background: t.brand }}
+                  />
+                  <div
+                    className="h-4 w-4 rounded-full border border-black/10"
+                    style={{ background: t.sidebar }}
+                  />
+                  <div
+                    className="h-4 w-4 rounded-full border border-black/10"
+                    style={{ background: t.bg }}
+                  />
+                </div>
+
+                {/* Label */}
+                <p className="mt-2 text-sm font-medium">{t.name}</p>
+                <p className="text-xs text-muted-foreground leading-snug">
+                  {t.description}
+                </p>
+              </button>
+            )
+          })}
         </div>
       </section>
 

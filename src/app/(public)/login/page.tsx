@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { decrypt } from '@/lib/auth/session'
+import { getTheme } from '@/lib/dal/settings'
 import { MagicLinkForm } from '@/components/auth/magic-link-form'
 
 export const dynamic = 'force-dynamic'
@@ -37,24 +39,36 @@ export default async function LoginPage() {
   }
 
   const isPreviewMode = process.env.PREVIEW_MODE === 'true'
+  const theme = await getTheme()
+
+  const brandWordmark = theme === 'cromwell' ? (
+    <Image
+      src="/logo-white.svg"
+      alt="Cromwell Chase"
+      width={140}
+      height={32}
+      className="h-8 w-auto"
+      priority
+    />
+  ) : (
+    <span className="font-sans text-lg font-semibold text-white">
+      Cromwell Chase
+    </span>
+  )
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left half - dark branding panel */}
       {/* Mobile: small header bar */}
       <div className="flex h-14 shrink-0 items-center bg-sidebar px-6 md:hidden">
-        <span className="font-sans text-lg font-semibold text-white">
-          Cromwell Chase
-        </span>
+        {brandWordmark}
       </div>
 
       {/* Desktop: full half panel */}
       <div className="hidden md:flex md:w-1/2 md:flex-col bg-sidebar p-12">
-        <span className="font-sans text-lg font-semibold text-white">
-          Cromwell Chase
-        </span>
+        {brandWordmark}
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-base text-[oklch(0.60_0_0)]">
+          <p className="text-base text-sidebar-foreground/50">
             Legal executive search, by legal professionals
           </p>
         </div>

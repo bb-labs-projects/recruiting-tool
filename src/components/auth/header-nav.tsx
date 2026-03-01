@@ -38,7 +38,7 @@ export function HeaderNav({ role }: { role: string }) {
                 'relative text-[13px] transition-custom',
                 isActive
                   ? 'text-white active-nav-dot'
-                  : 'text-[oklch(0.60_0_0)] hover:text-white'
+                  : 'text-sidebar-foreground/50 hover:text-white'
               )}
             >
               {label}
