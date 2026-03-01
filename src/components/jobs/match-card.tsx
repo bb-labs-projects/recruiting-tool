@@ -86,7 +86,7 @@ export function MatchCard({
           <div className="px-4 pb-6 pt-2 bg-[oklch(0.97_0_0)]">
             <div className="border-t border-[oklch(0.90_0_0)] pt-6">
               {/* Score breakdown */}
-              <div className="grid grid-cols-6 gap-4 mb-8">
+              <div className="grid grid-cols-3 gap-x-8 gap-y-5 mb-8">
                 {dimensionConfig.map(({ key, label }) => {
                   const dim = match.subscores[key]
                   if (!dim || (dim.score === 0 && dim.explanation === 'N/A')) return null

@@ -80,7 +80,7 @@ export function ProfileCard({
       <div className="pt-4 border-t border-[oklch(0.90_0_0)]">
         <Link
           href={`/employer/browse/${profile.id}`}
-          className="group/btn opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto w-full h-9 bg-[oklch(0.78_0.14_75)] hover:bg-[oklch(0.72_0.14_75)] text-[oklch(0.12_0_0)] font-medium text-[13px] rounded-md flex items-center justify-center gap-2 transition-custom"
+          className="group/btn w-full h-9 bg-[oklch(0.78_0.14_75)] hover:bg-[oklch(0.72_0.14_75)] text-[oklch(0.12_0_0)] font-medium text-[13px] rounded-md flex items-center justify-center gap-2 transition-custom"
         >
           <span className="relative size-3.5">
             <Lock className="size-3.5 absolute inset-0 transition-all duration-200 group-hover/btn:opacity-0 group-hover/btn:scale-90" />
