@@ -13,6 +13,7 @@ const EMPLOYER_LINKS = [
 
 const CANDIDATE_LINKS = [
   { href: '/candidate', label: 'Dashboard', exact: true },
+  { href: '/candidate/jobs', label: 'Jobs', exact: false },
   { href: '/candidate/profile', label: 'Profile', exact: true },
   { href: '/candidate/upload', label: 'Upload CV', exact: true },
 ] as const
