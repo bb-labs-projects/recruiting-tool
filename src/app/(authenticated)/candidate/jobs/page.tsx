@@ -1,6 +1,5 @@
 import { getUser } from '@/lib/dal'
-import { getCandidateProfile } from '@/lib/dal/candidate-profiles'
-import { getOpenJobsForCandidate } from '@/lib/dal/candidate-jobs'
+import { getCandidateProfileId, getOpenJobsForCandidate } from '@/lib/dal/candidate-jobs'
 import { redirect } from 'next/navigation'
 import { Briefcase, MapPin, Clock } from 'lucide-react'
 
@@ -28,10 +27,10 @@ export default async function CandidateJobsPage() {
   const user = await getUser()
   if (!user) redirect('/login')
 
-  const profile = await getCandidateProfile(user.id)
-  if (!profile) redirect('/candidate')
+  const profileId = await getCandidateProfileId(user.id)
+  if (!profileId) redirect('/candidate')
 
-  const jobs = await getOpenJobsForCandidate(profile.id)
+  const jobs = await getOpenJobsForCandidate(profileId)
 
   return (
     <div className="max-w-3xl">

@@ -2,8 +2,23 @@ import 'server-only'
 
 import { cache } from 'react'
 import { db } from '@/lib/db'
-import { jobs, jobMatches } from '@/lib/db/schema'
+import { jobs, jobMatches, profiles } from '@/lib/db/schema'
 import { eq, and, desc, sql } from 'drizzle-orm'
+
+/**
+ * Lightweight profile ID lookup for the jobs page.
+ * Avoids the heavy relational query in getCandidateProfile.
+ */
+export const getCandidateProfileId = cache(
+  async (userId: string): Promise<string | null> => {
+    const [row] = await db
+      .select({ id: profiles.id })
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
+      .limit(1)
+    return row?.id ?? null
+  }
+)
 
 export type CandidateJobDTO = {
   id: string
