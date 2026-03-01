@@ -43,11 +43,11 @@ export function MatchCard({
       onClick={() => setExpanded(!expanded)}
     >
       {/* Main row */}
-      <div className="grid grid-cols-[80px_240px_120px_140px_1fr_120px] items-center px-4 py-4">
+      <div className="grid grid-cols-[60px_1fr_100px_120px_minmax(0,2fr)_80px] gap-4 items-center px-4 py-4">
         <div>
           <ScoreRing score={match.overallScore} />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="w-7 h-7 rounded-full bg-[oklch(0.20_0_0)] flex items-center justify-center text-white text-[11px] font-medium shrink-0">
             {initials}
           </div>
@@ -59,15 +59,15 @@ export function MatchCard({
         <div className={`text-[13px] font-medium ${recommendationColor(match.recommendation)}`}>
           {match.recommendation}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 min-w-0 overflow-hidden">
           {visibleTags.map((tag) => (
-            <div key={tag.requirement} className="flex items-center gap-1 text-[12px] text-[oklch(0.12_0_0)]">
-              <CheckCircle className="text-[oklch(0.55_0.14_155)] size-3.5" />
-              {tag.requirement}
+            <div key={tag.requirement} className="flex items-center gap-1 text-[12px] text-[oklch(0.12_0_0)] shrink-0">
+              <CheckCircle className="text-[oklch(0.55_0.14_155)] size-3 shrink-0" />
+              <span className="truncate max-w-[140px]">{tag.requirement}</span>
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-end gap-4" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-end gap-3" onClick={(e) => e.stopPropagation()}>
           <Link
             href={`${profileBasePath}/${match.profileId}`}
             className="text-[oklch(0.78_0.14_75)] text-[13px] font-medium hover:underline"

@@ -25,12 +25,12 @@ export function MatchResults({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[80px_240px_120px_140px_1fr_120px] px-4 py-3 font-mono text-[11px] uppercase tracking-wide text-[oklch(0.55_0_0)] border-b border-[oklch(0.90_0_0)]">
+      <div className="grid grid-cols-[60px_1fr_100px_120px_minmax(0,2fr)_80px] gap-4 px-4 py-3 font-mono text-[11px] uppercase tracking-wide text-[oklch(0.55_0_0)] border-b border-[oklch(0.90_0_0)]">
         <div>Score</div>
         <div>Candidate</div>
         <div>Experience</div>
         <div>Key Match</div>
-        <div>Requirement Tags</div>
+        <div>Requirements</div>
         <div className="text-right">Actions</div>
       </div>
 
