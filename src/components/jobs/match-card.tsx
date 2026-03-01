@@ -86,7 +86,7 @@ export function MatchCard({
           <div className="px-4 pb-6 pt-2 bg-[oklch(0.97_0_0)]">
             <div className="border-t border-[oklch(0.90_0_0)] pt-6">
               {/* Score breakdown */}
-              <div className="grid grid-cols-3 gap-x-8 gap-y-5 mb-8">
+              <div className="grid grid-cols-2 gap-x-10 gap-y-6 mb-8">
                 {dimensionConfig.map(({ key, label }) => {
                   const dim = match.subscores[key]
                   if (!dim || (dim.score === 0 && dim.explanation === 'N/A')) return null
@@ -96,23 +96,21 @@ export function MatchCard({
                     ? 'bg-[oklch(0.70_0.14_85)]'
                     : 'bg-[oklch(0.55_0.16_20)]'
                   return (
-                    <div key={key} className="group/dim relative">
+                    <div key={key}>
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-[10px] font-mono uppercase text-[oklch(0.55_0_0)]">{label}</div>
-                        <div className="font-mono text-[11px] font-medium text-[oklch(0.30_0_0)]">{dim.score}</div>
+                        <div className="text-[10px] font-mono uppercase tracking-wide text-[oklch(0.55_0_0)]">{label}</div>
+                        <div className="font-mono text-[12px] font-semibold text-[oklch(0.20_0_0)]">{dim.score}</div>
                       </div>
-                      <div className="h-1.5 w-full bg-[oklch(0.90_0_0)] rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-[oklch(0.90_0_0)] rounded-full overflow-hidden mb-2">
                         <div
                           className={`h-full ${barColor} rounded-full`}
                           style={{ width: `${dim.score}%` }}
                         />
                       </div>
                       {dim.explanation && dim.explanation !== 'N/A' && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-20 opacity-0 pointer-events-none group-hover/dim:opacity-100 group-hover/dim:pointer-events-auto transition-opacity duration-150 w-[420px]">
-                          <div className="bg-[oklch(0.15_0_0)] text-white text-[12px] leading-[1.6] rounded-md px-4 py-3 shadow-lg">
-                            {dim.explanation}
-                          </div>
-                        </div>
+                        <p className="text-[12px] leading-[1.6] text-[oklch(0.40_0_0)]">
+                          {dim.explanation}
+                        </p>
                       )}
                     </div>
                   )
