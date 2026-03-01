@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2, RefreshCw } from 'lucide-react'
+import { Loader2, RefreshCw, Clock } from 'lucide-react'
 
 type Props = {
   jobId: string
@@ -101,22 +101,30 @@ export function MatchingTrigger({ jobId, matchingStatus }: Props) {
     )
   }
 
+  if (status === 'failed') {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center">
+          <p className="mb-3 text-sm text-red-600 dark:text-red-400">
+            {error ?? 'The previous matching attempt failed.'}
+          </p>
+          <Button onClick={handleRunMatching}>Retry Matching</Button>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
-      <CardContent className="py-8 text-center">
-        {error && (
-          <p className="mb-3 text-sm text-red-600 dark:text-red-400">
-            {error}
+      <CardContent className="flex items-start gap-3 py-6">
+        <Clock className="text-muted-foreground mt-0.5 size-5 shrink-0" />
+        <div>
+          <p className="text-sm font-medium">Pending admin review</p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Your job listing is being reviewed by our team. Candidate matching
+            will begin once it has been approved.
           </p>
-        )}
-        <p className="text-muted-foreground mb-4 text-sm">
-          {status === 'failed'
-            ? 'The previous matching attempt failed.'
-            : 'Run AI matching to find candidates that fit this job.'}
-        </p>
-        <Button onClick={handleRunMatching}>
-          {status === 'failed' ? 'Retry Matching' : 'Run Matching'}
-        </Button>
+        </div>
       </CardContent>
     </Card>
   )
