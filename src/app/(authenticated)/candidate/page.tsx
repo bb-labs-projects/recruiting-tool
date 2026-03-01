@@ -337,24 +337,6 @@ export default async function CandidateDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 mt-6">
         {/* Left column: main content */}
         <div>
-          {/* Open to Offers toggle -- only when profile is active */}
-          {profile.status === 'active' && (
-            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/50 px-4 py-3 mb-6">
-              <div>
-                <p className="text-[13px] font-medium text-foreground">
-                  Availability
-                </p>
-                <p className="text-[12px] text-muted-foreground">
-                  Let employers know you&apos;re open to new opportunities
-                </p>
-              </div>
-              <OpenToOffersToggle
-                profileId={profile.id}
-                initialValue={profile.openToOffers}
-              />
-            </div>
-          )}
-
           {/* Metrics Row */}
           <div className="flex items-center gap-10 mb-8">
             <div className="flex flex-col">
@@ -465,6 +447,11 @@ export default async function CandidateDashboardPage() {
             </div>
           )}
 
+          {/* Activity Feed (active profiles only) */}
+          {isActive && activity && (
+            <ActivityFeed activity={activity} />
+          )}
+
           {/* Profile Preview Sections */}
           <div className="space-y-10">
             {/* Specializations */}
@@ -535,6 +522,24 @@ export default async function CandidateDashboardPage() {
 
         {/* Right column: sidebar (sticky) */}
         <div className="lg:sticky lg:top-24 space-y-0">
+          {/* Open to Offers toggle -- only when profile is active */}
+          {profile.status === 'active' && (
+            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/50 px-4 py-3 mb-6">
+              <div>
+                <p className="text-[13px] font-medium text-foreground">
+                  Availability
+                </p>
+                <p className="text-[12px] text-muted-foreground">
+                  Let employers know you&apos;re open to new opportunities
+                </p>
+              </div>
+              <OpenToOffersToggle
+                profileId={profile.id}
+                initialValue={profile.openToOffers}
+              />
+            </div>
+          )}
+
           {/* Profile Strength */}
           <ProfileStrength result={strength} />
 
@@ -544,11 +549,6 @@ export default async function CandidateDashboardPage() {
             linkedinPictureUrl={profile.linkedinPictureUrl}
             linkedinName={profile.linkedinName}
           />
-
-          {/* Activity Feed (active profiles only) */}
-          {isActive && activity && (
-            <ActivityFeed activity={activity} />
-          )}
         </div>
       </div>
     </div>
