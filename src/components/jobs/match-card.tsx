@@ -108,8 +108,8 @@ export function MatchCard({
                         />
                       </div>
                       {dim.explanation && dim.explanation !== 'N/A' && (
-                        <div className="absolute left-0 right-0 top-full mt-2 z-20 opacity-0 pointer-events-none group-hover/dim:opacity-100 group-hover/dim:pointer-events-auto transition-opacity duration-150">
-                          <div className="bg-[oklch(0.15_0_0)] text-white text-[11px] leading-relaxed rounded-md px-3 py-2.5 shadow-lg max-w-[280px]">
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-20 opacity-0 pointer-events-none group-hover/dim:opacity-100 group-hover/dim:pointer-events-auto transition-opacity duration-150 w-[420px]">
+                          <div className="bg-[oklch(0.15_0_0)] text-white text-[12px] leading-[1.6] rounded-md px-4 py-3 shadow-lg">
                             {dim.explanation}
                           </div>
                         </div>
