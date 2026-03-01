@@ -1,6 +1,12 @@
 import { getUser } from '@/lib/dal'
 import { getCandidateProfile } from '@/lib/dal/candidate-profiles'
 import { getMatchesForCandidate } from '@/lib/dal/job-matches'
+import { getCandidateActivity } from '@/lib/dal/candidate-activity'
+import { computeProfileStrength } from '@/lib/profile-strength'
+import { computeLinkedInQuality } from '@/lib/linkedin-quality'
+import { ProfileStrength } from '@/components/candidate/profile-strength'
+import { LinkedInQuality } from '@/components/candidate/linkedin-quality'
+import { ActivityFeed } from '@/components/candidate/activity-feed'
 import Link from 'next/link'
 import {
   Upload,
@@ -223,9 +229,25 @@ export default async function CandidateDashboardPage() {
   }
 
   // Case B: Profile exists
-  const matches = profile.status === 'active'
-    ? await getMatchesForCandidate(profile.id)
-    : []
+  const isActive = profile.status === 'active'
+
+  const [matches, activity] = await Promise.all([
+    isActive ? getMatchesForCandidate(profile.id) : Promise.resolve([]),
+    isActive ? getCandidateActivity(profile.id) : Promise.resolve(null),
+  ])
+
+  const strength = computeProfileStrength(profile)
+  const linkedInQuality = computeLinkedInQuality(
+    {
+      linkedinSub: profile.linkedinSub,
+      linkedinName: profile.linkedinName,
+      linkedinEmail: profile.linkedinEmail,
+      linkedinPictureUrl: profile.linkedinPictureUrl,
+      name: profile.name,
+      email: profile.email,
+    },
+    user.email
+  )
 
   const statusDotColor = {
     pending_review: 'bg-[oklch(0.70_0.14_85)]',
@@ -352,8 +374,15 @@ export default async function CandidateDashboardPage() {
         </Link>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-[oklch(0.90_0_0)] mb-10" />
+      {/* Profile Strength */}
+      <ProfileStrength result={strength} />
+
+      {/* LinkedIn Verification */}
+      <LinkedInQuality
+        result={linkedInQuality}
+        linkedinPictureUrl={profile.linkedinPictureUrl}
+        linkedinName={profile.linkedinName}
+      />
 
       {/* Job Matches Section */}
       {profile.status === 'active' && matches.length > 0 && (
@@ -430,52 +459,9 @@ export default async function CandidateDashboardPage() {
         </div>
       )}
 
-      {/* Pending/rejected: guidance to get approved */}
-      {profile.status !== 'active' && (
-        <div className="mb-10">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-4">
-            Improve your profile
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex gap-3">
-              <Target className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Clear specializations</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  Be specific about your practice areas
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Zap className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Technical depth</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  List your technical domains for better matching
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <TrendingUp className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Complete dates</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  Full work history with dates helps scoring
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Lightbulb className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Bar admissions</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  All jurisdictions increase your match potential
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-[oklch(0.90_0_0)] mt-10" />
-        </div>
+      {/* Activity Feed (active profiles only) */}
+      {isActive && activity && (
+        <ActivityFeed activity={activity} />
       )}
 
       {/* Profile Preview Sections */}

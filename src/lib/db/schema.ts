@@ -101,11 +101,19 @@ export const profiles = pgTable('profiles', {
   openToOffers: boolean('open_to_offers').default(false).notNull(),
   reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
   reviewedBy: uuid('reviewed_by').references(() => users.id),
+  // LinkedIn OIDC verification
+  linkedinSub: varchar('linkedin_sub', { length: 100 }),
+  linkedinName: varchar('linkedin_name', { length: 255 }),
+  linkedinEmail: varchar('linkedin_email', { length: 255 }),
+  linkedinEmailVerified: boolean('linkedin_email_verified'),
+  linkedinPictureUrl: text('linkedin_picture_url'),
+  linkedinConnectedAt: timestamp('linkedin_connected_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
   index('profiles_status_idx').on(table.status),
   index('profiles_user_id_idx').on(table.userId),
+  uniqueIndex('profiles_linkedin_sub_idx').on(table.linkedinSub),
 ])
 
 // CV uploads table
