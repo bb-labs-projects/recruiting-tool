@@ -90,15 +90,30 @@ export function MatchCard({
                 {dimensionConfig.map(({ key, label }) => {
                   const dim = match.subscores[key]
                   if (!dim || (dim.score === 0 && dim.explanation === 'N/A')) return null
+                  const barColor = dim.score >= 70
+                    ? 'bg-[oklch(0.55_0.14_155)]'
+                    : dim.score >= 40
+                    ? 'bg-[oklch(0.70_0.14_85)]'
+                    : 'bg-[oklch(0.55_0.16_20)]'
                   return (
-                    <div key={key}>
-                      <div className="text-[10px] font-mono uppercase text-[oklch(0.55_0_0)] mb-2">{label}</div>
+                    <div key={key} className="group/dim relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-[10px] font-mono uppercase text-[oklch(0.55_0_0)]">{label}</div>
+                        <div className="font-mono text-[11px] font-medium text-[oklch(0.30_0_0)]">{dim.score}</div>
+                      </div>
                       <div className="h-1.5 w-full bg-[oklch(0.90_0_0)] rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-[oklch(0.55_0.14_155)] rounded-full"
+                          className={`h-full ${barColor} rounded-full`}
                           style={{ width: `${dim.score}%` }}
                         />
                       </div>
+                      {dim.explanation && dim.explanation !== 'N/A' && (
+                        <div className="absolute left-0 right-0 top-full mt-2 z-20 opacity-0 pointer-events-none group-hover/dim:opacity-100 group-hover/dim:pointer-events-auto transition-opacity duration-150">
+                          <div className="bg-[oklch(0.15_0_0)] text-white text-[11px] leading-relaxed rounded-md px-3 py-2.5 shadow-lg max-w-[280px]">
+                            {dim.explanation}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })}
