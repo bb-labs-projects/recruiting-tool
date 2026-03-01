@@ -22,6 +22,7 @@ import {
   Scale,
   Cpu,
   Lock,
+  LockOpen,
   Mail,
   Phone,
   Info,
@@ -407,8 +408,11 @@ async function renderAnonymizedView(
           <Separator />
 
           {/* Unlock CTA */}
-          <section className="rounded-xl bg-stone-50 p-8 text-center">
-            <Lock className="text-teal-400 mx-auto mb-3 size-8" />
+          <section className="group/unlock rounded-xl bg-stone-50 p-8 text-center cursor-pointer">
+            <div className="relative mx-auto mb-3 size-8">
+              <Lock className="text-[oklch(0.78_0.14_75)] absolute inset-0 size-8 transition-all duration-200 group-hover/unlock:opacity-0 group-hover/unlock:scale-90" />
+              <LockOpen className="text-[oklch(0.78_0.14_75)] absolute inset-0 size-8 transition-all duration-200 opacity-0 scale-110 group-hover/unlock:opacity-100 group-hover/unlock:scale-100" />
+            </div>
             <h3 className="font-sans text-lg font-semibold">
               Want to see this candidate&apos;s full details?
             </h3>
