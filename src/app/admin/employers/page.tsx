@@ -36,7 +36,7 @@ export default async function EmployersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
+        <h1 className="text-2xl font-bold tracking-tight font-sans">
           Employer Management
         </h1>
         <p className="text-muted-foreground">
@@ -53,7 +53,7 @@ export default async function EmployersPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
+            <p className="text-2xl font-bold font-sans">{totalCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -63,7 +63,7 @@ export default async function EmployersPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">
+            <p className="text-2xl font-bold font-sans text-amber-600">
               {pendingCount}
             </p>
           </CardContent>
@@ -75,7 +75,7 @@ export default async function EmployersPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">
+            <p className="text-2xl font-bold font-sans text-teal-600">
               {approvedCount}
             </p>
           </CardContent>
@@ -87,7 +87,7 @@ export default async function EmployersPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-red-600">{rejectedCount}</p>
+            <p className="text-2xl font-bold font-sans text-red-600">{rejectedCount}</p>
           </CardContent>
         </Card>
       </div>

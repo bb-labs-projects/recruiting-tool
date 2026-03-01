@@ -17,7 +17,7 @@ export default async function AdminNewJobPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
+        <h1 className="text-2xl font-bold tracking-tight font-sans">
           Create Job for Employer
         </h1>
         <p className="text-muted-foreground">

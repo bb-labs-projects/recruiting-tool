@@ -24,7 +24,7 @@ export default async function NewJobPage() {
       </Link>
 
       <div>
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight">
           Create Job Listing
         </h1>
         <p className="text-muted-foreground mt-1">

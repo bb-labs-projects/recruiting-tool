@@ -86,7 +86,7 @@ export default async function EmployerDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">{employer.companyName}</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-sans">{employer.companyName}</h1>
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"

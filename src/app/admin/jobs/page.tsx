@@ -30,7 +30,7 @@ export default async function AdminJobsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Job Listings</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-sans">Job Listings</h1>
           <p className="text-muted-foreground">
             Manage job listings across all employers
           </p>
@@ -49,7 +49,7 @@ export default async function AdminJobsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
+            <p className="text-2xl font-bold font-sans">{totalCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -59,7 +59,7 @@ export default async function AdminJobsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">{draftCount}</p>
+            <p className="text-2xl font-bold font-sans text-amber-600">{draftCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -69,7 +69,7 @@ export default async function AdminJobsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">{openCount}</p>
+            <p className="text-2xl font-bold font-sans text-teal-600">{openCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -79,7 +79,7 @@ export default async function AdminJobsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-stone-600">{closedCount}</p>
+            <p className="text-2xl font-bold font-sans text-stone-600">{closedCount}</p>
           </CardContent>
         </Card>
       </div>

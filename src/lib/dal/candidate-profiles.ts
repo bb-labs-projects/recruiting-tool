@@ -10,6 +10,8 @@ import { eq, desc, ilike, isNull, and } from 'drizzle-orm'
  * No anonymization -- this is the candidate's own data.
  */
 export const getCandidateProfile = cache(async (userId: string) => {
+  if (process.env.PREVIEW_MODE === 'true') return null
+
   const profile = await db.query.profiles.findFirst({
     where: eq(profiles.userId, userId),
     with: {

@@ -50,7 +50,7 @@ export default async function SavedProfilesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-2">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">Saved Profiles</h1>
+        <h1 className="font-sans text-2xl font-bold tracking-tight">Saved Profiles</h1>
         <p className="text-muted-foreground mt-1">
           Profiles you&apos;ve saved for later review
         </p>
@@ -72,7 +72,7 @@ export default async function SavedProfilesPage() {
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-xl py-20">
           <Heart className="text-teal-400 mb-4 size-12" />
-          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No saved profiles yet</h3>
+          <h3 className="font-sans text-lg font-semibold">No saved profiles yet</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             Browse candidates and save profiles you&apos;re interested in to see
             them here.

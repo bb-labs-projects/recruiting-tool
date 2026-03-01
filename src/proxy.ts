@@ -24,7 +24,11 @@ function getDashboardPath(role: string): string {
 async function decryptSession(cookie: string | undefined) {
   if (!cookie) return null
 
-  const secret = process.env.SESSION_SECRET
+  const secret =
+    process.env.SESSION_SECRET ||
+    (process.env.NODE_ENV !== 'production' || process.env.PREVIEW_MODE === 'true'
+      ? 'dev-preview-secret-not-for-production-use'
+      : undefined)
   if (!secret) {
     console.error('[proxy] SESSION_SECRET env var is not set')
     return null

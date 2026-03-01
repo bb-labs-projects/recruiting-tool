@@ -10,6 +10,24 @@ import { eq, desc } from 'drizzle-orm'
  * Returns full employer profile data for the authenticated employer or admin views.
  */
 export const getEmployerProfile = cache(async (userId: string) => {
+  if (process.env.PREVIEW_MODE === 'true') {
+    return {
+      id: '00000000-0000-0000-0000-000000000010',
+      userId,
+      companyName: 'Demo Law Firm LLP',
+      status: 'approved' as const,
+      tobAcceptedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      registrationNumber: null,
+      website: null,
+      contactName: null,
+      contactEmail: null,
+      tradeLicenceUrl: null,
+      rejectionNotes: null,
+    }
+  }
+
   const [profile] = await db
     .select()
     .from(employerProfiles)

@@ -39,7 +39,7 @@ export default async function EmployerPendingPage() {
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900/30">
             <Clock className="h-6 w-6 text-amber-600 dark:text-amber-400" />
           </div>
-          <CardTitle className="font-[family-name:var(--font-outfit)]">Account Pending Approval</CardTitle>
+          <CardTitle className="font-sans">Account Pending Approval</CardTitle>
           <CardDescription>
             {profile.companyName}
           </CardDescription>

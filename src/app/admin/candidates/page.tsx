@@ -77,7 +77,7 @@ export default async function CandidatesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Candidates</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-sans">Candidates</h1>
         <p className="text-muted-foreground">
           Review and manage candidate profiles
         </p>
@@ -92,7 +92,7 @@ export default async function CandidatesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{totalCount}</p>
+            <p className="text-2xl font-bold font-sans">{totalCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -102,7 +102,7 @@ export default async function CandidatesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-amber-600">{pendingCount}</p>
+            <p className="text-2xl font-bold font-sans text-amber-600">{pendingCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -112,7 +112,7 @@ export default async function CandidatesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-teal-600">{activeCount}</p>
+            <p className="text-2xl font-bold font-sans text-teal-600">{activeCount}</p>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
@@ -122,7 +122,7 @@ export default async function CandidatesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)] text-red-600">{rejectedCount}</p>
+            <p className="text-2xl font-bold font-sans text-red-600">{rejectedCount}</p>
           </CardContent>
         </Card>
       </div>

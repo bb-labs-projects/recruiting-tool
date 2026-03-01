@@ -109,7 +109,7 @@ export function MfaSetupForm({ mfaEnabled }: MfaSetupFormProps) {
     return (
       <Card className="rounded-xl border-0 card-warm">
         <CardHeader>
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+          <CardTitle className="font-sans text-xl tracking-tight">
             Two-Factor Authentication
           </CardTitle>
           <CardDescription>
@@ -180,7 +180,7 @@ export function MfaSetupForm({ mfaEnabled }: MfaSetupFormProps) {
     return (
       <Card className="rounded-xl border-0 card-warm">
         <CardHeader>
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+          <CardTitle className="font-sans text-xl tracking-tight">
             Two-Factor Authentication
           </CardTitle>
           <CardDescription>
@@ -207,7 +207,7 @@ export function MfaSetupForm({ mfaEnabled }: MfaSetupFormProps) {
     return (
       <Card className="rounded-xl border-0 card-warm">
         <CardHeader>
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+          <CardTitle className="font-sans text-xl tracking-tight">
             Set Up Authenticator
           </CardTitle>
           <CardDescription>
@@ -281,7 +281,7 @@ export function MfaSetupForm({ mfaEnabled }: MfaSetupFormProps) {
     return (
       <Card className="rounded-xl border-0 card-warm">
         <CardHeader>
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+          <CardTitle className="font-sans text-xl tracking-tight">
             Save Your Recovery Codes
           </CardTitle>
           <CardDescription>
@@ -322,7 +322,7 @@ export function MfaSetupForm({ mfaEnabled }: MfaSetupFormProps) {
   return (
     <Card className="rounded-xl border-0 card-warm">
       <CardHeader>
-        <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+        <CardTitle className="font-sans text-xl tracking-tight">
           Two-Factor Authentication
         </CardTitle>
       </CardHeader>

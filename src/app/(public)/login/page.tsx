@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import { decrypt } from '@/lib/auth/session'
 import { MagicLinkForm } from '@/components/auth/magic-link-form'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Sign In',
 }
@@ -34,6 +36,8 @@ export default async function LoginPage() {
     }
   }
 
+  const isPreviewMode = process.env.PREVIEW_MODE === 'true'
+
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left half - dark branding panel */}
@@ -56,10 +60,39 @@ export default async function LoginPage() {
         </div>
       </div>
 
-      {/* Right half - white form panel */}
+      {/* Right half - form or role switcher */}
       <div className="flex flex-1 items-center justify-center bg-white px-6 md:w-1/2">
         <div className="w-full max-w-sm px-0 md:px-12">
-          <MagicLinkForm />
+          {isPreviewMode ? (
+            <div>
+              <h2 className="text-lg font-semibold mb-1">Preview Mode</h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                Select a role to view the app
+              </p>
+              <div className="flex flex-col gap-3">
+                <a
+                  href="/api/dev/preview?role=employer"
+                  className="flex items-center justify-center rounded-md bg-brand px-4 py-3 text-sm font-medium text-brand-foreground transition-opacity hover:opacity-90"
+                >
+                  Employer
+                </a>
+                <a
+                  href="/api/dev/preview?role=candidate"
+                  className="flex items-center justify-center rounded-md bg-brand px-4 py-3 text-sm font-medium text-brand-foreground transition-opacity hover:opacity-90"
+                >
+                  Candidate
+                </a>
+                <a
+                  href="/api/dev/preview?role=admin"
+                  className="flex items-center justify-center rounded-md border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-muted"
+                >
+                  Admin
+                </a>
+              </div>
+            </div>
+          ) : (
+            <MagicLinkForm />
+          )}
         </div>
       </div>
     </div>

@@ -47,7 +47,7 @@ export default async function AdminAnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Analytics</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-sans">Analytics</h1>
         <p className="text-muted-foreground">
           Platform metrics and activity overview
         </p>
@@ -63,7 +63,7 @@ export default async function AdminAnalyticsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">
+            <p className="text-2xl font-bold font-sans">
               ${(summary.totalRevenue / 100).toFixed(2)}
             </p>
             <p className="text-xs text-muted-foreground">
@@ -80,7 +80,7 @@ export default async function AdminAnalyticsPage() {
             <Unlock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.totalUnlocks}</p>
+            <p className="text-2xl font-bold font-sans">{summary.totalUnlocks}</p>
             <p className="text-xs text-muted-foreground">
               Profiles purchased by employers
             </p>
@@ -95,7 +95,7 @@ export default async function AdminAnalyticsPage() {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.totalViews}</p>
+            <p className="text-2xl font-bold font-sans">{summary.totalViews}</p>
             <p className="text-xs text-muted-foreground">
               Total profile detail views
             </p>
@@ -110,7 +110,7 @@ export default async function AdminAnalyticsPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold font-[family-name:var(--font-outfit)]">{summary.conversionRate}%</p>
+            <p className="text-2xl font-bold font-sans">{summary.conversionRate}%</p>
             <p className="text-xs text-muted-foreground">
               Views to unlocks
             </p>

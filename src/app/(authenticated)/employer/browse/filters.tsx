@@ -1,10 +1,9 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import { useDebouncedCallback } from 'use-debounce'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -12,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { X } from 'lucide-react'
+import { Popover as PopoverPrimitive } from 'radix-ui'
+import { ChevronDown, X, MapPin } from 'lucide-react'
 
 const SPECIALIZATIONS = [
   'Patent Prosecution',
@@ -44,9 +44,68 @@ const EXPERIENCE_RANGES = [
 ]
 
 /**
+ * Multi-select dropdown filter using Radix Popover.
+ * Renders a compact trigger button with a dropdown of checkboxes.
+ */
+function MultiSelectFilter({
+  label,
+  options,
+  activeValues,
+  onToggle,
+}: {
+  label: string
+  options: string[]
+  activeValues: string[]
+  onToggle: (value: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const count = activeValues.length
+
+  return (
+    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+      <PopoverPrimitive.Trigger asChild>
+        <button
+          type="button"
+          className="border-input flex items-center gap-1.5 rounded-md border bg-transparent px-3 py-1.5 text-xs transition-colors hover:bg-muted/50"
+        >
+          {label}
+          {count > 0 && (
+            <span className="bg-brand text-brand-foreground rounded px-1 py-0.5 text-[10px] font-medium leading-none">
+              {count}
+            </span>
+          )}
+          <ChevronDown className="size-3 opacity-50" />
+        </button>
+      </PopoverPrimitive.Trigger>
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+          align="start"
+          sideOffset={4}
+          className="bg-popover text-popover-foreground z-50 min-w-[180px] rounded-md border p-2 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+        >
+          <div className="flex flex-col gap-1">
+            {options.map((option) => (
+              <label
+                key={option}
+                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-muted/50"
+              >
+                <Checkbox
+                  checked={activeValues.includes(option)}
+                  onCheckedChange={() => onToggle(option)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        </PopoverPrimitive.Content>
+      </PopoverPrimitive.Portal>
+    </PopoverPrimitive.Root>
+  )
+}
+
+/**
  * Comprehensive filter bar for employer browse page.
- * Multi-select specializations and technical domains via checkboxes,
- * patent bar toggle, location text input with debounce, experience dropdown.
+ * Horizontal row of compact dropdown triggers for multi-select and single-select filters.
  * All filter state lives in URL search params for bookmarkable/shareable searches.
  * Changing any filter resets page to 1.
  */
@@ -54,6 +113,7 @@ export function FilterBar() {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
+  const locationRef = useRef<HTMLInputElement>(null)
 
   // Read current filter state from URL params
   const activeSpecs = searchParams.getAll('spec')
@@ -135,114 +195,89 @@ export function FilterBar() {
     if (q) params.set('q', q)
     params.set('page', '1')
     router.replace(`${pathname}?${params.toString()}`)
+    // Reset the location input
+    if (locationRef.current) {
+      locationRef.current.value = ''
+    }
   }
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
-      <div className="flex flex-wrap gap-x-8 gap-y-4">
-        {/* Specializations -- multi-select checkboxes */}
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Specializations</p>
-          <div className="flex flex-col gap-1.5">
-            {SPECIALIZATIONS.map((spec) => (
-              <label
-                key={spec}
-                className="flex items-center gap-2 text-sm cursor-pointer"
-              >
-                <Checkbox
-                  checked={activeSpecs.includes(spec)}
-                  onCheckedChange={() =>
-                    toggleMultiParam('spec', spec, activeSpecs)
-                  }
-                />
-                {spec}
-              </label>
-            ))}
-          </div>
-        </div>
+    <div className="flex flex-wrap items-center gap-2">
+      {/* Specializations -- multi-select dropdown */}
+      <MultiSelectFilter
+        label="Specialization"
+        options={SPECIALIZATIONS}
+        activeValues={activeSpecs}
+        onToggle={(value) => toggleMultiParam('spec', value, activeSpecs)}
+      />
 
-        {/* Technical Domains -- multi-select checkboxes */}
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Technical Domains</p>
-          <div className="flex flex-col gap-1.5">
-            {TECHNICAL_DOMAINS.map((domain) => (
-              <label
-                key={domain}
-                className="flex items-center gap-2 text-sm cursor-pointer"
-              >
-                <Checkbox
-                  checked={activeTechs.includes(domain)}
-                  onCheckedChange={() =>
-                    toggleMultiParam('tech', domain, activeTechs)
-                  }
-                />
-                {domain}
-              </label>
-            ))}
-          </div>
-        </div>
+      {/* Technical Domains -- multi-select dropdown */}
+      <MultiSelectFilter
+        label="Technical Domain"
+        options={TECHNICAL_DOMAINS}
+        activeValues={activeTechs}
+        onToggle={(value) => toggleMultiParam('tech', value, activeTechs)}
+      />
 
-        {/* Right-side filters: Experience, Patent Bar, Location */}
-        <div className="space-y-4">
-          {/* Experience Range -- single-select dropdown */}
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Experience</p>
-            <Select
-              value={activeExperience || 'all'}
-              onValueChange={(value) => setSingleParam('experience', value)}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All Experience" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Experience</SelectItem>
-                {EXPERIENCE_RANGES.map((range) => (
-                  <SelectItem key={range.value} value={range.value}>
-                    {range.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+      {/* Experience Range -- single-select dropdown */}
+      <Select
+        value={activeExperience || 'all'}
+        onValueChange={(value) => setSingleParam('experience', value)}
+      >
+        <SelectTrigger className="h-auto gap-1.5 border px-3 py-1.5 text-xs shadow-none">
+          <SelectValue placeholder="Experience" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Experience</SelectItem>
+          {EXPERIENCE_RANGES.map((range) => (
+            <SelectItem key={range.value} value={range.value}>
+              {range.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
-          {/* Patent Bar -- toggle checkbox */}
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Certifications</p>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <Checkbox
-                checked={activePatentBar}
-                onCheckedChange={(checked) =>
-                  setSingleParam('patent_bar', checked ? 'true' : '')
-                }
-              />
-              USPTO Patent Bar
-            </label>
-          </div>
+      {/* Patent Bar -- compact toggle button */}
+      <button
+        type="button"
+        onClick={() => setSingleParam('patent_bar', activePatentBar ? '' : 'true')}
+        className={`flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs transition-colors ${
+          activePatentBar
+            ? 'border-brand bg-brand/10 text-foreground'
+            : 'border-input bg-transparent hover:bg-muted/50'
+        }`}
+      >
+        Patent Bar
+        {activePatentBar && (
+          <span className="bg-brand text-brand-foreground rounded px-1 py-0.5 text-[10px] font-medium leading-none">
+            On
+          </span>
+        )}
+      </button>
 
-          {/* Location -- debounced text input */}
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Location</p>
-            <Input
-              placeholder="e.g. California, New York..."
-              defaultValue={activeLocation}
-              onChange={(e) => handleLocationChange(e.target.value)}
-              className="w-[200px]"
-            />
-          </div>
-        </div>
+      {/* Location -- compact input with icon */}
+      <div className="relative">
+        <MapPin className="text-muted-foreground absolute left-2.5 top-1/2 size-3 -translate-y-1/2" />
+        <input
+          ref={locationRef}
+          type="text"
+          placeholder="Location..."
+          defaultValue={activeLocation}
+          onChange={(e) => handleLocationChange(e.target.value)}
+          className="border-input bg-transparent placeholder:text-muted-foreground h-auto w-[140px] rounded-md border py-1.5 pl-7 pr-2 text-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] transition-[color,box-shadow]"
+        />
       </div>
 
       {/* Clear All Filters */}
       {hasActiveFilters && (
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
+          type="button"
           onClick={clearAllFilters}
-          className="text-muted-foreground"
+          className="text-muted-foreground flex items-center gap-1 px-2 py-1.5 text-xs transition-colors hover:text-foreground"
         >
-          <X className="mr-1 size-4" />
-          Clear all filters
-        </Button>
+          <X className="size-3" />
+          Clear
+        </button>
       )}
     </div>
   )

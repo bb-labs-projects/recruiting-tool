@@ -7,8 +7,7 @@ import Link from 'next/link'
 import { SearchInput } from './search'
 import { FilterBar } from './filters'
 import { ProfileCard } from '@/components/employer/profile-card'
-import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 /**
  * Normalize a search param that may be string, string[], or undefined
@@ -99,6 +98,10 @@ export default async function BrowsePage({
     !!params.location ||
     !!params.q
 
+  // Pagination range display
+  const start = (page - 1) * pageSize + 1
+  const end = Math.min(page * pageSize, total)
+
   // Build pagination URL helper -- preserves ALL filter params
   function buildPageUrl(targetPage: number) {
     const urlParams = new URLSearchParams()
@@ -119,25 +122,20 @@ export default async function BrowsePage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="mb-2">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+      <div className="flex items-baseline gap-3">
+        <h1 className="font-sans text-2xl font-semibold">
           Browse Candidates
         </h1>
-        <p className="text-muted-foreground mt-1">
-          Discover qualified IP professionals
-        </p>
+        <span className="text-muted-foreground font-mono text-xs">
+          {total} candidate{total !== 1 ? 's' : ''}
+        </span>
       </div>
 
-      {/* Search */}
-      <SearchInput />
-
-      {/* Filters */}
-      <FilterBar />
-
-      {/* Results Count */}
-      <p className="text-muted-foreground text-sm">
-        {total} candidate{total !== 1 ? 's' : ''} found
-      </p>
+      {/* Search + Filters */}
+      <div className="space-y-3">
+        <SearchInput />
+        <FilterBar />
+      </div>
 
       {/* Profile Cards Grid */}
       {profiles.length > 0 ? (
@@ -152,68 +150,60 @@ export default async function BrowsePage({
         </div>
       ) : (
         /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-xl py-20">
-          <Users className="text-teal-400 mb-4 size-12" />
-          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No candidates found</h3>
-          <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
+        <div className="flex flex-col items-center justify-center py-20">
+          <p className="text-muted-foreground font-mono text-[11px] uppercase tracking-widest">
+            No Candidates Found
+          </p>
+          <p className="text-muted-foreground mt-2 text-sm">
             {hasActiveFilters
-              ? 'Try broadening your filters or clearing some to see more candidates.'
+              ? 'Try broadening your filters'
               : 'No candidate profiles are available yet. Check back soon.'}
           </p>
           {hasActiveFilters && (
-            <Button asChild variant="link" className="mt-2">
-              <Link href="/employer/browse">Clear all filters</Link>
-            </Button>
+            <Link
+              href="/employer/browse"
+              className="text-brand mt-2 text-sm hover:underline"
+            >
+              Clear filters
+            </Link>
           )}
         </div>
       )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-lg transition-all"
-            asChild={page > 1}
-            disabled={page <= 1}
-          >
-            {page > 1 ? (
-              <Link href={buildPageUrl(page - 1)}>
-                <ChevronLeft className="size-4" />
-                Previous
-              </Link>
-            ) : (
-              <>
-                <ChevronLeft className="size-4" />
-                Previous
-              </>
-            )}
-          </Button>
+        <div className="flex items-center justify-center gap-4">
+          {page > 1 ? (
+            <Link
+              href={buildPageUrl(page - 1)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="size-4" />
+            </Link>
+          ) : (
+            <span className="text-muted-foreground/40">
+              <ChevronLeft className="size-4" />
+            </span>
+          )}
 
-          <span className="text-muted-foreground text-sm">
-            Page {page} of {totalPages}
+          <span className="text-muted-foreground font-mono text-xs">
+            Showing {start}-{end} of {total}
           </span>
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-lg transition-all"
-            asChild={page < totalPages}
-            disabled={page >= totalPages}
-          >
-            {page < totalPages ? (
-              <Link href={buildPageUrl(page + 1)}>
-                Next
-                <ChevronRight className="size-4" />
-              </Link>
-            ) : (
-              <>
-                Next
-                <ChevronRight className="size-4" />
-              </>
-            )}
-          </Button>
+          {page < totalPages ? (
+            <Link
+              href={buildPageUrl(page + 1)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Next page"
+            >
+              <ChevronRight className="size-4" />
+            </Link>
+          ) : (
+            <span className="text-muted-foreground/40">
+              <ChevronRight className="size-4" />
+            </span>
+          )}
         </div>
       )}
     </div>

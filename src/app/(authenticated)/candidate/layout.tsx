@@ -1,10 +1,10 @@
 import { getUser } from '@/lib/dal'
 import { redirect } from 'next/navigation'
-import { CandidateNav } from './nav'
 
 /**
- * Candidate layout -- verifies candidate role and provides navigation.
+ * Candidate layout -- verifies candidate role and provides content padding.
  * Auth is already verified by the parent (authenticated) layout.
+ * Navigation is rendered in the parent header via HeaderNav.
  */
 export default async function CandidateLayout({
   children,
@@ -18,9 +18,6 @@ export default async function CandidateLayout({
   }
 
   return (
-    <div>
-      <CandidateNav />
-      <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
-    </div>
+    <div className="mx-auto max-w-7xl px-6 py-8">{children}</div>
   )
 }

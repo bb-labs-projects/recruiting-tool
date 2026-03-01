@@ -1,25 +1,8 @@
 import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Lock, Briefcase, GraduationCap, Scale } from 'lucide-react'
 import { SaveButton } from '@/app/(authenticated)/employer/browse/saved-button'
 import type { AnonymizedProfileDTO } from '@/lib/dal/employer-profiles'
 
-/**
- * Anonymized candidate profile card for employer browse grid.
- * Displays ONLY non-PII data: specializations, experience range,
- * bar admissions, education summary, and anonymized work history.
- * NEVER shows name, email, phone, or employer names.
- * Includes save/unsave heart button with optimistic UI.
- */
 export function ProfileCard({
   profile,
   isSaved,
@@ -28,89 +11,81 @@ export function ProfileCard({
   isSaved: boolean
 }) {
   return (
-    <Card className="flex h-full flex-col">
-      <CardHeader className="flex flex-row items-start justify-between">
-        <div>
-          <CardTitle>IP Professional</CardTitle>
-          <CardDescription>{profile.experienceRange} experience</CardDescription>
-        </div>
+    <div className="group bg-white border border-[oklch(0.90_0_0)] rounded-lg p-5 shadow-[0_1px_3px_oklch(0_0_0_/_0.06)] hover:border-[oklch(0.80_0_0)] transition-custom relative flex flex-col">
+      {/* Save heart */}
+      <div className="absolute right-4 top-4">
         <SaveButton profileId={profile.id} initialSaved={isSaved} size="sm" />
-      </CardHeader>
+      </div>
 
-      <CardContent className="flex flex-1 flex-col gap-4">
-        {/* Specializations */}
-        {profile.specializations.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {profile.specializations.map((spec) => (
-              <Badge key={spec} variant="secondary">
-                {spec}
-              </Badge>
-            ))}
-          </div>
+      {/* Overline + title */}
+      <div className="flex flex-col gap-1 mb-4">
+        <span className="font-mono text-[11px] uppercase tracking-wide text-[oklch(0.55_0_0)] font-medium">
+          IP Professional
+        </span>
+        <h3 className="text-[oklch(0.12_0_0)] font-semibold text-[15px]">
+          {profile.experienceRange} experience
+        </h3>
+        {profile.barAdmissions.length > 0 && (
+          <span className="text-[oklch(0.55_0_0)] text-[13px]">
+            {profile.barAdmissions.join(', ')}
+          </span>
         )}
+      </div>
 
-        {/* Technical Domains */}
-        {profile.technicalDomains.length > 0 && (
-          <p className="text-muted-foreground text-sm">
-            {profile.technicalDomains.join(', ')}
+      {/* Content */}
+      <div className="space-y-3 mb-6 flex-1">
+        {profile.specializations.length > 0 && (
+          <p className="text-[13px] text-[oklch(0.12_0_0)] leading-relaxed">
+            {profile.specializations.join(', ')}
           </p>
         )}
 
-        {/* Bar Admissions */}
         {profile.barAdmissions.length > 0 && (
-          <div className="flex items-start gap-2 text-sm">
-            <Scale className="text-muted-foreground mt-0.5 size-4 shrink-0" />
-            <span>{profile.barAdmissions.join(', ')}</span>
+          <div className="flex items-center gap-2 text-[13px] text-[oklch(0.12_0_0)]">
+            <Scale className="text-[oklch(0.55_0_0)] size-3.5 shrink-0" />
+            {profile.barAdmissions.join(', ')}
           </div>
         )}
 
-        {/* Education Summary */}
         {profile.educationSummary.length > 0 && (
-          <div className="flex items-start gap-2 text-sm">
-            <GraduationCap className="text-muted-foreground mt-0.5 size-4 shrink-0" />
-            <span>
+          <div className="flex items-center gap-2 text-[13px] text-[oklch(0.12_0_0)]">
+            <GraduationCap className="text-[oklch(0.55_0_0)] size-3.5 shrink-0" />
+            <span className="line-clamp-1">
               {profile.educationSummary[0]}
               {profile.educationSummary.length > 1 && (
-                <span className="text-muted-foreground">
-                  {' '}
-                  +{profile.educationSummary.length - 1} more
+                <span className="text-[oklch(0.55_0_0)]">
+                  {' '}+{profile.educationSummary.length - 1} more
                 </span>
               )}
             </span>
           </div>
         )}
 
-        {/* Work History Summary */}
         {profile.workHistorySummary.length > 0 && (
-          <div className="flex items-start gap-2 text-sm">
-            <Briefcase className="text-muted-foreground mt-0.5 size-4 shrink-0" />
-            <div className="space-y-1">
-              {profile.workHistorySummary.slice(0, 2).map((entry, i) => (
-                <p key={i}>
-                  {entry.title} - {entry.type}{' '}
-                  <span className="text-muted-foreground">
-                    ({entry.durationRange})
-                  </span>
-                </p>
-              ))}
-              {profile.workHistorySummary.length > 2 && (
-                <p className="text-muted-foreground">
-                  +{profile.workHistorySummary.length - 2} more positions
-                </p>
+          <div className="flex items-center gap-2 text-[13px] text-[oklch(0.12_0_0)]">
+            <Briefcase className="text-[oklch(0.55_0_0)] size-3.5 shrink-0" />
+            <span className="line-clamp-1">
+              {profile.workHistorySummary[0].title} - {profile.workHistorySummary[0].type}
+              {profile.workHistorySummary.length > 1 && (
+                <span className="text-[oklch(0.55_0_0)]">
+                  {' '}+{profile.workHistorySummary.length - 1} more
+                </span>
               )}
-            </div>
+            </span>
           </div>
         )}
-      </CardContent>
+      </div>
 
-      <CardFooter>
-        <Button asChild variant="outline" className="w-full">
-          <Link href={`/employer/browse/${profile.id}`}>
-            <Lock className="size-4" />
-            View Profile
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+      {/* Footer */}
+      <div className="pt-4 border-t border-[oklch(0.90_0_0)]">
+        <Link
+          href={`/employer/browse/${profile.id}`}
+          className="opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto w-full h-9 bg-[oklch(0.78_0.14_75)] hover:bg-[oklch(0.72_0.14_75)] text-[oklch(0.12_0_0)] font-medium text-[13px] rounded-md flex items-center justify-center gap-2 transition-custom"
+        >
+          <Lock className="size-3.5" />
+          Unlock Full Profile
+        </Link>
+      </div>
+    </div>
   )
 }

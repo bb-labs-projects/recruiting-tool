@@ -1,6 +1,7 @@
 /**
- * Public layout -- centered, minimal layout for login and verify pages.
+ * Public layout -- minimal wrapper for login, verify, and MFA pages.
  * No auth checks -- public routes are accessible to everyone.
+ * Individual pages handle their own layout (e.g. split layout for login).
  */
 export default function PublicLayout({
   children,
@@ -8,18 +9,8 @@ export default function PublicLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="w-full max-w-md px-4">
-        <div className="mb-8 text-center">
-          <h1 className="font-[family-name:var(--font-outfit)] text-3xl font-bold tracking-tight text-foreground">
-            IP Lawyer Recruiting
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Connecting top IP talent with leading firms
-          </p>
-        </div>
-        {children}
-      </div>
+    <div className="min-h-screen bg-background">
+      {children}
     </div>
   )
 }

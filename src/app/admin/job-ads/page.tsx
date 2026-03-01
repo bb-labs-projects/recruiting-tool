@@ -254,7 +254,7 @@ export default function JobAdUploadPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Job Ad Upload</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-sans">Job Ad Upload</h1>
         <p className="text-muted-foreground">
           Upload PDF or DOCX job ads, trigger parsing, and monitor progress
         </p>

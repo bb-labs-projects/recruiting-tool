@@ -49,6 +49,18 @@ export default async function JobDetailPage({
 
   const canEdit = job.status === 'draft' || job.status === 'open'
 
+  // Build subtitle parts
+  const subtitleParts: string[] = []
+  if (job.requiredSpecializations && job.requiredSpecializations.length > 0) {
+    subtitleParts.push(job.requiredSpecializations.join(', '))
+  }
+  if (job.minimumExperience != null) {
+    subtitleParts.push(`${job.minimumExperience}+ years`)
+  }
+  if (job.requiredBar && job.requiredBar.length > 0) {
+    subtitleParts.push(job.requiredBar.join(', '))
+  }
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <Link
@@ -62,7 +74,12 @@ export default async function JobDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">{job.title}</h1>
+          <h1 className="font-sans text-2xl font-semibold">{job.title}</h1>
+          {subtitleParts.length > 0 && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              {subtitleParts.join(' / ')}
+            </p>
+          )}
           <div className="mt-2 flex items-center gap-2">
             <Badge className={statusColors[job.status] ?? ''}>
               {job.status}
@@ -184,7 +201,7 @@ export default async function JobDetailPage({
 
       {/* Matching Section */}
       <div className="space-y-4">
-        <h2 className="font-[family-name:var(--font-outfit)] text-xl font-semibold">Candidate Matches</h2>
+        <h2 className="font-sans text-xl font-semibold">Candidate Matches</h2>
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
           <>

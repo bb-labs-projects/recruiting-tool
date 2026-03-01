@@ -89,7 +89,7 @@ export default async function CandidateProfilePage() {
       {/* Header with status */}
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">My Profile</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-sans">My Profile</h1>
           <p className="text-muted-foreground">{profile.name}</p>
         </div>
         <Badge variant="outline" className={status.className}>

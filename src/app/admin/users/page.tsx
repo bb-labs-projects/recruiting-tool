@@ -81,7 +81,7 @@ export default function AdminUsersPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Manage Users</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-sans">Manage Users</h1>
         <p className="text-muted-foreground">
           Promote users to admin or revoke admin access.
         </p>

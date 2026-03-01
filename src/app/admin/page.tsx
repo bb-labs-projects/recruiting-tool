@@ -4,19 +4,7 @@ import { getUser } from '@/lib/dal'
 import { db } from '@/lib/db'
 import { profiles, employerProfiles, profileUnlocks } from '@/lib/db/schema'
 import { count, sum, eq } from 'drizzle-orm'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Users,
-  Building2,
-  DollarSign,
-  ArrowRight,
-} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 /**
  * Admin dashboard page.
@@ -52,94 +40,58 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">
-          Admin Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Welcome back, {user.email}
-        </p>
+      <h1 className="font-sans text-2xl font-semibold mb-6">Dashboard</h1>
+
+      {/* Metric row - inline with vertical dividers */}
+      <div className="flex items-center gap-8 pb-4 border-b border-border">
+        <div>
+          <p className="font-mono text-lg font-semibold">{activeCandidates}</p>
+          <p className="text-xs text-muted-foreground">Candidates</p>
+        </div>
+        <div className="h-8 w-px bg-border" />
+        <div>
+          <p className="font-mono text-lg font-semibold">{approvedEmployers}</p>
+          <p className="text-xs text-muted-foreground">Employers</p>
+        </div>
+        <div className="h-8 w-px bg-border" />
+        <div>
+          <p className="font-mono text-lg font-semibold">
+            ${(totalRevenue / 100).toFixed(2)}
+          </p>
+          <p className="text-xs text-muted-foreground">Revenue</p>
+        </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="rounded-xl shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Candidates</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">{activeCandidates}</p>
-            <p className="text-sm text-muted-foreground">
-              Active candidate profiles
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-xl shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Employers</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">{approvedEmployers}</p>
-            <p className="text-sm text-muted-foreground">
-              Approved employer accounts
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-xl shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold font-[family-name:var(--font-outfit)]">
-              ${(totalRevenue / 100).toFixed(2)}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Total from profile unlocks
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-xl shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quick Links</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <nav className="flex flex-col gap-2">
-              <Link
-                href="/admin/analytics"
-                className="flex items-center justify-between text-sm text-primary hover:underline underline-offset-4"
-              >
-                View Analytics
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-              <Link
-                href="/admin/candidates"
-                className="flex items-center justify-between text-sm text-primary hover:underline underline-offset-4"
-              >
-                Manage Candidates
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-              <Link
-                href="/admin/employers"
-                className="flex items-center justify-between text-sm text-primary hover:underline underline-offset-4"
-              >
-                Manage Employers
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-              <Link
-                href="/admin/users"
-                className="flex items-center justify-between text-sm text-primary hover:underline underline-offset-4"
-              >
-                Manage Users
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-            </nav>
-          </CardContent>
-        </Card>
+      {/* Quick links */}
+      <div className="mt-6 flex flex-col gap-3">
+        <Link
+          href="/admin/analytics"
+          className="flex items-center justify-between text-sm text-brand hover:underline underline-offset-4"
+        >
+          View Analytics
+          <ArrowRight className="size-3" />
+        </Link>
+        <Link
+          href="/admin/candidates"
+          className="flex items-center justify-between text-sm text-brand hover:underline underline-offset-4"
+        >
+          Manage Candidates
+          <ArrowRight className="size-3" />
+        </Link>
+        <Link
+          href="/admin/employers"
+          className="flex items-center justify-between text-sm text-brand hover:underline underline-offset-4"
+        >
+          Manage Employers
+          <ArrowRight className="size-3" />
+        </Link>
+        <Link
+          href="/admin/users"
+          className="flex items-center justify-between text-sm text-brand hover:underline underline-offset-4"
+        >
+          Manage Users
+          <ArrowRight className="size-3" />
+        </Link>
       </div>
     </div>
   )

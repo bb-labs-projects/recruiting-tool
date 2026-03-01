@@ -17,7 +17,7 @@ export default async function MfaSettingsPage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div>
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight">
           Security Settings
         </h1>
         <p className="text-sm text-muted-foreground">

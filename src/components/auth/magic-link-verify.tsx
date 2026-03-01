@@ -31,7 +31,7 @@ export function MagicLinkVerify() {
     return (
       <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
         <CardHeader className="text-center">
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Invalid Link</CardTitle>
+          <CardTitle className="font-sans text-xl tracking-tight">Invalid Link</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
@@ -85,7 +85,7 @@ export function MagicLinkVerify() {
     return (
       <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
         <CardHeader className="text-center">
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Success!</CardTitle>
+          <CardTitle className="font-sans text-xl tracking-tight">Success!</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
@@ -100,7 +100,7 @@ export function MagicLinkVerify() {
     return (
       <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
         <CardHeader className="text-center">
-          <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Sign In Failed</CardTitle>
+          <CardTitle className="font-sans text-xl tracking-tight">Sign In Failed</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-destructive">{errorMessage}</p>
@@ -119,7 +119,7 @@ export function MagicLinkVerify() {
   return (
     <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
       <CardHeader className="text-center">
-        <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">Confirm Sign In</CardTitle>
+        <CardTitle className="font-sans text-xl tracking-tight">Confirm Sign In</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-sm text-muted-foreground">

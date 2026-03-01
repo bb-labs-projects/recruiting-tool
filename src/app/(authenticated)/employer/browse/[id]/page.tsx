@@ -94,7 +94,7 @@ export default async function ProfileDetailPage({
 
         {/* Title Section -- actual name when unlocked */}
         <div className="flex items-center gap-3">
-          <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+          <h1 className="font-sans text-2xl font-bold tracking-tight">
             {fullProfile.name}
           </h1>
           <Badge variant="secondary">
@@ -108,7 +108,7 @@ export default async function ProfileDetailPage({
           <CardContent className="space-y-6 pt-6">
             {/* Contact Information */}
             <section>
-              <h2 className="font-[family-name:var(--font-outfit)] mb-3 text-lg font-semibold">
+              <h2 className="font-sans mb-3 text-lg font-semibold">
                 Contact Information
               </h2>
               <div className="space-y-2">
@@ -302,7 +302,7 @@ async function renderAnonymizedView(
 
       {/* Title Section */}
       <div className="flex items-center gap-3">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">IP Professional</h1>
+        <h1 className="font-sans text-2xl font-bold tracking-tight">IP Professional</h1>
         <Badge variant="secondary">{profile.experienceRange} experience</Badge>
         <SaveButton profileId={profile.id} initialSaved={saved} />
       </div>
@@ -409,7 +409,7 @@ async function renderAnonymizedView(
           {/* Unlock CTA */}
           <section className="rounded-xl bg-stone-50 p-8 text-center">
             <Lock className="text-teal-400 mx-auto mb-3 size-8" />
-            <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">
+            <h3 className="font-sans text-lg font-semibold">
               Want to see this candidate&apos;s full details?
             </h3>
             <p className="text-muted-foreground mx-auto mt-1 mb-4 max-w-md text-sm">

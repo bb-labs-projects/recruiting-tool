@@ -58,7 +58,7 @@ export default async function AdminJobDetailPage({
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">{job.title}</h1>
+        <h1 className="text-3xl font-bold tracking-tight font-sans">{job.title}</h1>
         <div className="mt-2 flex items-center gap-2">
           <Badge className={statusColors[job.status] ?? ''}>
             {job.status}
@@ -192,7 +192,7 @@ export default async function AdminJobDetailPage({
 
       {/* Matching Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold font-[family-name:var(--font-outfit)]">Candidate Matches</h2>
+        <h2 className="text-xl font-semibold font-sans">Candidate Matches</h2>
 
         {job.matchingStatus === 'completed' && matches.length > 0 ? (
           <>

@@ -10,9 +10,17 @@ export interface SessionPayload {
   role: string
   expiresAt: Date
   mfaVerified: boolean
+  /** When true, the DAL skips database lookups and returns a mock user. Dev only. */
+  devPreview?: boolean
 }
 
-const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET)
+const sessionSecret =
+  process.env.SESSION_SECRET ||
+  (process.env.NODE_ENV !== 'production' || process.env.PREVIEW_MODE === 'true'
+    ? 'dev-preview-secret-not-for-production-use'
+    : undefined)
+
+const encodedKey = new TextEncoder().encode(sessionSecret)
 
 export async function encrypt(payload: SessionPayload): Promise<string> {
   return new SignJWT({
@@ -21,6 +29,7 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
     role: payload.role,
     expiresAt: payload.expiresAt.toISOString(),
     mfaVerified: payload.mfaVerified,
+    ...(payload.devPreview ? { devPreview: true } : {}),
   })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -44,6 +53,7 @@ export async function decrypt(
       role: payload.role as string,
       expiresAt: new Date(payload.expiresAt as string),
       mfaVerified: payload.mfaVerified !== undefined ? (payload.mfaVerified as boolean) : true,
+      devPreview: payload.devPreview === true,
     }
   } catch {
     return null

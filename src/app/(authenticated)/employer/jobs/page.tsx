@@ -30,7 +30,7 @@ export default async function EmployerJobsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">My Jobs</h1>
+          <h1 className="font-sans text-2xl font-bold tracking-tight">My Jobs</h1>
           <p className="text-muted-foreground mt-1">
             Manage your job listings and view matched candidates
           </p>
@@ -46,7 +46,7 @@ export default async function EmployerJobsPage() {
       {jobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl py-20">
           <Briefcase className="text-teal-400 mb-4 size-12" />
-          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No job listings yet</h3>
+          <h3 className="font-sans text-lg font-semibold">No job listings yet</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             You haven&apos;t created any job listings yet. Create your first job
             to start matching with qualified candidates.

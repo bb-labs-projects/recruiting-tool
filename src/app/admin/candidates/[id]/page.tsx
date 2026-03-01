@@ -106,7 +106,7 @@ export default async function ProfileDetailPage({
       </Link>
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">{profile.name}</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-sans">{profile.name}</h1>
           <div className="flex items-center gap-2">
             <StatusBadge status={profile.status} />
             {profile.reviewedAt && (

@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
   Dialog,
   DialogContent,
@@ -21,6 +19,7 @@ import {
   FileText,
   Trash2,
 } from 'lucide-react'
+import Link from 'next/link'
 
 type CvUpload = {
   id: string
@@ -33,6 +32,32 @@ type CvUpload = {
 }
 
 type PageView = 'loading' | 'dropzone' | 'existing' | 'uploading' | 'parsing' | 'complete'
+
+function statusDot(status: CvUpload['status']) {
+  switch (status) {
+    case 'uploaded':
+      return 'bg-[oklch(0.70_0.12_75)]'
+    case 'parsing':
+      return 'bg-[oklch(0.70_0.12_75)]'
+    case 'parsed':
+      return 'bg-[oklch(0.55_0.14_155)]'
+    case 'failed':
+      return 'bg-[oklch(0.55_0.16_20)]'
+  }
+}
+
+function statusText(status: CvUpload['status']) {
+  switch (status) {
+    case 'uploaded':
+      return 'Uploaded'
+    case 'parsing':
+      return 'Parsing...'
+    case 'parsed':
+      return 'Parsed'
+    case 'failed':
+      return 'Failed'
+  }
+}
 
 export default function CandidateUploadPage() {
   const router = useRouter()
@@ -309,19 +334,6 @@ export default function CandidateUploadPage() {
     })
   }
 
-  function statusBadge(status: CvUpload['status']) {
-    switch (status) {
-      case 'uploaded':
-        return <Badge variant="outline" className="border-amber-200 text-amber-700 bg-amber-50">Uploaded</Badge>
-      case 'parsing':
-        return <Badge variant="outline" className="border-amber-200 text-amber-700 bg-amber-50">Parsing...</Badge>
-      case 'parsed':
-        return <Badge variant="outline" className="border-teal-200 text-teal-700 bg-teal-50">Parsed</Badge>
-      case 'failed':
-        return <Badge variant="outline" className="border-red-200 text-red-700 bg-red-50">Failed</Badge>
-    }
-  }
-
   const dropzoneUI = (
     <>
       <div
@@ -334,27 +346,17 @@ export default function CandidateUploadPage() {
           e.preventDefault()
           setDragOver(false)
         }}
-        className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-colors ${
+        onClick={() => fileInputRef.current?.click()}
+        className={`cursor-pointer border-2 border-dashed rounded-lg py-12 px-6 text-center transition-colors ${
           dragOver
-            ? 'border-primary bg-primary/5'
-            : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+            ? 'border-foreground/30 bg-secondary/50'
+            : 'border-border hover:border-muted-foreground/50'
         }`}
       >
-        <Upload className="mb-3 size-10 text-muted-foreground" />
-        <p className="mb-1 text-sm font-medium">
-          Drag and drop your CV here
+        <Upload className="size-6 text-muted-foreground mx-auto mb-3" />
+        <p className="text-sm text-muted-foreground">
+          Drop PDF or DOCX here, or click to browse
         </p>
-        <p className="mb-4 text-xs text-muted-foreground">
-          PDF or DOCX, max 10MB
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-lg transition-all"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          Select file
-        </Button>
         <input
           ref={fileInputRef}
           type="file"
@@ -370,105 +372,93 @@ export default function CandidateUploadPage() {
   )
 
   return (
-    <div>
+    <div className="max-w-3xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">Upload CV</h1>
-        <p className="text-muted-foreground">
-          Upload your CV in PDF or DOCX format. Our system will automatically extract
-          your qualifications and experience.
+        <h1 className="text-2xl font-semibold font-sans">Upload CV</h1>
+        <p className="text-sm text-muted-foreground">
+          Upload your CV in PDF or DOCX format.
         </p>
       </div>
 
-      <Card className="rounded-xl shadow-sm">
-        <CardHeader>
-          <CardTitle>
-            {view === 'loading' && 'Loading...'}
-            {view === 'dropzone' && 'Upload Your CV'}
-            {view === 'existing' && (currentUpload?.status === 'failed' ? 'Analysis Failed' : 'CV Uploaded')}
-            {view === 'uploading' && 'Uploading...'}
-            {view === 'parsing' && 'Analyzing Your CV...'}
-            {view === 'complete' && 'Profile Created!'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {view === 'loading' && (
-            <div className="flex flex-col items-center py-10">
-              <Loader2 className="mb-3 size-10 animate-spin text-muted-foreground" />
-            </div>
+      {view === 'loading' && (
+        <div className="flex items-center gap-2 py-10">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Loading...</span>
+        </div>
+      )}
+
+      {view === 'dropzone' && dropzoneUI}
+
+      {view === 'existing' && currentUpload && (
+        <div className="py-6">
+          <div className="flex items-center gap-3 mb-3">
+            {currentUpload.status === 'failed' ? (
+              <XCircle className="size-5 text-[oklch(0.55_0.16_20)]" />
+            ) : (
+              <FileText className="size-5 text-muted-foreground" />
+            )}
+            <span className="text-sm font-medium">{currentUpload.filename}</span>
+          </div>
+
+          {errorMessage && (
+            <p className="mb-4 text-sm text-red-600">
+              {errorMessage}
+            </p>
           )}
 
-          {view === 'dropzone' && dropzoneUI}
+          <div className="flex items-center gap-4">
+            <button
+              className="text-sm text-brand hover:underline"
+              onClick={() => triggerParse(currentUpload.id)}
+            >
+              {currentUpload.status === 'failed' ? 'Retry analysis' : 'Analyze CV'}
+            </button>
+            <button
+              className="text-sm text-brand hover:underline"
+              onClick={showDropzone}
+            >
+              Upload different CV
+            </button>
+          </div>
+        </div>
+      )}
 
-          {view === 'existing' && currentUpload && (
-            <div className="flex flex-col items-center py-6">
-              {currentUpload.status === 'failed' ? (
-                <XCircle className="mb-3 size-10 text-red-500" />
-              ) : (
-                <FileText className="mb-3 size-10 text-muted-foreground" />
-              )}
+      {view === 'uploading' && (
+        <div className="flex items-center gap-2 py-10">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <span className="text-sm">Uploading your CV...</span>
+        </div>
+      )}
 
-              <p className="mb-1 text-sm font-medium">{currentUpload.filename}</p>
+      {view === 'parsing' && (
+        <div className="flex items-center gap-2 py-10">
+          <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <span className="text-sm">Analyzing your CV...</span>
+        </div>
+      )}
 
-              {errorMessage && (
-                <p className="mb-4 max-w-md text-center text-sm text-red-600">
-                  {errorMessage}
-                </p>
-              )}
-
-              <div className="flex gap-3">
-                <Button
-                  className="rounded-lg transition-all"
-                  onClick={() => triggerParse(currentUpload.id)}
-                >
-                  {currentUpload.status === 'failed' ? 'Retry Analysis' : 'Analyze CV'}
-                </Button>
-                <Button variant="outline" className="rounded-lg transition-all" onClick={showDropzone}>
-                  Upload Different CV
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {view === 'uploading' && (
-            <div className="flex flex-col items-center py-10">
-              <Loader2 className="mb-3 size-10 animate-spin text-primary" />
-              <p className="text-sm font-medium">Uploading your CV...</p>
-              <p className="text-xs text-muted-foreground">
-                This should only take a moment
-              </p>
-            </div>
-          )}
-
-          {view === 'parsing' && (
-            <div className="flex flex-col items-center py-10">
-              <Loader2 className="mb-3 size-10 animate-spin text-primary" />
-              <p className="text-sm font-medium">
-                Analyzing your CV...
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Extracting your qualifications, experience, and specializations
-              </p>
-            </div>
-          )}
-
-          {view === 'complete' && (
-            <div className="flex flex-col items-center py-10">
-              <CheckCircle className="mb-3 size-10 text-teal-500" />
-              <p className="mb-4 text-sm font-medium">
-                Your profile has been created!
-              </p>
-              <div className="flex gap-3">
-                <Button className="rounded-lg transition-all" onClick={() => router.push('/candidate/profile')}>
-                  View Profile
-                </Button>
-                <Button variant="outline" className="rounded-lg transition-all" onClick={showDropzone}>
-                  Upload New CV
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {view === 'complete' && (
+        <div className="py-6">
+          <div className="flex items-center gap-2 mb-3">
+            <CheckCircle className="size-5 text-[oklch(0.55_0.14_155)]" />
+            <span className="text-sm font-medium">Profile created</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/candidate/profile"
+              className="text-sm text-brand hover:underline"
+            >
+              View Profile &gt;
+            </Link>
+            <button
+              className="text-sm text-brand hover:underline"
+              onClick={showDropzone}
+            >
+              Upload new CV
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
@@ -484,12 +474,12 @@ export default function CandidateUploadPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" className="rounded-lg transition-all" onClick={() => setDeleteTarget(null)} disabled={!!deletingId}>
+            <Button variant="outline" className="rounded-md" onClick={() => setDeleteTarget(null)} disabled={!!deletingId}>
               Cancel
             </Button>
             <Button
               variant="destructive"
-              className="rounded-lg transition-all"
+              className="rounded-md"
               disabled={!!deletingId}
               onClick={() => deleteTarget && handleDelete(deleteTarget.id)}
             >
@@ -502,81 +492,74 @@ export default function CandidateUploadPage() {
 
       {/* Upload History */}
       {allUploads.length > 0 && view !== 'loading' && (
-        <Card className="mt-6 rounded-xl shadow-sm">
-          <CardHeader>
-            <CardTitle>Your Uploads</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="divide-y">
-              {allUploads.map((upload) => (
-                <div
-                  key={upload.id}
-                  className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <FileText className="size-4 shrink-0 text-muted-foreground" />
-                      <span className="truncate text-sm font-medium">
-                        {upload.filename}
-                      </span>
-                      {statusBadge(upload.status)}
-                    </div>
-                    <div className="mt-1 flex flex-col gap-0.5 pl-6">
-                      <span className="text-xs text-muted-foreground">
-                        {formatDate(upload.createdAt)}
-                      </span>
-                      {upload.status === 'failed' && upload.errorMessage && (
-                        <span className="text-xs text-red-600">
-                          {upload.errorMessage}
-                        </span>
-                      )}
-                    </div>
+        <div className="mt-8">
+          <h2 className="text-sm font-medium mb-3">Your Uploads</h2>
+          <div>
+            {allUploads.map((upload) => (
+              <div
+                key={upload.id}
+                className="flex items-center justify-between py-3 border-b border-border last:border-b-0"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="truncate text-sm">
+                      {upload.filename}
+                    </span>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${statusDot(upload.status)}`} />
+                    <span className="text-xs text-muted-foreground">
+                      {statusText(upload.status)}
+                    </span>
                   </div>
-
-                  <div className="flex shrink-0 items-center gap-2">
-                    {(upload.status === 'uploaded' || upload.status === 'failed') && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-lg transition-all"
-                        onClick={() => {
-                          setCurrentUpload(upload)
-                          if (upload.status === 'failed') {
-                            setErrorMessage(upload.errorMessage || 'CV parsing failed')
-                          }
-                          triggerParse(upload.id)
-                        }}
-                      >
-                        Analyze
-                      </Button>
+                  <div className="mt-0.5">
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {formatDate(upload.createdAt)}
+                    </span>
+                    {upload.status === 'failed' && upload.errorMessage && (
+                      <span className="ml-2 text-xs text-red-600">
+                        {upload.errorMessage}
+                      </span>
                     )}
-
-                    {upload.status === 'parsed' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-lg transition-all"
-                        onClick={() => router.push('/candidate/profile')}
-                      >
-                        View Profile
-                      </Button>
-                    )}
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      disabled={upload.status === 'parsing' || deletingId === upload.id}
-                      onClick={() => setDeleteTarget(upload)}
-                      title={upload.status === 'parsing' ? 'Cannot delete while analyzing' : 'Delete upload'}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+
+                <div className="flex shrink-0 items-center gap-3">
+                  {(upload.status === 'uploaded' || upload.status === 'failed') && (
+                    <button
+                      className="text-xs text-brand hover:underline"
+                      onClick={() => {
+                        setCurrentUpload(upload)
+                        if (upload.status === 'failed') {
+                          setErrorMessage(upload.errorMessage || 'CV parsing failed')
+                        }
+                        triggerParse(upload.id)
+                      }}
+                    >
+                      Analyze
+                    </button>
+                  )}
+
+                  {upload.status === 'parsed' && (
+                    <button
+                      className="text-xs text-brand hover:underline"
+                      onClick={() => router.push('/candidate/profile')}
+                    >
+                      View Profile
+                    </button>
+                  )}
+
+                  <button
+                    className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
+                    disabled={upload.status === 'parsing' || deletingId === upload.id}
+                    onClick={() => setDeleteTarget(upload)}
+                    title={upload.status === 'parsing' ? 'Cannot delete while analyzing' : 'Delete upload'}
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

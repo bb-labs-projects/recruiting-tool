@@ -18,7 +18,7 @@ export default async function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="mb-2">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight">
           Terms of Business
         </h1>
         <p className="text-muted-foreground mt-1">

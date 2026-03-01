@@ -54,7 +54,7 @@ export function MfaChallengeForm() {
   return (
     <Card className="w-full max-w-sm rounded-xl border-0 card-warm">
       <CardHeader className="text-center">
-        <CardTitle className="font-[family-name:var(--font-outfit)] text-xl tracking-tight">
+        <CardTitle className="font-sans text-xl tracking-tight">
           {mode === 'totp' ? 'Two-Factor Authentication' : 'Recovery Code'}
         </CardTitle>
       </CardHeader>

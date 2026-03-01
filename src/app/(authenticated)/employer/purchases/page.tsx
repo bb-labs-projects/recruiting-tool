@@ -36,7 +36,7 @@ export default async function PurchaseHistoryPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-2">
-        <h1 className="font-[family-name:var(--font-outfit)] text-2xl font-bold tracking-tight">Purchase History</h1>
+        <h1 className="font-sans text-2xl font-bold tracking-tight">Purchase History</h1>
         <p className="text-muted-foreground mt-1">
           Profiles you&apos;ve unlocked via payment
         </p>
@@ -96,7 +96,7 @@ export default async function PurchaseHistoryPage() {
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-xl py-20">
           <Receipt className="text-teal-400 mb-4 size-12" />
-          <h3 className="font-[family-name:var(--font-outfit)] text-lg font-semibold">No purchases yet</h3>
+          <h3 className="font-sans text-lg font-semibold">No purchases yet</h3>
           <p className="text-muted-foreground mt-1 max-w-md text-center text-sm">
             Browse candidates and unlock profiles to see their full details.
           </p>

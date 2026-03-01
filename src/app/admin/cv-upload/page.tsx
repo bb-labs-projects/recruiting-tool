@@ -251,7 +251,7 @@ export default function CvUploadPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-outfit)]">CV Upload</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-sans">CV Upload</h1>
         <p className="text-muted-foreground">
           Upload PDF or DOCX CVs, trigger parsing, and monitor progress
         </p>
