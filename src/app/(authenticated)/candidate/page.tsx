@@ -38,162 +38,195 @@ export default async function CandidateDashboardPage() {
   const profile = await getCandidateProfile(user.id)
 
   if (!profile) {
-    // Case A: No profile exists -- onboarding welcome
+    // Case A: No profile exists -- onboarding welcome (split layout)
     return (
-      <div className="max-w-3xl">
+      <div className="max-w-5xl">
+        {/* Header */}
         <div className="mb-10">
-          <h1 className="text-[oklch(0.12_0_0)] font-semibold text-[28px] tracking-tight mb-2">
+          <h1 className="text-[oklch(0.12_0_0)] font-semibold text-[32px] tracking-tight mb-2">
             Welcome to Cromwell Chase
           </h1>
-          <p className="text-[14px] text-[oklch(0.40_0_0)] leading-relaxed max-w-lg">
+          <p className="text-[14px] text-[oklch(0.40_0_0)] leading-relaxed max-w-xl">
             We connect IP professionals with leading firms and in-house teams
             worldwide. Upload your CV to get started.
           </p>
         </div>
 
-        {/* Upload CTA */}
-        <div className="mb-12">
-          <Link
-            href="/candidate/upload"
-            className="inline-flex items-center gap-3 bg-[oklch(0.12_0_0)] text-white rounded-lg px-6 py-3.5 text-[14px] font-medium hover:bg-[oklch(0.20_0_0)] transition-custom"
-          >
-            <Upload className="size-4" />
-            Upload Your CV
-          </Link>
-          <p className="text-[12px] text-[oklch(0.55_0_0)] mt-2">
-            PDF or DOCX, up to 10 MB
-          </p>
-        </div>
+        {/* Split layout: content left, upload right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 items-start">
+          {/* Left column -- info */}
+          <div>
+            {/* How it works */}
+            <div className="mb-10">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-6">
+                How it works
+              </h2>
+              <div className="space-y-5">
+                <div className="flex gap-4">
+                  <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">1</span>
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-0.5">
+                      Upload your CV
+                    </p>
+                    <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
+                      PDF or DOCX. We automatically extract your qualifications,
+                      work history, bar admissions, and technical expertise.
+                    </p>
+                  </div>
+                </div>
 
-        {/* How it works -- expanded */}
-        <div className="mb-12">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-6">
-            How it works
-          </h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0">
-                <FileText className="size-4 text-[oklch(0.40_0_0)]" />
-              </div>
-              <div>
-                <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-1">
-                  Upload your CV
-                </p>
-                <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
-                  Upload your CV in PDF or DOCX format. Our system automatically
-                  extracts your qualifications, work history, bar admissions,
-                  and technical expertise.
-                </p>
+                <div className="flex gap-4">
+                  <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">2</span>
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-0.5">
+                      Review and refine
+                    </p>
+                    <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
+                      Edit any field for accuracy -- job titles, education,
+                      bar admissions -- then submit for approval.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-7 h-7 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="font-mono text-[11px] font-semibold text-[oklch(0.40_0_0)]">3</span>
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-0.5">
+                      Get matched to opportunities
+                    </p>
+                    <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
+                      Your profile is matched against open positions. Signal
+                      you&apos;re open to offers -- all while staying anonymous.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0">
-                <ScanSearch className="size-4 text-[oklch(0.40_0_0)]" />
-              </div>
-              <div>
-                <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-1">
-                  Review and refine
-                </p>
-                <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
-                  Check the extracted details for accuracy. You can edit any
-                  field -- job titles, education, bar admissions -- to make
-                  sure your profile is complete and correct.
-                </p>
+            {/* What makes a strong profile */}
+            <div className="border-t border-[oklch(0.90_0_0)] pt-8 mb-10">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-5">
+                What makes a strong profile
+              </h2>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                <div className="flex gap-2.5">
+                  <Target className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Clear specializations</p>
+                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
+                      Patent prosecution, litigation, licensing
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2.5">
+                  <Zap className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Technical depth</p>
+                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
+                      Biotech, software, EE, mechanical
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2.5">
+                  <TrendingUp className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Complete work history</p>
+                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
+                      Dates and descriptions matter
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2.5">
+                  <Lightbulb className="size-3.5 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[13px] font-medium text-[oklch(0.12_0_0)]">Bar admissions</p>
+                    <p className="text-[12px] text-[oklch(0.50_0_0)]">
+                      Patent bar, state, international
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center shrink-0">
-                <UserCheck className="size-4 text-[oklch(0.40_0_0)]" />
-              </div>
-              <div>
-                <p className="text-[14px] font-medium text-[oklch(0.12_0_0)] mb-1">
-                  Get matched to opportunities
-                </p>
-                <p className="text-[13px] text-[oklch(0.50_0_0)] leading-relaxed">
-                  Once approved, your profile is matched against open positions.
-                  You&apos;ll see which roles align with your experience and can
-                  signal that you&apos;re open to offers -- all while staying anonymous.
-                </p>
+            {/* Privacy */}
+            <div className="border-t border-[oklch(0.90_0_0)] pt-8">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-5">
+                Your privacy
+              </h2>
+              <div className="space-y-3">
+                <div className="flex gap-2.5">
+                  <Shield className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.12_0_0)]">Anonymized by default.</strong>{' '}
+                    Employers never see your name, email, or employer names.
+                  </p>
+                </div>
+                <div className="flex gap-2.5">
+                  <EyeOff className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.12_0_0)]">Pay to unlock.</strong>{' '}
+                    Employers pay to see your full identity. You control your visibility.
+                  </p>
+                </div>
+                <div className="flex gap-2.5">
+                  <Eye className="size-3.5 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
+                  <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
+                    <strong className="text-[oklch(0.12_0_0)]">Open to offers.</strong>{' '}
+                    A discreet signal to employers -- without revealing who you are.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* What makes a strong profile */}
-        <div className="border-t border-[oklch(0.90_0_0)] pt-8 mb-12">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-6">
-            What makes a strong profile
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex gap-3">
-              <Target className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Clear specializations</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  Patent prosecution, litigation, licensing -- be specific about your practice areas
+          {/* Right column -- upload card (sticky) */}
+          <div className="lg:sticky lg:top-24">
+            <div className="rounded-xl border border-[oklch(0.90_0_0)] bg-white p-6 shadow-[0_1px_3px_oklch(0_0_0_/_0.06)]">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-full bg-[oklch(0.96_0_0)] flex items-center justify-center mb-4">
+                  <Upload className="size-5 text-[oklch(0.40_0_0)]" />
+                </div>
+                <h3 className="text-[16px] font-semibold text-[oklch(0.12_0_0)] mb-1">
+                  Get started
+                </h3>
+                <p className="text-[13px] text-[oklch(0.50_0_0)] mb-5">
+                  Upload your CV and we&apos;ll build your profile automatically.
+                </p>
+                <Link
+                  href="/candidate/upload"
+                  className="w-full h-10 bg-[oklch(0.12_0_0)] hover:bg-[oklch(0.20_0_0)] text-white font-medium text-[13px] rounded-md flex items-center justify-center gap-2 transition-custom"
+                >
+                  <Upload className="size-4" />
+                  Upload Your CV
+                </Link>
+                <p className="text-[11px] text-[oklch(0.55_0_0)] mt-3">
+                  PDF or DOCX, up to 10 MB
                 </p>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <Zap className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Technical depth</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  List your technical domains -- biotech, software, EE -- so employers can find the right fit
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <TrendingUp className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Complete work history</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  Include dates and descriptions. Longer tenure signals commitment to employers.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Lightbulb className="size-4 text-[oklch(0.78_0.14_75)] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-[13px] font-medium text-[oklch(0.12_0_0)] mb-0.5">Bar admissions</p>
-                <p className="text-[12px] text-[oklch(0.50_0_0)]">
-                  Patent bar, state bars, and international qualifications all increase your match potential
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Privacy section */}
-        <div className="border-t border-[oklch(0.90_0_0)] pt-8">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.08em] text-[oklch(0.55_0_0)] font-medium mb-6">
-            Your privacy
-          </h2>
-          <div className="space-y-4">
-            <div className="flex gap-3">
-              <Shield className="size-4 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-              <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                Your profile is <strong className="text-[oklch(0.12_0_0)]">anonymized by default</strong>.
-                Employers see your specializations, experience level, and qualifications
-                but never your name, email, phone, or employer names.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <EyeOff className="size-4 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-              <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                Employers must <strong className="text-[oklch(0.12_0_0)]">pay to unlock</strong> your
-                full identity. You stay in control of your visibility.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Eye className="size-4 text-[oklch(0.55_0_0)] mt-0.5 shrink-0" />
-              <p className="text-[13px] text-[oklch(0.40_0_0)] leading-relaxed">
-                Once your profile is live, you can signal that you&apos;re
-                <strong className="text-[oklch(0.12_0_0)]"> open to offers</strong> --
-                a discreet indicator visible to employers without revealing who you are.
-              </p>
+              {/* Quick stats teaser */}
+              <div className="border-t border-[oklch(0.92_0_0)] mt-5 pt-5">
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div>
+                    <FileText className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
+                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Upload</p>
+                  </div>
+                  <div>
+                    <ScanSearch className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
+                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Review</p>
+                  </div>
+                  <div>
+                    <UserCheck className="size-3.5 text-[oklch(0.55_0_0)] mx-auto mb-1" />
+                    <p className="text-[11px] text-[oklch(0.50_0_0)]">Match</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
