@@ -285,7 +285,50 @@ export async function updateCandidateBarAdmission(formData: FormData) {
 }
 
 // ---------------------------------------------------------------------------
-// Action 5: submitProfileForReview
+// Action 5: toggleOpenToOffers
+// ---------------------------------------------------------------------------
+
+const ToggleOpenToOffersSchema = z.object({
+  profileId: z.string().uuid(),
+  openToOffers: z.boolean(),
+})
+
+export async function toggleOpenToOffers(formData: FormData) {
+  try {
+    const parsed = ToggleOpenToOffersSchema.safeParse({
+      profileId: formData.get('profileId'),
+      openToOffers: formData.get('openToOffers') === 'true',
+    })
+
+    if (!parsed.success) {
+      return { error: 'Invalid input' }
+    }
+
+    await requireCandidateOwner(parsed.data.profileId)
+
+    await db
+      .update(profiles)
+      .set({
+        openToOffers: parsed.data.openToOffers,
+        updatedAt: new Date(),
+      })
+      .where(eq(profiles.id, parsed.data.profileId))
+
+    revalidatePath('/candidate')
+    revalidatePath('/candidate/profile')
+
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return { error: 'Unauthorized' }
+    }
+    console.error('toggleOpenToOffers error:', error)
+    return { error: 'Failed to update preference' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action 6: submitProfileForReview
 // ---------------------------------------------------------------------------
 
 const SubmitForReviewSchema = z.object({

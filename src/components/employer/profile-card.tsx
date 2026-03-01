@@ -19,9 +19,17 @@ export function ProfileCard({
 
       {/* Overline + title */}
       <div className="flex flex-col gap-1 mb-4">
-        <span className="font-mono text-[11px] uppercase tracking-wide text-[oklch(0.55_0_0)] font-medium">
-          IP Professional
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] uppercase tracking-wide text-[oklch(0.55_0_0)] font-medium">
+            IP Professional
+          </span>
+          {profile.openToOffers && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[oklch(0.55_0.14_155)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.55_0.14_155)]" />
+              Open
+            </span>
+          )}
+        </div>
         <h3 className="text-[oklch(0.12_0_0)] font-semibold text-[15px]">
           {profile.experienceRange} experience
         </h3>

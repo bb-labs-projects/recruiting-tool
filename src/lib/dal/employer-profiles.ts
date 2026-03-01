@@ -32,6 +32,7 @@ export type AnonymizedProfileDTO = {
   experienceRange: string
   educationSummary: string[]
   barAdmissions: string[]
+  openToOffers: boolean
   workHistorySummary: {
     title: string
     type: string
@@ -284,6 +285,7 @@ export const getAnonymizedProfiles = cache(
       columns: {
         id: true,
         createdAt: true,
+        openToOffers: true,
         // PII fields explicitly EXCLUDED by using inclusion mode:
         // name, email, phone, nameConfidence, emailConfidence, phoneConfidence
         // are NOT listed and therefore NEVER selected
@@ -352,6 +354,7 @@ export const getAnonymizedProfiles = cache(
           (ba) =>
             `${ba.jurisdiction}${ba.status ? ` (${ba.status})` : ''}`
         ),
+        openToOffers: profile.openToOffers,
         workHistorySummary: anonymizeWorkHistory(profile.workHistory),
       })
     )
@@ -373,6 +376,7 @@ export const getAnonymizedProfileById = cache(
       columns: {
         id: true,
         createdAt: true,
+        openToOffers: true,
       },
       with: {
         profileSpecializations: {
@@ -432,6 +436,7 @@ export const getAnonymizedProfileById = cache(
         (ba) =>
           `${ba.jurisdiction}${ba.status ? ` (${ba.status})` : ''}`
       ),
+      openToOffers: profile.openToOffers,
       workHistorySummary: anonymizeWorkHistory(profile.workHistory),
     }
   }

@@ -98,6 +98,7 @@ export const profiles = pgTable('profiles', {
   status: profileStatusEnum('status').notNull().default('pending_review'),
   rejectionNotes: text('rejection_notes'),
   duplicateNotes: text('duplicate_notes'),
+  openToOffers: boolean('open_to_offers').default(false).notNull(),
   reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
   reviewedBy: uuid('reviewed_by').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),

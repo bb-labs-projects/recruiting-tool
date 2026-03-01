@@ -2,7 +2,7 @@ import 'server-only'
 
 import { cache } from 'react'
 import { db } from '@/lib/db'
-import { jobMatches, profileUnlocks } from '@/lib/db/schema'
+import { jobMatches, profileUnlocks, jobs } from '@/lib/db/schema'
 import { eq, and, desc, isNull, gte, inArray } from 'drizzle-orm'
 import { bucketExperienceYears } from '@/lib/anonymize'
 
@@ -245,6 +245,56 @@ export async function getMatchCardProfiles(
 
   return result
 }
+
+// Candidate-facing match types and functions
+
+export type CandidateMatchDTO = {
+  id: string
+  jobTitle: string
+  overallScore: number
+  recommendation: string
+  summary: string
+  strengths: string[]
+  scoredAt: Date
+}
+
+/**
+ * Get all job matches for a candidate's profile.
+ * Only returns matches for open jobs. Hides employer identity.
+ * Ordered by overall score descending.
+ */
+export const getMatchesForCandidate = cache(
+  async (profileId: string): Promise<CandidateMatchDTO[]> => {
+    const rows = await db
+      .select({
+        match: jobMatches,
+        jobTitle: jobs.title,
+        jobStatus: jobs.status,
+      })
+      .from(jobMatches)
+      .innerJoin(jobs, eq(jobMatches.jobId, jobs.id))
+      .where(
+        and(
+          eq(jobMatches.profileId, profileId),
+          eq(jobs.status, 'open')
+        )
+      )
+      .orderBy(desc(jobMatches.overallScore))
+
+    return rows.map((r) => {
+      const { strengths } = parseScoringData(r.match.subscores)
+      return {
+        id: r.match.id,
+        jobTitle: r.jobTitle,
+        overallScore: r.match.overallScore,
+        recommendation: r.match.recommendation,
+        summary: r.match.summary,
+        strengths: strengths.slice(0, 3),
+        scoredAt: r.match.scoredAt,
+      }
+    })
+  }
+)
 
 // Write functions
 
