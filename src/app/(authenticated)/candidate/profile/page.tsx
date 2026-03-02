@@ -87,7 +87,7 @@ export default async function CandidateProfilePage() {
   const StatusIcon = status.icon
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="max-w-6xl mx-auto px-6 py-8">
       {/* Header with status and actions */}
       <div className="mb-6 flex items-center justify-between">
         <div>
