@@ -34,72 +34,71 @@ export function ActivityFeed({ activity }: { activity: CandidateActivity }) {
         Activity
       </h2>
 
-      {/* Stats row */}
-      <div className="flex items-center gap-12 mb-8">
-        <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-foreground">
+      {/* Stats grid -- 2x2 for sidebar, 4-col on wider */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-center">
+          <span className="font-mono text-[16px] font-semibold text-foreground block">
             {stats.viewsThisWeek}
           </span>
-          <span className="text-[12px] text-muted-foreground">Views this week</span>
+          <span className="text-[11px] text-muted-foreground">Views</span>
         </div>
-        <div className="h-8 w-[1px] bg-border" />
-        <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-foreground">
+        <div className="rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-center">
+          <span className="font-mono text-[16px] font-semibold text-foreground block">
             {stats.totalSaves}
           </span>
-          <span className="text-[12px] text-muted-foreground">Saves</span>
+          <span className="text-[11px] text-muted-foreground">Saves</span>
         </div>
-        <div className="h-8 w-[1px] bg-border" />
-        <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-foreground">
+        <div className="rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-center">
+          <span className="font-mono text-[16px] font-semibold text-foreground block">
             {stats.totalUnlocks}
           </span>
-          <span className="text-[12px] text-muted-foreground">Unlocks</span>
+          <span className="text-[11px] text-muted-foreground">Unlocks</span>
         </div>
-        <div className="h-8 w-[1px] bg-border" />
-        <div className="flex flex-col">
-          <span className="font-mono text-[14px] font-medium text-foreground">
+        <div className="rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-center">
+          <span className="font-mono text-[16px] font-semibold text-foreground block">
             {stats.totalMatches}
           </span>
-          <span className="text-[12px] text-muted-foreground">Matches</span>
+          <span className="text-[11px] text-muted-foreground">Matches</span>
         </div>
       </div>
 
       {/* Event list */}
       {events.length > 0 ? (
         <>
-          <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground font-medium mb-3">
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground font-medium mb-2.5">
             Recent
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {events.map((event) => {
               const config = eventConfig[event.type]
               const Icon = config.icon
               return (
-                <div key={event.id} className="flex items-center gap-3">
-                  <Icon className="size-3.5 text-muted-foreground shrink-0" />
-                  <span className="text-[13px] text-foreground/80 flex-1">
-                    {config.label}
-                  </span>
-                  <span className="font-mono text-[11px] text-muted-foreground shrink-0">
-                    {relativeTime(event.timestamp)}
-                  </span>
+                <div key={event.id} className="flex items-start gap-2.5">
+                  <Icon className="size-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px] text-foreground/80 leading-snug">
+                      {config.label}
+                    </p>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {relativeTime(event.timestamp)}
+                    </span>
+                  </div>
                 </div>
               )
             })}
           </div>
         </>
       ) : (
-        <div className="rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center">
-          <Eye className="size-5 text-muted-foreground mx-auto mb-2" />
-          <p className="text-[13px] text-muted-foreground">
+        <div className="rounded-lg border border-dashed border-border bg-muted/50 p-4 text-center">
+          <Eye className="size-4 text-muted-foreground mx-auto mb-1.5" />
+          <p className="text-[12px] text-muted-foreground">
             No activity yet. When employers interact with your profile,
             you&apos;ll see it here.
           </p>
         </div>
       )}
 
-      <div className="border-t border-border mt-10" />
+      <div className="border-t border-border mt-8" />
     </div>
   )
 }
